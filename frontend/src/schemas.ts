@@ -380,6 +380,11 @@ export const ScoreBreakdownSchema = z.object({
   genreFrequency: z.number().optional(), // Chord frequency in genre
   frictionScore: z.number().optional(), // Rarity metric
   patternMatches: z.array(TrainedPatternSchema).optional(), // Matched patterns from model
+
+  // Contextual score (from pattern-based context matching)
+  // Measures how well this chord fits the recent progression history,
+  // not just the single previous chord. Higher = better contextual fit.
+  contextualScore: z.number().optional(),
 })
 
 // Scored candidate with breakdown

@@ -187,6 +187,27 @@ export function RecommendationCard({
             </span>
           </div>
 
+          {/* Contextual fit (from progression history pattern matching) */}
+          {breakdown.contextualScore !== undefined &&
+            breakdown.contextualScore > 0 && (
+              <div className="flex items-center gap-1.5">
+                <span className="text-gray-500 font-medium w-14 shrink-0">
+                  {t('recommendationCard.context')}
+                </span>
+                <div className="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-amber-500"
+                    style={{
+                      width: `${breakdown.contextualScore * 100}%`,
+                    }}
+                  />
+                </div>
+                <span className="text-gray-500 font-mono w-10 text-right shrink-0">
+                  {Math.round(breakdown.contextualScore * 100)}%
+                </span>
+              </div>
+            )}
+
           {/* Distance + Tension — merged into one row */}
           <div className="flex items-center gap-2 text-gray-500">
             <span className="font-medium w-14 shrink-0">

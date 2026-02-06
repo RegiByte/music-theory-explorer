@@ -7,7 +7,10 @@ import {
   getScoredCandidatesV2,
 } from '@/core/trunkExplorer'
 import { categorizeRecommendations } from '@/core/recommendationCategorizer'
-import { combineScores } from '@/core/hybridScoring'
+import {
+  combineScores,
+  type ContextualBoostMap,
+} from '@/core/hybridScoring'
 import { categorizeByGenre } from '@/core/genreCategorizer'
 import { createSyntheticCandidates } from '@/core/syntheticCandidates'
 import {
@@ -216,7 +219,8 @@ export const progressionExplorerResource = defineResource({
           harmonicCandidates.length,
         )
 
-        // Get statistical recommendations for ALL genres
+        // Get statistical recommendations for ALL genres,
+        // enhanced with contextual pattern matching from the progression history
         const genres = recommender.getGenres()
         const genreRecommendations: Record<
           Genre,
@@ -224,11 +228,39 @@ export const progressionExplorerResource = defineResource({
         > = {} as Record<Genre, GenreCategorizedRecommendations>
 
         for (const genre of genres) {
+          // Build context: all chords BEFORE the current node (excluding it).
+          // The current node's chord is passed as fromChord; context is what
+          // came before it. getRecommendations uses backoff: trigram → bigram → unigram.
+          const context = path.length > 1 ? path.slice(0, -1) : undefined
+
           const statisticalRecs = await recommender.getRecommendations(
             node.chordId,
             genre,
             50, // Increased from 30 to get more candidates
+            context,
           )
+
+          // --- Context-aware pattern boosting ---
+          // Use the progression path to find matching n-gram patterns from
+          // the trained model. Try progressively shorter suffixes of the path
+          // as prefixes (last 3, last 2, last 1 chords) to maximize coverage.
+          // Longer prefix matches are weighted higher (more specific context).
+          const contextualBoost = await buildContextualBoostFromPatterns(
+            path,
+            genre,
+            recommender,
+          )
+
+          if (contextualBoost.size > 0) {
+            console.log(
+              `🎯 Contextual boost for ${genre} (path: ${path.join(' → ')}):`,
+              Object.fromEntries(
+                [...contextualBoost.entries()]
+                  .sort(([, a], [, b]) => b - a)
+                  .slice(0, 5),
+              ),
+            )
+          }
 
           // Create synthetic candidates for chords in statistical model but not in harmonic map
           const syntheticCandidates = createSyntheticCandidates(
@@ -239,8 +271,12 @@ export const progressionExplorerResource = defineResource({
 
           // Combine harmonic + synthetic candidates
           const allCandidates = [...harmonicCandidates, ...syntheticCandidates]
-          // Combine scores with hybrid scoring
-          const hybridCandidates = combineScores(allCandidates, statisticalRecs)
+          // Combine scores with hybrid scoring (now includes contextual boost!)
+          const hybridCandidates = combineScores(
+            allCandidates,
+            statisticalRecs,
+            contextualBoost,
+          )
 
           // Categorize by genre (canonical/spicy split)
           genreRecommendations[genre] = categorizeByGenre(
@@ -594,4 +630,53 @@ function getPathToNode(nodes: TrunkNode[], nodeId: string): string[] {
   }
 
   return path
+}
+
+/**
+ * Build a contextual boost map by matching the progression path against
+ * trained n-gram patterns for a genre.
+ *
+ * Strategy: try the path suffix as a prefix at decreasing lengths (3, 2, 1).
+ * For each matching pattern, extract the "next chord" (the chord right after
+ * the matched prefix) and accumulate its frequency as a boost score.
+ *
+ * Longer prefix matches contribute their raw frequency, shorter ones are
+ * dampened to reflect lower confidence from less context.
+ *
+ * @returns Map of chord → contextual score (higher = better contextual fit)
+ */
+async function buildContextualBoostFromPatterns(
+  path: string[],
+  genre: Genre,
+  recommender: RecommenderResource,
+): Promise<ContextualBoostMap> {
+  const boostMap: ContextualBoostMap = new Map()
+
+  // Confidence multipliers: longer prefix = more context = higher confidence
+  const prefixConfidence: Record<number, number> = {
+    3: 1.0, // 3-chord prefix: full confidence
+    2: 0.6, // 2-chord prefix: moderate confidence
+    1: 0.2, // 1-chord prefix: low confidence (near first-order Markov)
+  }
+
+  // Try decreasing prefix lengths from the path tail
+  for (const prefixLen of [3, 2, 1]) {
+    if (path.length < prefixLen) continue
+
+    const prefix = path.slice(-prefixLen)
+    const patterns = await recommender.findPatterns(prefix, genre, 4)
+    const confidence = prefixConfidence[prefixLen] ?? 0.2
+
+    for (const pattern of patterns) {
+      // The "next chord" is the one right after the prefix in this pattern
+      const nextIndex = prefixLen
+      if (nextIndex < pattern.chords.length) {
+        const nextChord = pattern.chords[nextIndex]
+        const current = boostMap.get(nextChord) ?? 0
+        boostMap.set(nextChord, current + pattern.frequency * confidence)
+      }
+    }
+  }
+
+  return boostMap
 }

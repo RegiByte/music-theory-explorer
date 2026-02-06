@@ -238,6 +238,7 @@
     "ofSongs": "{{value}}% of songs",
     "transition": "Transition:",
     "pattern": "Pattern:",
+    "context": "Context:",
     "distance": "Distance:",
     "veryClose": "(very close)",
     "close": "(close)",

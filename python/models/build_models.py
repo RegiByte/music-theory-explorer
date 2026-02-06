@@ -54,10 +54,16 @@ def parse_progressions(df: pd.DataFrame) -> pd.DataFrame:
 
 def main():
     """Main model building pipeline."""
+    import shutil
+    
     # Configuration
     MIN_GENRE_SIZE = 5000  # Minimum progressions per genre
-    OUTPUT_DIR = get_project_root() / "src" / "models" / "trained"
+    OUTPUT_DIR = get_project_root() / "python" / "models" / "trained"
     OUTPUT_DIR.mkdir(exist_ok=True)
+    
+    # Also copy to frontend public directory
+    FRONTEND_MODELS_DIR = get_project_root() / "frontend" / "public" / "models"
+    FRONTEND_MODELS_DIR.mkdir(parents=True, exist_ok=True)
     
     print("=" * 80)
     print("CHORD PROGRESSION MODEL BUILDER")
@@ -77,7 +83,9 @@ def main():
         chord_column='parsed_chords',
         genre_column='main_genre',
         normalize_fn=normalize_chord_simple,
-        min_genre_size=MIN_GENRE_SIZE
+        min_genre_size=MIN_GENRE_SIZE,
+        min_bigram_count=5,   # Bigram context must appear ≥5 times
+        min_trigram_count=3,  # Trigram context must appear ≥3 times
     )
     
     # Save Markov model
@@ -120,12 +128,22 @@ def main():
         print(f"\n{genre.upper()}:")
         print(f"  Total progressions: {markov_model.genre_totals.get(genre, 0):,}")
         
-        # Count unique transitions
+        # Count unique transitions per order
         n_transitions = sum(
             len(to_chords)
             for to_chords in markov_model.transitions[genre].values()
         )
-        print(f"  Unique transitions: {n_transitions:,}")
+        n_bigram = sum(
+            len(to_chords)
+            for to_chords in markov_model.bigram_transitions.get(genre, {}).values()
+        )
+        n_trigram = sum(
+            len(to_chords)
+            for to_chords in markov_model.trigram_transitions.get(genre, {}).values()
+        )
+        print(f"  Order 1 transitions: {n_transitions:,}")
+        print(f"  Order 2 transitions: {n_bigram:,} (bigram contexts)")
+        print(f"  Order 3 transitions: {n_trigram:,} (trigram contexts)")
         
         # Count patterns
         n_patterns = sum(
@@ -133,6 +151,17 @@ def main():
             for patterns in pattern_miner.patterns[genre].values()
         )
         print(f"  Common patterns: {n_patterns}")
+    
+    # Copy trained models to frontend
+    print("\n" + "=" * 80)
+    print("DEPLOYING TO FRONTEND")
+    print("=" * 80)
+    
+    shutil.copy2(markov_path, FRONTEND_MODELS_DIR / "markov_model.json")
+    print(f"✓ Copied markov_model.json → {FRONTEND_MODELS_DIR}")
+    
+    shutil.copy2(patterns_path, FRONTEND_MODELS_DIR / "patterns.json")
+    print(f"✓ Copied patterns.json → {FRONTEND_MODELS_DIR}")
     
     print("\n" + "=" * 80)
     print("✓ MODEL BUILDING COMPLETE")

@@ -5,8 +5,15 @@ import type {
   TrainedPattern,
 } from '@/schemas'
 
+/** Separator used for higher-order context keys (matches Python CONTEXT_SEP) */
+const CONTEXT_SEP = '|'
+
 interface MarkovModel {
   transitions: Record<string, Record<string, Record<string, number>>>
+  /** 2nd-order: "prev|current" → {next: probability} */
+  bigram_transitions?: Record<string, Record<string, Record<string, number>>>
+  /** 3rd-order: "prev2|prev1|current" → {next: probability} */
+  trigram_transitions?: Record<string, Record<string, Record<string, number>>>
   chord_frequencies: Record<string, Record<string, number>>
   genre_totals: Record<string, number>
 }
@@ -41,16 +48,71 @@ export const recommenderResource = defineResource({
       })
 
     return {
-      // Get statistical recommendations for a chord in a genre
+      /**
+       * Get statistical recommendations with context-aware backoff.
+       *
+       * Tries the most specific context available:
+       *   1. Trigram (3rd order): uses last 2 context chords + current chord
+       *   2. Bigram (2nd order): uses last 1 context chord + current chord
+       *   3. Unigram (1st order): uses only current chord (original behavior)
+       *
+       * @param fromChord - The current chord to get recommendations from
+       * @param genre - Genre to query
+       * @param topN - Max number of recommendations
+       * @param context - Optional preceding chords (most recent last).
+       *                  E.g. ["C", "G"] means the path was C → G → fromChord.
+       */
       getRecommendations: async (
         fromChord: string,
         genre: Genre,
         topN = 20,
+        context?: string[],
       ): Promise<StatisticalRecommendation[]> => {
         await loadPromise // Wait for models if still loading
         if (!markovModel) return []
 
-        const transitions = markovModel.transitions[genre]?.[fromChord] || {}
+        let transitions: Record<string, number> | undefined
+
+        // Try order 3 (trigram): need >= 2 context chords
+        if (context && context.length >= 2) {
+          const trigramKey = [
+            context[context.length - 2],
+            context[context.length - 1],
+            fromChord,
+          ].join(CONTEXT_SEP)
+          transitions =
+            markovModel.trigram_transitions?.[genre]?.[trigramKey]
+          if (transitions && Object.keys(transitions).length > 0) {
+            console.log(
+              `📊 Using 3rd-order context: ${trigramKey} (${Object.keys(transitions).length} transitions)`,
+            )
+          } else {
+            transitions = undefined
+          }
+        }
+
+        // Try order 2 (bigram): need >= 1 context chord
+        if (!transitions && context && context.length >= 1) {
+          const bigramKey = [
+            context[context.length - 1],
+            fromChord,
+          ].join(CONTEXT_SEP)
+          transitions =
+            markovModel.bigram_transitions?.[genre]?.[bigramKey]
+          if (transitions && Object.keys(transitions).length > 0) {
+            console.log(
+              `📊 Using 2nd-order context: ${bigramKey} (${Object.keys(transitions).length} transitions)`,
+            )
+          } else {
+            transitions = undefined
+          }
+        }
+
+        // Fall back to order 1 (unigram)
+        if (!transitions) {
+          transitions = markovModel.transitions[genre]?.[fromChord] || {}
+        }
+
         const frequencies = markovModel.chord_frequencies[genre] || {}
 
         return Object.entries(transitions)
