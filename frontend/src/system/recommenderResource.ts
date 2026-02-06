@@ -26,8 +26,8 @@ export const recommenderResource = defineResource({
 
     // Start loading immediately but don't block
     const loadPromise = Promise.all([
-      fetch('/models/markov_model.json').then((r) => r.json()),
-      fetch('/models/patterns.json').then((r) => r.json()),
+      fetch(`${import.meta.env.BASE_URL}models/markov_model.json`).then((r) => r.json()),
+      fetch(`${import.meta.env.BASE_URL}models/patterns.json`).then((r) => r.json()),
     ])
       .then(([markov, patterns]) => {
         markovModel = markov
