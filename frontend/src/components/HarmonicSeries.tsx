@@ -53,13 +53,15 @@ export function HarmonicSeries() {
 
   const harmonics = useMemo(
     () => generateHarmonics(fundamentalFreq, MAX_HARMONICS),
-    [fundamentalFreq]
+    [fundamentalFreq],
   )
 
   const chartData = useMemo(() => {
-    const labels = harmonics.map((harmonic) => harmonic.harmonicNumber.toString())
+    const labels = harmonics.map((harmonic) =>
+      harmonic.harmonicNumber.toString(),
+    )
     const colors = harmonics.map((harmonic) =>
-      getHarmonicColor(harmonic.harmonicNumber)
+      getHarmonicColor(harmonic.harmonicNumber),
     )
 
     return {
@@ -75,10 +77,12 @@ export function HarmonicSeries() {
         },
       ],
     }
-  }, [harmonics])
+  }, [harmonics, t])
 
   const centsChartData = useMemo(() => {
-    const labels = harmonics.map((harmonic) => harmonic.harmonicNumber.toString())
+    const labels = harmonics.map((harmonic) =>
+      harmonic.harmonicNumber.toString(),
+    )
 
     return {
       labels,
@@ -109,7 +113,7 @@ export function HarmonicSeries() {
         },
       ],
     }
-  }, [harmonics])
+  }, [harmonics, t])
 
   const labelPlugin = useMemo(
     () => ({
@@ -140,7 +144,7 @@ export function HarmonicSeries() {
         ctx.restore()
       },
     }),
-    []
+    [],
   )
 
   const chartOptions: ChartOptions<'bar'> = useMemo(
@@ -175,10 +179,18 @@ export function HarmonicSeries() {
               const harmonic = dataset._harmonics[context.dataIndex]
               if (!harmonic) return ''
               return [
-                t('harmonicSeries.tooltipFrequency', { value: harmonic.frequency.toFixed(2) }),
-                t('harmonicSeries.tooltipClosestNote', { note: harmonic.closestNote }),
-                t('harmonicSeries.tooltipCentsOff', { value: harmonic.centsDeviation.toFixed(1) }),
-                t('harmonicSeries.tooltipInterval', { interval: harmonic.intervalFromFundamental }),
+                t('harmonicSeries.tooltipFrequency', {
+                  value: harmonic.frequency.toFixed(2),
+                }),
+                t('harmonicSeries.tooltipClosestNote', {
+                  note: harmonic.closestNote,
+                }),
+                t('harmonicSeries.tooltipCentsOff', {
+                  value: harmonic.centsDeviation.toFixed(1),
+                }),
+                t('harmonicSeries.tooltipInterval', {
+                  interval: harmonic.intervalFromFundamental,
+                }),
               ]
             },
           },
@@ -213,7 +225,7 @@ export function HarmonicSeries() {
         },
       },
     }),
-    [audio, chartData.datasets]
+    [audio, chartData.datasets, t],
   )
 
   const centsChartOptions: ChartOptions<'bar'> = useMemo(
@@ -237,7 +249,9 @@ export function HarmonicSeries() {
             label: (context) => {
               const harmonic = harmonics[context.dataIndex]
               if (!harmonic) return ''
-              return t('harmonicSeries.tooltipDeviation', { value: Math.abs(harmonic.centsDeviation).toFixed(1) })
+              return t('harmonicSeries.tooltipDeviation', {
+                value: Math.abs(harmonic.centsDeviation).toFixed(1),
+              })
             },
           },
         },
@@ -271,7 +285,7 @@ export function HarmonicSeries() {
         },
       },
     }),
-    [harmonics]
+    [harmonics, t],
   )
 
   return (
@@ -279,24 +293,33 @@ export function HarmonicSeries() {
       <div className="mb-6 space-y-4">
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
-            <h3 className="text-xl font-semibold">{t('harmonicSeries.title')}</h3>
+            <h3 className="text-xl font-semibold">
+              {t('harmonicSeries.title')}
+            </h3>
             <p className="text-sm text-gray-600">
               {t('harmonicSeries.description')}
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <label className="text-sm font-medium text-gray-700">{t('harmonicSeries.rootNote')}</label>
-            <NotePicker value={rootNote} onValueChange={(v) => v && setRootNote(v)} />
+            <label className="text-sm font-medium text-gray-700">
+              {t('harmonicSeries.rootNote')}
+            </label>
+            <NotePicker
+              value={rootNote}
+              onValueChange={(v) => v && setRootNote(v)}
+            />
           </div>
         </div>
-        <p className="text-xs text-gray-500">
-          {t('harmonicSeries.clickHint')}
-        </p>
+        <p className="text-xs text-gray-500">{t('harmonicSeries.clickHint')}</p>
       </div>
 
       <div className="space-y-8">
         <div className="h-96 w-full">
-          <Bar data={chartData} options={chartOptions} plugins={[labelPlugin]} />
+          <Bar
+            data={chartData}
+            options={chartOptions}
+            plugins={[labelPlugin]}
+          />
         </div>
         <div className="h-80 w-full">
           <Bar data={centsChartData} options={centsChartOptions} />

@@ -103,7 +103,9 @@ function PillGroup({
   )
 
   return (
-    <PillGroupContext.Provider value={{ value, multi, max, size, colorScheme, onSelect, isSelected }}>
+    <PillGroupContext.Provider
+      value={{ value, multi, max, size, colorScheme, onSelect, isSelected }}
+    >
       <div
         data-slot="pill-group"
         role={multi ? 'group' : 'radiogroup'}
@@ -149,7 +151,13 @@ interface PillProps extends VariantProps<typeof pillVariants> {
   disabled?: boolean
 }
 
-function Pill({ value, children, className, activeClassName, disabled }: PillProps) {
+function Pill({
+  value,
+  children,
+  className,
+  activeClassName,
+  disabled,
+}: PillProps) {
   const { size, colorScheme, onSelect, isSelected } = usePillGroup()
   const active = isSelected(value)
 
@@ -181,7 +189,9 @@ function Pill({ value, children, className, activeClassName, disabled }: PillPro
 // Color scheme helpers
 // ---------------------------------------------------------------------------
 
-function getActiveClasses(scheme: PillGroupContextValue['colorScheme']): string {
+function getActiveClasses(
+  scheme: PillGroupContextValue['colorScheme'],
+): string {
   switch (scheme) {
     case 'note':
       return 'bg-primary text-primary-foreground border-primary shadow-sm'
@@ -198,7 +208,9 @@ function getActiveClasses(scheme: PillGroupContextValue['colorScheme']): string 
   }
 }
 
-function getInactiveClasses(scheme: PillGroupContextValue['colorScheme']): string {
+function getInactiveClasses(
+  scheme: PillGroupContextValue['colorScheme'],
+): string {
   switch (scheme) {
     case 'note':
       return 'bg-muted/60 text-muted-foreground border-transparent hover:bg-muted hover:text-foreground'

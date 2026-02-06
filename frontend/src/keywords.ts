@@ -70,20 +70,20 @@ export const SCALE_TYPES = {
   LYDIAN: 'lydian',
   MIXOLYDIAN: 'mixolydian',
   MAJOR_BEBOP: 'major_bebop',
-  
+
   // Minor family
   MINOR: 'minor',
   DORIAN: 'dorian',
   PHRYGIAN: 'phrygian',
   LOCRIAN: 'locrian',
   MINOR_BEBOP: 'minor_bebop',
-  
+
   // Harmonic minor and modes
   HARMONIC_MINOR: 'harmonic_minor',
   PHRYGIAN_DOMINANT: 'phrygian_dominant',
   LOCRIAN_NATURAL6: 'locrian_natural6',
   IONIAN_AUGMENTED: 'ionian_augmented',
-  
+
   // Melodic minor and modes (jazz)
   MELODIC_MINOR: 'melodic_minor',
   MELODIC_MINOR_MODE2_DORIAN_B2: 'melodic_minor_mode2_dorian_b2',
@@ -92,18 +92,18 @@ export const SCALE_TYPES = {
   MELODIC_MINOR_MODE5_MIXOLYDIAN_B6: 'melodic_minor_mode5_mixolydian_b6',
   MELODIC_MINOR_MODE6_LOCRIAN_N2: 'melodic_minor_mode6_locrian_n2',
   MELODIC_MINOR_MODE7_ALTERED: 'melodic_minor_mode7_altered',
-  
+
   // Symmetric scales
   WHOLE_TONE: 'whole_tone',
   DIMINISHED_HALF_WHOLE: 'diminished_half_whole',
   DIMINISHED_WHOLE_HALF: 'diminished_whole_half',
-  
+
   // Exotic / World scales
   HUNGARIAN_MINOR: 'hungarian_minor',
   DOUBLE_HARMONIC_MAJOR: 'double_harmonic_major',
   NEAPOLITAN_MINOR: 'neapolitan_minor',
   NEAPOLITAN_MAJOR: 'neapolitan_major',
-  
+
   // Pentatonic scales
   PENTATONIC_MAJOR: 'pentatonic_major',
   PENTATONIC_MINOR: 'pentatonic_minor',
@@ -111,7 +111,7 @@ export const SCALE_TYPES = {
   IN_SEN: 'in_sen',
   HIRAJOSHI: 'hirajoshi',
   IWATO: 'iwato',
-  
+
   // Blues
   BLUES: 'blues',
 } as const

@@ -8,7 +8,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
-import { MELODY_STYLE_PRESETS, type MelodyPath, type MelodyStyle } from '@/core/melodyGenerator'
+import {
+  MELODY_STYLE_PRESETS,
+  type MelodyPath,
+  type MelodyStyle,
+} from '@/core/melodyGenerator'
 import { suggestNextNotes, type NoteSuggestion } from '@/core/melody'
 import type { Note } from '@/schemas'
 
@@ -16,14 +20,17 @@ import type { Note } from '@/schemas'
 // Style Colors
 // ---------------------------------------------------------------------------
 
-const STYLE_COLORS: Record<MelodyStyle, {
-  badge: string
-  notePill: string
-  chordPill: string
-  bg: string
-  border: string
-  selectedBorder: string
-}> = {
+const STYLE_COLORS: Record<
+  MelodyStyle,
+  {
+    badge: string
+    notePill: string
+    chordPill: string
+    bg: string
+    border: string
+    selectedBorder: string
+  }
+> = {
   smooth: {
     badge: 'bg-blue-100 text-blue-800 border-blue-300',
     notePill: 'bg-blue-50 text-blue-700 border-blue-200',
@@ -64,10 +71,14 @@ const STYLE_COLORS: Record<MelodyStyle, {
 
 function getCategoryColor(category: NoteSuggestion['category']) {
   switch (category) {
-    case 'strong': return 'bg-green-100 text-green-800 border-green-300'
-    case 'good': return 'bg-blue-100 text-blue-800 border-blue-300'
-    case 'interesting': return 'bg-yellow-100 text-yellow-800 border-yellow-300'
-    case 'risky': return 'bg-red-100 text-red-800 border-red-300'
+    case 'strong':
+      return 'bg-green-100 text-green-800 border-green-300'
+    case 'good':
+      return 'bg-blue-100 text-blue-800 border-blue-300'
+    case 'interesting':
+      return 'bg-yellow-100 text-yellow-800 border-yellow-300'
+    case 'risky':
+      return 'bg-red-100 text-red-800 border-red-300'
   }
 }
 
@@ -110,7 +121,9 @@ export function MelodyPathCard({
   // Compute suggestions for the currently editing note
   const suggestions = useMemo(() => {
     if (editingNoteIndex === null) return []
-    const melodyBefore = path.notes.slice(0, editingNoteIndex).map(n => n.note)
+    const melodyBefore = path.notes
+      .slice(0, editingNoteIndex)
+      .map((n) => n.note)
     return suggestNextNotes(
       melodyBefore,
       scaleNotes,
@@ -123,9 +136,7 @@ export function MelodyPathCard({
   return (
     <Card
       className={`p-4 transition-all cursor-pointer ${colors.bg} ${
-        isSelected
-          ? colors.selectedBorder
-          : `border ${colors.border}`
+        isSelected ? colors.selectedBorder : `border ${colors.border}`
       }`}
       onClick={() => onCardClick()}
     >
@@ -149,7 +160,10 @@ export function MelodyPathCard({
             <Button
               size="sm"
               variant="outline"
-              onClick={(e) => { e.stopPropagation(); onPlay() }}
+              onClick={(e) => {
+                e.stopPropagation()
+                onPlay()
+              }}
               className="text-xs h-7 px-2"
             >
               {t('melodyPathCard.play')}
@@ -157,7 +171,10 @@ export function MelodyPathCard({
             <Button
               size="sm"
               variant="outline"
-              onClick={(e) => { e.stopPropagation(); onRegenerate() }}
+              onClick={(e) => {
+                e.stopPropagation()
+                onRegenerate()
+              }}
               className="text-xs h-7 px-2"
             >
               {t('melodyPathCard.regen')}
@@ -165,7 +182,10 @@ export function MelodyPathCard({
             {isSelected && (
               <Button
                 size="sm"
-                onClick={(e) => { e.stopPropagation(); onPractice() }}
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onPractice()
+                }}
                 className="text-xs h-7 px-2"
               >
                 {t('melodyPathCard.practice')}
@@ -207,16 +227,28 @@ export function MelodyPathCard({
         {/* Analysis stats */}
         <div className="flex gap-3 text-xs text-muted-foreground">
           <span title="Stepwise motion percentage">
-            {t('melodyPathCard.steps')} <span className="font-medium text-foreground">{path.analysis.stepPercentage}%</span>
+            {t('melodyPathCard.steps')}{' '}
+            <span className="font-medium text-foreground">
+              {path.analysis.stepPercentage}%
+            </span>
           </span>
           <span title="Chord tone percentage">
-            {t('melodyPathCard.chord')} <span className="font-medium text-foreground">{path.analysis.chordTonePercentage}%</span>
+            {t('melodyPathCard.chord')}{' '}
+            <span className="font-medium text-foreground">
+              {path.analysis.chordTonePercentage}%
+            </span>
           </span>
           <span title="Interval range">
-            {t('melodyPathCard.range')} <span className="font-medium text-foreground">{path.analysis.intervalRange}</span>
+            {t('melodyPathCard.range')}{' '}
+            <span className="font-medium text-foreground">
+              {path.analysis.intervalRange}
+            </span>
           </span>
           <span title="Total notes">
-            {t('melodyPathCard.notesLabel')} <span className="font-medium text-foreground">{path.analysis.totalNotes}</span>
+            {t('melodyPathCard.notesLabel')}{' '}
+            <span className="font-medium text-foreground">
+              {path.analysis.totalNotes}
+            </span>
           </span>
         </div>
       </div>
@@ -236,7 +268,7 @@ interface NoteWithPopoverProps {
   isEditing: boolean
   isSelected: boolean
   canDelete: boolean
-  colors: typeof STYLE_COLORS[MelodyStyle]
+  colors: (typeof STYLE_COLORS)[MelodyStyle]
   suggestions: NoteSuggestion[]
   scaleNotes: Note[]
   onOpenEdit: () => void
@@ -304,11 +336,12 @@ function NoteWithPopover({
           text-xs font-semibold rounded-full
           border transition-all cursor-pointer
           hover:scale-110 hover:shadow-sm
-          ${isEditing
-            ? 'ring-2 ring-indigo-400 ring-offset-1 bg-indigo-100 text-indigo-800 border-indigo-400'
-            : isChordTone
-              ? colors.chordPill
-              : colors.notePill
+          ${
+            isEditing
+              ? 'ring-2 ring-indigo-400 ring-offset-1 bg-indigo-100 text-indigo-800 border-indigo-400'
+              : isChordTone
+                ? colors.chordPill
+                : colors.notePill
           }
           ${isStrongBeat && !isEditing ? 'ring-1 ring-offset-1 ring-gray-300' : ''}
         `}
@@ -316,12 +349,17 @@ function NoteWithPopover({
       >
         {note}
       </PopoverTrigger>
-      <PopoverContent className="w-auto min-w-[200px] max-w-[320px]" side="bottom" align="center">
+      <PopoverContent
+        className="w-auto min-w-[200px] max-w-[320px]"
+        side="bottom"
+        align="center"
+      >
         <div className="space-y-2.5" onClick={(e) => e.stopPropagation()}>
           {/* Header */}
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold">
-              {t('melodyPathCard.noteLabel', { index: index + 1 })} <span className="text-indigo-600">{note}</span>
+              {t('melodyPathCard.noteLabel', { index: index + 1 })}{' '}
+              <span className="text-indigo-600">{note}</span>
             </span>
             {canDelete && (
               <button
@@ -336,7 +374,9 @@ function NoteWithPopover({
           {/* Suggestions */}
           {suggestions.length > 0 && (
             <div>
-              <p className="text-[10px] text-muted-foreground mb-1.5">{t('melodyPathCard.replaceWith')}</p>
+              <p className="text-[10px] text-muted-foreground mb-1.5">
+                {t('melodyPathCard.replaceWith')}
+              </p>
               <div className="flex gap-1.5 flex-wrap">
                 {suggestions.map((s) => (
                   <button
@@ -353,7 +393,9 @@ function NoteWithPopover({
                     title={s.reasons.join(', ')}
                   >
                     {s.note}
-                    <span className="text-[9px] ml-0.5 opacity-60">{s.score}</span>
+                    <span className="text-[9px] ml-0.5 opacity-60">
+                      {s.score}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -362,7 +404,9 @@ function NoteWithPopover({
 
           {/* All scale notes */}
           <div>
-            <p className="text-[10px] text-muted-foreground mb-1.5">{t('melodyPathCard.scaleNotes')}</p>
+            <p className="text-[10px] text-muted-foreground mb-1.5">
+              {t('melodyPathCard.scaleNotes')}
+            </p>
             <div className="flex gap-1 flex-wrap">
               {scaleNotes.map((sn) => (
                 <button
@@ -374,9 +418,10 @@ function NoteWithPopover({
                   className={`
                     px-1.5 py-0.5 rounded text-[11px] font-medium border
                     cursor-pointer hover:scale-105 transition-all
-                    ${sn === note
-                      ? 'bg-indigo-500 text-white border-indigo-600'
-                      : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
+                    ${
+                      sn === note
+                        ? 'bg-indigo-500 text-white border-indigo-600'
+                        : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-100'
                     }
                   `}
                 >

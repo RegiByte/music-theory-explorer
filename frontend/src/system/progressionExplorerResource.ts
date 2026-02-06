@@ -1,15 +1,20 @@
 import { defineResource } from 'braided'
 import { createStore, type StoreApi } from 'zustand/vanilla'
+import { buildProgressionMap, getHarmonicMovement } from '@/core/progressionMap'
 import {
-  buildProgressionMap,
-  getHarmonicMovement,
-} from '@/core/progressionMap'
-import { getChromaticDiverseTrunks, getSuggestedNextChords, getScoredCandidatesV2 } from '@/core/trunkExplorer'
+  getChromaticDiverseTrunks,
+  getSuggestedNextChords,
+  getScoredCandidatesV2,
+} from '@/core/trunkExplorer'
 import { categorizeRecommendations } from '@/core/recommendationCategorizer'
 import { combineScores } from '@/core/hybridScoring'
 import { categorizeByGenre } from '@/core/genreCategorizer'
 import { createSyntheticCandidates } from '@/core/syntheticCandidates'
-import { normalizeChordId, enharmonicChordEqual, type NotationPreference } from '@/core/enharmonic'
+import {
+  normalizeChordId,
+  enharmonicChordEqual,
+  type NotationPreference,
+} from '@/core/enharmonic'
 import type {
   ProgressionMap,
   ProgressionNode,
@@ -40,7 +45,10 @@ interface ExplorerState {
   trunkEdges: TrunkEdge[]
   nodeCandidates: Record<string, CandidateSuggestion[]>
   nodeCandidatesV2: Record<string, CategorizedRecommendations>
-  genreCandidates: Record<string, Record<Genre, GenreCategorizedRecommendations>>
+  genreCandidates: Record<
+    string,
+    Record<Genre, GenreCategorizedRecommendations>
+  >
   // Registry of all ProgressionNodes we've ever created (map + synthetic).
   // Keyed by chord ID. Persists across candidate deletions so we can always
   // look up a node when expanding FROM a synthetic chord.
@@ -99,7 +107,11 @@ export const progressionExplorerResource = defineResource({
         const map = currentMap
 
         console.log('Initializing progression explorer:', { key, scaleType })
-        console.log('Map nodes:', map.nodes.length, map.nodes.map(n => ({ id: n.id, roman: n.romanNumeral })))
+        console.log(
+          'Map nodes:',
+          map.nodes.length,
+          map.nodes.map((n) => ({ id: n.id, roman: n.romanNumeral })),
+        )
 
         // Find tonic: 'I' for major, 'i' for minor
         const tonicRomanNumeral = scaleType === 'major' ? 'I' : 'i'
@@ -122,7 +134,11 @@ export const progressionExplorerResource = defineResource({
         const path = [rootChordId]
         const suggestions = getChromaticDiverseTrunks(rootChordId, path, map, 5)
 
-        console.log('Trunk suggestions:', suggestions.length, suggestions.map(s => s.node.id))
+        console.log(
+          'Trunk suggestions:',
+          suggestions.length,
+          suggestions.map((s) => s.node.id),
+        )
 
         const trunkHeadNodes: TrunkNode[] = suggestions.map(
           (suggestion, idx) => ({
@@ -134,7 +150,7 @@ export const progressionExplorerResource = defineResource({
             isRoot: false,
             isTrunkHead: true,
             parentId: rootNode.id,
-          })
+          }),
         )
 
         const trunkEdges: TrunkEdge[] = trunkHeadNodes.map((trunkNode, idx) => {
@@ -190,25 +206,35 @@ export const progressionExplorerResource = defineResource({
         const path = getPathToNode(state.trunkNodes, nodeId)
 
         // Get harmonic candidates (existing logic)
-        const harmonicCandidates = getScoredCandidatesV2(node.chordId, path, map)
-        console.log(`Harmonic candidates from map for ${node.chordId}:`, harmonicCandidates.length)
+        const harmonicCandidates = getScoredCandidatesV2(
+          node.chordId,
+          path,
+          map,
+        )
+        console.log(
+          `Harmonic candidates from map for ${node.chordId}:`,
+          harmonicCandidates.length,
+        )
 
         // Get statistical recommendations for ALL genres
         const genres = recommender.getGenres()
-        const genreRecommendations: Record<Genre, GenreCategorizedRecommendations> = {} as Record<Genre, GenreCategorizedRecommendations>
+        const genreRecommendations: Record<
+          Genre,
+          GenreCategorizedRecommendations
+        > = {} as Record<Genre, GenreCategorizedRecommendations>
 
         for (const genre of genres) {
           const statisticalRecs = await recommender.getRecommendations(
             node.chordId,
             genre,
-            50 // Increased from 30 to get more candidates
+            50, // Increased from 30 to get more candidates
           )
 
           // Create synthetic candidates for chords in statistical model but not in harmonic map
           const syntheticCandidates = createSyntheticCandidates(
             statisticalRecs,
             harmonicCandidates,
-            map
+            map,
           )
 
           // Combine harmonic + synthetic candidates
@@ -219,9 +245,8 @@ export const progressionExplorerResource = defineResource({
           // Categorize by genre (canonical/spicy split)
           genreRecommendations[genre] = categorizeByGenre(
             hybridCandidates,
-            genre
+            genre,
           )
-
         }
 
         // Collect all new nodes from genre recommendations to register
@@ -238,15 +263,14 @@ export const progressionExplorerResource = defineResource({
         }
 
         // Keep legacy categorization for backward compatibility
-        const categorized = categorizeRecommendations(harmonicCandidates, path, map)
-
-        // Keep legacy suggestions for backward compatibility
-        const suggestions = getSuggestedNextChords(
-          node.chordId,
+        const categorized = categorizeRecommendations(
+          harmonicCandidates,
           path,
           map,
-          5
         )
+
+        // Keep legacy suggestions for backward compatibility
+        const suggestions = getSuggestedNextChords(node.chordId, path, map, 5)
 
         set({
           nodeCandidates: {
@@ -290,13 +314,16 @@ export const progressionExplorerResource = defineResource({
               ...genreRecs.canonical,
               ...genreRecs.spicy,
             ]
-            const scoredCandidate = allGenreCandidates.find(c =>
-              c.node.id === chordId || enharmonicChordEqual(c.node.id, chordId)
+            const scoredCandidate = allGenreCandidates.find(
+              (c) =>
+                c.node.id === chordId ||
+                enharmonicChordEqual(c.node.id, chordId),
             )
             if (scoredCandidate) {
               breakdown = scoredCandidate.breakdown
               transitionStrength = scoredCandidate.breakdown.transitionStrength
-              matchedProgressions = scoredCandidate.breakdown.matchedProgressions
+              matchedProgressions =
+                scoredCandidate.breakdown.matchedProgressions
               break
             }
           }
@@ -312,13 +339,16 @@ export const progressionExplorerResource = defineResource({
               ...categorizedCandidates.exploratory,
               ...categorizedCandidates.resolution,
             ]
-            const scoredCandidate = allCandidates.find(c =>
-              c.node.id === chordId || enharmonicChordEqual(c.node.id, chordId)
+            const scoredCandidate = allCandidates.find(
+              (c) =>
+                c.node.id === chordId ||
+                enharmonicChordEqual(c.node.id, chordId),
             )
             if (scoredCandidate) {
               breakdown = scoredCandidate.breakdown
               transitionStrength = scoredCandidate.breakdown.transitionStrength
-              matchedProgressions = scoredCandidate.breakdown.matchedProgressions
+              matchedProgressions =
+                scoredCandidate.breakdown.matchedProgressions
             }
           }
         }
@@ -326,8 +356,9 @@ export const progressionExplorerResource = defineResource({
         // Fallback: Try legacy candidates
         if (!breakdown) {
           const candidates = state.nodeCandidates[parentNodeId] || []
-          const selectedSuggestion = candidates.find((c) =>
-            c.node.id === chordId || enharmonicChordEqual(c.node.id, chordId)
+          const selectedSuggestion = candidates.find(
+            (c) =>
+              c.node.id === chordId || enharmonicChordEqual(c.node.id, chordId),
           )
           if (selectedSuggestion) {
             transitionStrength = selectedSuggestion.transitionStrength
@@ -353,15 +384,17 @@ export const progressionExplorerResource = defineResource({
 
         // Look up nodes: try registry first (covers both map and synthetic nodes),
         // then fall back to map lookup, then genre candidates
-        const fromNode = state.nodeRegistry[parentNode.chordId]
-          ?? state.nodeRegistry[normalizeChordId(parentNode.chordId)]
-          ?? map.nodes.find((n) => n.id === parentNode.chordId)
-          ?? map.nodes.find((n) => enharmonicChordEqual(n.id, parentNode.chordId))
+        const fromNode =
+          state.nodeRegistry[parentNode.chordId] ??
+          state.nodeRegistry[normalizeChordId(parentNode.chordId)] ??
+          map.nodes.find((n) => n.id === parentNode.chordId) ??
+          map.nodes.find((n) => enharmonicChordEqual(n.id, parentNode.chordId))
 
-        let toNode: ProgressionNode | undefined = state.nodeRegistry[chordId]
-          ?? state.nodeRegistry[normalizeChordId(chordId)]
-          ?? map.nodes.find((n) => n.id === chordId)
-          ?? map.nodes.find((n) => enharmonicChordEqual(n.id, chordId))
+        let toNode: ProgressionNode | undefined =
+          state.nodeRegistry[chordId] ??
+          state.nodeRegistry[normalizeChordId(chordId)] ??
+          map.nodes.find((n) => n.id === chordId) ??
+          map.nodes.find((n) => enharmonicChordEqual(n.id, chordId))
 
         // For synthetic candidates not in registry/map, search genre candidates
         if (!toNode) {
@@ -369,9 +402,14 @@ export const progressionExplorerResource = defineResource({
           if (genreCands) {
             for (const genre of Object.keys(genreCands)) {
               const genreRecs = genreCands[genre as Genre]
-              const allGenreCandidates = [...genreRecs.canonical, ...genreRecs.spicy]
-              const found = allGenreCandidates.find(c =>
-                c.node.id === chordId || enharmonicChordEqual(c.node.id, chordId)
+              const allGenreCandidates = [
+                ...genreRecs.canonical,
+                ...genreRecs.spicy,
+              ]
+              const found = allGenreCandidates.find(
+                (c) =>
+                  c.node.id === chordId ||
+                  enharmonicChordEqual(c.node.id, chordId),
               )
               if (found) {
                 toNode = found.node
@@ -383,7 +421,9 @@ export const progressionExplorerResource = defineResource({
 
         // If we still can't find either node, bail out
         if (!fromNode || !toNode) {
-          console.warn(`Cannot find node for chord: from=${parentNode.chordId} (${!!fromNode}), to=${chordId} (${!!toNode})`)
+          console.warn(
+            `Cannot find node for chord: from=${parentNode.chordId} (${!!fromNode}), to=${chordId} (${!!toNode})`,
+          )
           return
         }
 
@@ -426,14 +466,23 @@ export const progressionExplorerResource = defineResource({
 
       clearCandidates: (nodeId) => {
         const state = get()
-        if (!state.nodeCandidates[nodeId] && !state.nodeCandidatesV2[nodeId] && !state.genreCandidates[nodeId]) return
+        if (
+          !state.nodeCandidates[nodeId] &&
+          !state.nodeCandidatesV2[nodeId] &&
+          !state.genreCandidates[nodeId]
+        )
+          return
         const nextCandidates = { ...state.nodeCandidates }
         delete nextCandidates[nodeId]
         const nextCandidatesV2 = { ...state.nodeCandidatesV2 }
         delete nextCandidatesV2[nodeId]
         const nextGenreCandidates = { ...state.genreCandidates }
         delete nextGenreCandidates[nodeId]
-        set({ nodeCandidates: nextCandidates, nodeCandidatesV2: nextCandidatesV2, genreCandidates: nextGenreCandidates })
+        set({
+          nodeCandidates: nextCandidates,
+          nodeCandidatesV2: nextCandidatesV2,
+          genreCandidates: nextGenreCandidates,
+        })
       },
 
       deleteNode: (nodeId) => {
@@ -455,9 +504,13 @@ export const progressionExplorerResource = defineResource({
 
         // Update parent to be a leaf again if this was its only child
         const parentId = node.parentId
-        const parentNode = parentId ? state.trunkNodes.find((n) => n.id === parentId) : null
+        const parentNode = parentId
+          ? state.trunkNodes.find((n) => n.id === parentId)
+          : null
         const parentHasOtherChildren = parentNode
-          ? state.trunkNodes.some((n) => n.parentId === parentId && !descendantIds.has(n.id))
+          ? state.trunkNodes.some(
+              (n) => n.parentId === parentId && !descendantIds.has(n.id),
+            )
           : false
 
         // Remove nodes and edges
@@ -471,7 +524,7 @@ export const progressionExplorerResource = defineResource({
           })
 
         const nextEdges = state.trunkEdges.filter(
-          (e) => !descendantIds.has(e.source) && !descendantIds.has(e.target)
+          (e) => !descendantIds.has(e.source) && !descendantIds.has(e.target),
         )
 
         // Clear candidates for deleted nodes
@@ -526,7 +579,7 @@ export const progressionExplorerResource = defineResource({
     return store
   },
 
-  halt: async () => { },
+  halt: async () => {},
 })
 
 function getPathToNode(nodes: TrunkNode[], nodeId: string): string[] {

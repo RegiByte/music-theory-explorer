@@ -42,7 +42,9 @@ export function KeyScalePicker({
     <div className={cn('space-y-2', className)}>
       <div className="flex items-center gap-2">
         {!hideLabels && (
-          <span className="text-xs font-medium text-muted-foreground w-10 shrink-0">Key</span>
+          <span className="text-xs font-medium text-muted-foreground w-10 shrink-0">
+            Key
+          </span>
         )}
         <NotePicker
           value={noteValue}
@@ -53,7 +55,9 @@ export function KeyScalePicker({
       </div>
       <div className="flex items-start gap-2">
         {!hideLabels && (
-          <span className="text-xs font-medium text-muted-foreground w-10 shrink-0 mt-1.5">Scale</span>
+          <span className="text-xs font-medium text-muted-foreground w-10 shrink-0 mt-1.5">
+            Scale
+          </span>
         )}
         <ScalePicker
           value={scaleValue}

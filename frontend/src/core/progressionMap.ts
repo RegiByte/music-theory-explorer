@@ -46,7 +46,7 @@ export function calculateTransitionStrength(from: Chord, to: Chord): number {
 
   const fromRootIdx = noteToIndex(from.root)
   const toRootIdx = noteToIndex(to.root)
-  const interval = ((toRootIdx - fromRootIdx) % 12 + 12) % 12
+  const interval = (((toRootIdx - fromRootIdx) % 12) + 12) % 12
 
   // Root motion by fifth (strongest progressions)
   // Down a 5th (up a 4th) = interval of 5 semitones - STRONGER
@@ -98,7 +98,8 @@ export function calculateTransitionStrength(from: Chord, to: Chord): number {
   }
 
   // Chromatic approach (half-step below target)
-  if (interval === 11) { // Half-step below
+  if (interval === 11) {
+    // Half-step below
     score += 0.1
   }
 
@@ -143,7 +144,7 @@ function getAvailableExtensions(quality: string): string[] {
  */
 export function buildProgressionMap(
   key: Note,
-  scaleType: ScaleType
+  scaleType: ScaleType,
 ): ProgressionMap {
   const nodes: ProgressionNode[] = []
   const edges: ProgressionEdge[] = []
@@ -219,7 +220,7 @@ export function buildProgressionMap(
       if (fromNode.id !== toNode.id) {
         const strength = calculateTransitionStrength(
           fromNode.chord,
-          toNode.chord
+          toNode.chord,
         )
 
         if (strength >= EDGE_THRESHOLD) {
@@ -247,7 +248,7 @@ export function buildProgressionMap(
  */
 export function getNodePosition(
   node: ProgressionNode,
-  allNodes: ProgressionNode[]
+  allNodes: ProgressionNode[],
 ): { row: number; col: number } {
   // Diatonic chords go in the center rows
   if (node.category === 'diatonic') {
@@ -279,7 +280,7 @@ export function getNodePosition(
   // Secondary dominants go in row 0
   if (node.category === 'secondary-dominant') {
     const secDomNodes = allNodes.filter(
-      (n) => n.category === 'secondary-dominant'
+      (n) => n.category === 'secondary-dominant',
     )
     const idx = secDomNodes.indexOf(node)
     return { row: 0, col: idx }
@@ -301,7 +302,7 @@ export function getNodePosition(
  */
 export function getNodeEdges(
   nodeId: string,
-  edges: ProgressionEdge[]
+  edges: ProgressionEdge[],
 ): { incoming: ProgressionEdge[]; outgoing: ProgressionEdge[] } {
   return {
     incoming: edges.filter((e) => e.to === nodeId),
@@ -315,7 +316,7 @@ export function getNodeEdges(
  */
 export function getSuggestedNextChords(
   currentNodeId: string,
-  map: ProgressionMap
+  map: ProgressionMap,
 ): Array<{ node: ProgressionNode; strength: number }> {
   const outgoingEdges = map.edges.filter((e) => e.from === currentNodeId)
 
@@ -334,7 +335,7 @@ export function getSuggestedNextChords(
  */
 export function validateProgression(
   nodeIds: string[],
-  map: ProgressionMap
+  map: ProgressionMap,
 ): {
   totalStrength: number
   averageStrength: number
@@ -376,13 +377,13 @@ export function validateProgression(
  */
 export function getHarmonicMovement(
   _fromNode: ProgressionNode,
-  toNode: ProgressionNode
+  toNode: ProgressionNode,
 ): HarmonicMovement {
   // The movement type is determined by the DESTINATION's function
   // - Moving TO a tonic chord = resolution
   // - Moving TO a dominant chord = building tension
   // - Moving TO a subdominant chord = departure/exploration
-  
+
   // Defensive: if toNode or its function is missing, default to subdominant
   // This can happen with synthetic candidates from the statistical model
   const harmonicFn = toNode?.function ?? 'subdominant'

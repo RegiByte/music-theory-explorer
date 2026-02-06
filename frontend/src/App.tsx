@@ -1,7 +1,13 @@
 import { useState } from 'react'
 import { useTranslation, Trans } from 'react-i18next'
 import { Button } from '@/components/ui/button'
-import { Section, KnowledgeBlock, DeepDive, ConceptTerm, SectionDivider } from '@/components/ui/section'
+import {
+  Section,
+  KnowledgeBlock,
+  DeepDive,
+  ConceptTerm,
+  SectionDivider,
+} from '@/components/ui/section'
 
 // Tools & Visualizations
 import { Fretboard } from '@/components/Fretboard'
@@ -17,7 +23,12 @@ import { CircleOfFifths } from '@/components/CircleOfFifths'
 import { ProgressionBuilder } from '@/components/ProgressionBuilder'
 import { ProgressionExplorerRoot } from '@/components/ProgressionExplorer/ProgressionExplorerRoot'
 import { MelodyExplorerRoot } from '@/components/MelodyExplorer'
-import { ChordFrequencyChart, GenreFingerprintsChart, TransitionHeatmap, GCentricUniverse } from '@/components/DataInsights'
+import {
+  ChordFrequencyChart,
+  GenreFingerprintsChart,
+  TransitionHeatmap,
+  GCentricUniverse,
+} from '@/components/DataInsights'
 
 export function App() {
   const [started, setStarted] = useState(false)
@@ -57,7 +68,9 @@ export function App() {
             </Button>
           </div>
 
-          <Button size={'xl'} onClick={() => setStarted(true)}>{t('landing.getStarted')}</Button>
+          <Button size={'xl'} onClick={() => setStarted(true)}>
+            {t('landing.getStarted')}
+          </Button>
         </div>
       </div>
     )
@@ -89,7 +102,12 @@ export function App() {
               <Trans
                 i18nKey="sections:s1.kb.p1"
                 components={{
-                  vibration: <ConceptTerm definition={t('concepts.vibration')} href="https://en.wikipedia.org/wiki/Vibration" />,
+                  vibration: (
+                    <ConceptTerm
+                      definition={t('concepts.vibration')}
+                      href="https://en.wikipedia.org/wiki/Vibration"
+                    />
+                  ),
                 }}
               />
             </p>
@@ -97,8 +115,18 @@ export function App() {
               <Trans
                 i18nKey="sections:s1.kb.p2"
                 components={{
-                  frequency: <ConceptTerm definition={t('concepts.frequency')} href="https://en.wikipedia.org/wiki/Frequency" />,
-                  hertz: <ConceptTerm definition={t('concepts.hertz')} href="https://en.wikipedia.org/wiki/Hertz" />,
+                  frequency: (
+                    <ConceptTerm
+                      definition={t('concepts.frequency')}
+                      href="https://en.wikipedia.org/wiki/Frequency"
+                    />
+                  ),
+                  hertz: (
+                    <ConceptTerm
+                      definition={t('concepts.hertz')}
+                      href="https://en.wikipedia.org/wiki/Hertz"
+                    />
+                  ),
                 }}
               />
             </p>
@@ -130,8 +158,13 @@ export function App() {
                   ['A', 'Lá'],
                   ['B', 'Si'],
                 ].map(([letter, solfege]) => (
-                  <div key={letter} className="rounded-md bg-white border border-amber-200 px-2 py-1.5">
-                    <div className="text-base font-bold text-gray-900">{letter}</div>
+                  <div
+                    key={letter}
+                    className="rounded-md bg-white border border-amber-200 px-2 py-1.5"
+                  >
+                    <div className="text-base font-bold text-gray-900">
+                      {letter}
+                    </div>
                     <div className="text-xs text-amber-700">{solfege}</div>
                   </div>
                 ))}
@@ -139,7 +172,9 @@ export function App() {
               <div className="text-xs text-amber-700 space-y-1">
                 <p>{t('sections:s1.notationDisclaimer.sharp')}</p>
                 <p>{t('sections:s1.notationDisclaimer.flat')}</p>
-                <p className="font-medium">{t('sections:s1.notationDisclaimer.example')}</p>
+                <p className="font-medium">
+                  {t('sections:s1.notationDisclaimer.example')}
+                </p>
               </div>
               <p className="text-xs text-amber-600 italic">
                 {t('sections:s1.notationDisclaimer.note')}
@@ -162,10 +197,7 @@ export function App() {
               />
             </p>
             <p>
-              <Trans
-                i18nKey="deepdives:s1.d2.p2"
-                components={{ i: <em /> }}
-              />
+              <Trans i18nKey="deepdives:s1.d2.p2" components={{ i: <em /> }} />
             </p>
           </DeepDive>
         </Section>
@@ -191,7 +223,12 @@ export function App() {
               <Trans
                 i18nKey="sections:s2.kb.p2"
                 components={{
-                  ratios: <ConceptTerm definition={t('concepts.ratios')} href="https://en.wikipedia.org/wiki/Pitch_(music)" />,
+                  ratios: (
+                    <ConceptTerm
+                      definition={t('concepts.ratios')}
+                      href="https://en.wikipedia.org/wiki/Pitch_(music)"
+                    />
+                  ),
                 }}
               />
             </p>
@@ -199,7 +236,12 @@ export function App() {
               <Trans
                 i18nKey="sections:s2.kb.p3"
                 components={{
-                  cents: <ConceptTerm definition={t('concepts.cents')} href="https://en.wikipedia.org/wiki/Cent_(music)" />,
+                  cents: (
+                    <ConceptTerm
+                      definition={t('concepts.cents')}
+                      href="https://en.wikipedia.org/wiki/Cent_(music)"
+                    />
+                  ),
                 }}
               />
             </p>
@@ -221,10 +263,7 @@ export function App() {
 
           <DeepDive title={t('deepdives:s2.d1.title')}>
             <p>
-              <Trans
-                i18nKey="deepdives:s2.d1.p1"
-                components={{ i: <em /> }}
-              />
+              <Trans i18nKey="deepdives:s2.d1.p1" components={{ i: <em /> }} />
             </p>
             <p>
               <Trans
@@ -265,9 +304,24 @@ export function App() {
               <Trans
                 i18nKey="sections:s3.kb.p1"
                 components={{
-                  fundamental: <ConceptTerm definition={t('concepts.fundamental')} href="https://en.wikipedia.org/wiki/Fundamental_frequency" />,
-                  overtones: <ConceptTerm definition={t('concepts.overtones')} href="https://en.wikipedia.org/wiki/Overtone" />,
-                  harmonicSeries: <ConceptTerm definition={t('concepts.harmonicSeries')} href="https://en.wikipedia.org/wiki/Harmonic_series_(music)" />,
+                  fundamental: (
+                    <ConceptTerm
+                      definition={t('concepts.fundamental')}
+                      href="https://en.wikipedia.org/wiki/Fundamental_frequency"
+                    />
+                  ),
+                  overtones: (
+                    <ConceptTerm
+                      definition={t('concepts.overtones')}
+                      href="https://en.wikipedia.org/wiki/Overtone"
+                    />
+                  ),
+                  harmonicSeries: (
+                    <ConceptTerm
+                      definition={t('concepts.harmonicSeries')}
+                      href="https://en.wikipedia.org/wiki/Harmonic_series_(music)"
+                    />
+                  ),
                 }}
               />
             </p>
@@ -281,8 +335,18 @@ export function App() {
               <Trans
                 i18nKey="sections:s3.kb.p3"
                 components={{
-                  consonance: <ConceptTerm definition={t('concepts.consonance')} href="https://en.wikipedia.org/wiki/Consonance_and_dissonance" />,
-                  dissonance: <ConceptTerm definition={t('concepts.dissonance')} href="https://en.wikipedia.org/wiki/Consonance_and_dissonance" />,
+                  consonance: (
+                    <ConceptTerm
+                      definition={t('concepts.consonance')}
+                      href="https://en.wikipedia.org/wiki/Consonance_and_dissonance"
+                    />
+                  ),
+                  dissonance: (
+                    <ConceptTerm
+                      definition={t('concepts.dissonance')}
+                      href="https://en.wikipedia.org/wiki/Consonance_and_dissonance"
+                    />
+                  ),
                 }}
               />
             </p>
@@ -325,16 +389,36 @@ export function App() {
               <Trans
                 i18nKey="sections:s4.kb.p1"
                 components={{
-                  interval: <ConceptTerm definition={t('concepts.interval')} href="https://en.wikipedia.org/wiki/Interval_(music)" />,
+                  interval: (
+                    <ConceptTerm
+                      definition={t('concepts.interval')}
+                      href="https://en.wikipedia.org/wiki/Interval_(music)"
+                    />
+                  ),
                   b: <strong />,
                 }}
               />
             </p>
             <p>{t('sections:s4.kb.p2')}</p>
             <ul>
-              <li><Trans i18nKey="sections:s4.kb.li1" components={{ b: <strong /> }} /></li>
-              <li><Trans i18nKey="sections:s4.kb.li2" components={{ b: <strong /> }} /></li>
-              <li><Trans i18nKey="sections:s4.kb.li3" components={{ b: <strong /> }} /></li>
+              <li>
+                <Trans
+                  i18nKey="sections:s4.kb.li1"
+                  components={{ b: <strong /> }}
+                />
+              </li>
+              <li>
+                <Trans
+                  i18nKey="sections:s4.kb.li2"
+                  components={{ b: <strong /> }}
+                />
+              </li>
+              <li>
+                <Trans
+                  i18nKey="sections:s4.kb.li3"
+                  components={{ b: <strong /> }}
+                />
+              </li>
             </ul>
             <p>
               <Trans
@@ -370,7 +454,12 @@ export function App() {
               <Trans
                 i18nKey="sections:s5.kb.p1"
                 components={{
-                  scale: <ConceptTerm definition={t('concepts.scale')} href="https://en.wikipedia.org/wiki/Scale_(music)" />,
+                  scale: (
+                    <ConceptTerm
+                      definition={t('concepts.scale')}
+                      href="https://en.wikipedia.org/wiki/Scale_(music)"
+                    />
+                  ),
                 }}
               />
             </p>
@@ -419,8 +508,18 @@ export function App() {
               <Trans
                 i18nKey="sections:s6.kb.p1"
                 components={{
-                  chord: <ConceptTerm definition={t('concepts.chord')} href="https://en.wikipedia.org/wiki/Chord_(music)" />,
-                  triad: <ConceptTerm definition={t('concepts.triad')} href="https://en.wikipedia.org/wiki/Triad_(music)" />,
+                  chord: (
+                    <ConceptTerm
+                      definition={t('concepts.chord')}
+                      href="https://en.wikipedia.org/wiki/Chord_(music)"
+                    />
+                  ),
+                  triad: (
+                    <ConceptTerm
+                      definition={t('concepts.triad')}
+                      href="https://en.wikipedia.org/wiki/Triad_(music)"
+                    />
+                  ),
                 }}
               />
             </p>
@@ -445,7 +544,12 @@ export function App() {
               <Trans
                 i18nKey="sections:s6.kb.p4"
                 components={{
-                  voicing: <ConceptTerm definition={t('concepts.voicing')} href="https://en.wikipedia.org/wiki/Voicing_(music)" />,
+                  voicing: (
+                    <ConceptTerm
+                      definition={t('concepts.voicing')}
+                      href="https://en.wikipedia.org/wiki/Voicing_(music)"
+                    />
+                  ),
                 }}
               />
             </p>
@@ -487,8 +591,18 @@ export function App() {
               <Trans
                 i18nKey="sections:s7.kb.p1"
                 components={{
-                  key: <ConceptTerm definition={t('concepts.key')} href="https://en.wikipedia.org/wiki/Key_(music)" />,
-                  tonic: <ConceptTerm definition={t('concepts.tonic')} href="https://en.wikipedia.org/wiki/Tonic_(music)" />,
+                  key: (
+                    <ConceptTerm
+                      definition={t('concepts.key')}
+                      href="https://en.wikipedia.org/wiki/Key_(music)"
+                    />
+                  ),
+                  tonic: (
+                    <ConceptTerm
+                      definition={t('concepts.tonic')}
+                      href="https://en.wikipedia.org/wiki/Tonic_(music)"
+                    />
+                  ),
                 }}
               />
             </p>
@@ -496,7 +610,12 @@ export function App() {
               <Trans
                 i18nKey="sections:s7.kb.p2"
                 components={{
-                  circleOfFifths: <ConceptTerm definition={t('concepts.circleOfFifths')} href="https://en.wikipedia.org/wiki/Circle_of_fifths" />,
+                  circleOfFifths: (
+                    <ConceptTerm
+                      definition={t('concepts.circleOfFifths')}
+                      href="https://en.wikipedia.org/wiki/Circle_of_fifths"
+                    />
+                  ),
                   b: <strong />,
                 }}
               />
@@ -505,7 +624,12 @@ export function App() {
               <Trans
                 i18nKey="sections:s7.kb.p3"
                 components={{
-                  diatonic: <ConceptTerm definition={t('concepts.diatonic')} href="https://en.wikipedia.org/wiki/Diatonic_and_chromatic" />,
+                  diatonic: (
+                    <ConceptTerm
+                      definition={t('concepts.diatonic')}
+                      href="https://en.wikipedia.org/wiki/Diatonic_and_chromatic"
+                    />
+                  ),
                 }}
               />
             </p>
@@ -547,21 +671,51 @@ export function App() {
               <Trans
                 i18nKey="sections:s8.kb.p1"
                 components={{
-                  progression: <ConceptTerm definition={t('concepts.chordProgression')} href="https://en.wikipedia.org/wiki/Chord_progression" />,
-                  harmonicFunction: <ConceptTerm definition={t('concepts.harmonicFunction')} href="https://en.wikipedia.org/wiki/Function_(music)" />,
+                  progression: (
+                    <ConceptTerm
+                      definition={t('concepts.chordProgression')}
+                      href="https://en.wikipedia.org/wiki/Chord_progression"
+                    />
+                  ),
+                  harmonicFunction: (
+                    <ConceptTerm
+                      definition={t('concepts.harmonicFunction')}
+                      href="https://en.wikipedia.org/wiki/Function_(music)"
+                    />
+                  ),
                 }}
               />
             </p>
             <ul>
-              <li><Trans i18nKey="sections:s8.kb.li1" components={{ b: <strong /> }} /></li>
-              <li><Trans i18nKey="sections:s8.kb.li2" components={{ b: <strong /> }} /></li>
-              <li><Trans i18nKey="sections:s8.kb.li3" components={{ b: <strong /> }} /></li>
+              <li>
+                <Trans
+                  i18nKey="sections:s8.kb.li1"
+                  components={{ b: <strong /> }}
+                />
+              </li>
+              <li>
+                <Trans
+                  i18nKey="sections:s8.kb.li2"
+                  components={{ b: <strong /> }}
+                />
+              </li>
+              <li>
+                <Trans
+                  i18nKey="sections:s8.kb.li3"
+                  components={{ b: <strong /> }}
+                />
+              </li>
             </ul>
             <p>
               <Trans
                 i18nKey="sections:s8.kb.p2"
                 components={{
-                  cadence: <ConceptTerm definition={t('concepts.cadence')} href="https://en.wikipedia.org/wiki/Cadence" />,
+                  cadence: (
+                    <ConceptTerm
+                      definition={t('concepts.cadence')}
+                      href="https://en.wikipedia.org/wiki/Cadence"
+                    />
+                  ),
                   b: <strong />,
                 }}
               />
@@ -624,17 +778,16 @@ export function App() {
               />
             </p>
             <p>
-              <Trans
-                i18nKey="sections:s9.kb.p2"
-                components={{ i: <em /> }}
-              />
+              <Trans i18nKey="sections:s9.kb.p2" components={{ i: <em /> }} />
             </p>
           </KnowledgeBlock>
 
           {/* 9a: Progression Explorer */}
           <div className="space-y-4">
             <div>
-              <h3 className="text-2xl font-bold mb-2">{t('sections:s9.progressionExplorer.title')}</h3>
+              <h3 className="text-2xl font-bold mb-2">
+                {t('sections:s9.progressionExplorer.title')}
+              </h3>
               <p className="text-muted-foreground max-w-3xl">
                 {t('sections:s9.progressionExplorer.description')}
               </p>
@@ -645,7 +798,9 @@ export function App() {
           {/* 9b: Melody Explorer */}
           <div className="space-y-4 pt-8">
             <div>
-              <h3 className="text-2xl font-bold mb-2">{t('sections:s9.melodyExplorer.title')}</h3>
+              <h3 className="text-2xl font-bold mb-2">
+                {t('sections:s9.melodyExplorer.title')}
+              </h3>
               <p className="text-muted-foreground max-w-3xl">
                 {t('sections:s9.melodyExplorer.description')}
               </p>
@@ -656,7 +811,9 @@ export function App() {
           {/* 9c: Data Insights */}
           <div className="space-y-6 pt-8">
             <div>
-              <h3 className="text-2xl font-bold mb-2">{t('sections:s9.dataInsights.title')}</h3>
+              <h3 className="text-2xl font-bold mb-2">
+                {t('sections:s9.dataInsights.title')}
+              </h3>
               <p className="text-muted-foreground max-w-3xl">
                 {t('sections:s9.dataInsights.description')}
               </p>
@@ -716,12 +873,8 @@ export function App() {
 
         {/* Footer */}
         <footer className="mt-20 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>
-            {t('footer.builtWith')}
-          </p>
-          <p className="mt-1">
-            {t('footer.data')}
-          </p>
+          <p>{t('footer.builtWith')}</p>
+          <p className="mt-1">{t('footer.data')}</p>
         </footer>
       </div>
     </div>

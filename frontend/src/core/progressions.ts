@@ -8,12 +8,10 @@ import type { Note, ScaleType, ProgressionChord } from '@/schemas'
 export function buildProgression(
   key: Note,
   scaleType: ScaleType,
-  degrees: readonly number[]
+  degrees: readonly number[],
 ): ProgressionChord[] {
   const diatonicChords =
-    scaleType === 'major'
-      ? getDiatonicChords(key)
-      : getDiatonicChordsMinor(key)
+    scaleType === 'major' ? getDiatonicChords(key) : getDiatonicChordsMinor(key)
 
   return degrees.map((degree, index) => {
     const diatonicChord = diatonicChords[degree - 1]
@@ -61,7 +59,7 @@ export function getHarmonicFunction(degree: number): string {
  */
 export function calculateResolutionStrength(
   fromDegree: number,
-  toDegree: number
+  toDegree: number,
 ): number {
   // V -> I is strongest (1.0)
   if (fromDegree === 5 && toDegree === 1) return 1.0

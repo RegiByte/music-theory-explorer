@@ -30,20 +30,20 @@ export const ScaleTypeSchema = z.enum([
   'lydian',
   'mixolydian',
   'major_bebop',
-  
+
   // Minor family
   'minor',
   'dorian',
   'phrygian',
   'locrian',
   'minor_bebop',
-  
+
   // Harmonic minor and modes
   'harmonic_minor',
   'phrygian_dominant',
   'locrian_natural6',
   'ionian_augmented',
-  
+
   // Melodic minor and modes (jazz)
   'melodic_minor',
   'melodic_minor_mode2_dorian_b2',
@@ -52,18 +52,18 @@ export const ScaleTypeSchema = z.enum([
   'melodic_minor_mode5_mixolydian_b6',
   'melodic_minor_mode6_locrian_n2',
   'melodic_minor_mode7_altered',
-  
+
   // Symmetric scales
   'whole_tone',
   'diminished_half_whole',
   'diminished_whole_half',
-  
+
   // Exotic / World scales
   'hungarian_minor',
   'double_harmonic_major',
   'neapolitan_minor',
   'neapolitan_major',
-  
+
   // Pentatonic scales
   'pentatonic_major',
   'pentatonic_minor',
@@ -71,7 +71,7 @@ export const ScaleTypeSchema = z.enum([
   'in_sen',
   'hirajoshi',
   'iwato',
-  
+
   // Blues
   'blues',
 ])
@@ -126,10 +126,12 @@ export const ChordVoicingSchema = z.object({
   difficulty: z.number().min(0).max(10),
   consonance: z.number().min(0).max(1),
   detectedQuality: ChordQualitySchema.optional(),
-  metadata: z.object({
-    minFret: z.number().min(0).max(12),
-    maxFret: z.number().min(0).max(12),
-  }).optional(),
+  metadata: z
+    .object({
+      minFret: z.number().min(0).max(12),
+      maxFret: z.number().min(0).max(12),
+    })
+    .optional(),
 })
 
 // Interval schema
@@ -189,7 +191,11 @@ export const MelodyNoteWithMuteSchema = z.object({
 })
 
 // Harmonic function (for progression map)
-export const HarmonicFunctionSchema = z.enum(['tonic', 'subdominant', 'dominant'])
+export const HarmonicFunctionSchema = z.enum([
+  'tonic',
+  'subdominant',
+  'dominant',
+])
 
 // Chord category (for progression map)
 export const ChordCategorySchema = z.enum([
@@ -297,8 +303,6 @@ export const PatternMatchResultSchema = z.object({
   norm: z.number(),
 })
 
-
-
 // Genre schema - 9 genres from the trained models
 export const GenreSchema = z.enum([
   'pop',
@@ -343,7 +347,6 @@ export const FrequencyStatsSchema = z.object({
   p25: z.number(), // 25th percentile
   p75: z.number(), // 75th percentile
 })
-
 
 // Enhanced score breakdown
 export const ScoreBreakdownSchema = z.object({
@@ -401,8 +404,6 @@ export const GenreCategorizedRecommendationsSchema = z.object({
   frequencyStats: FrequencyStatsSchema, // Distribution stats for relative rarity
 })
 
-
-
 // Type inference (no runtime validation needed)
 export type Note = z.infer<typeof NoteSchema>
 export type ScaleType = z.infer<typeof ScaleTypeSchema>
@@ -428,15 +429,23 @@ export type TrunkNode = z.infer<typeof TrunkNodeSchema>
 export type TrunkEdge = z.infer<typeof TrunkEdgeSchema>
 export type TrunkState = z.infer<typeof TrunkStateSchema>
 export type ColorClass = z.infer<typeof ColorClassSchema>
-export type RecommendationCategory = z.infer<typeof RecommendationCategorySchema>
+export type RecommendationCategory = z.infer<
+  typeof RecommendationCategorySchema
+>
 export type PatternMatch = z.infer<typeof PatternMatchSchema>
 export type PatternMatchResult = z.infer<typeof PatternMatchResultSchema>
 export type ScoreBreakdown = z.infer<typeof ScoreBreakdownSchema>
 export type ScoredCandidate = z.infer<typeof ScoredCandidateSchema>
-export type CategorizedRecommendations = z.infer<typeof CategorizedRecommendationsSchema>
+export type CategorizedRecommendations = z.infer<
+  typeof CategorizedRecommendationsSchema
+>
 export type Genre = z.infer<typeof GenreSchema>
 export type MarkovTransition = z.infer<typeof MarkovTransitionSchema>
 export type TrainedPattern = z.infer<typeof TrainedPatternSchema>
-export type StatisticalRecommendation = z.infer<typeof StatisticalRecommendationSchema>
+export type StatisticalRecommendation = z.infer<
+  typeof StatisticalRecommendationSchema
+>
 export type FrequencyStats = z.infer<typeof FrequencyStatsSchema>
-export type GenreCategorizedRecommendations = z.infer<typeof GenreCategorizedRecommendationsSchema>
+export type GenreCategorizedRecommendations = z.infer<
+  typeof GenreCategorizedRecommendationsSchema
+>

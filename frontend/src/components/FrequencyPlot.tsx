@@ -28,7 +28,7 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
 )
 
 type ScaleType = 'linear' | 'log' | 'both'
@@ -64,7 +64,7 @@ export function FrequencyPlot() {
       return {
         label: t('frequencyPlot.stringLabel', { string }),
         data: data.map((point) =>
-          scaleType === 'log' ? point.logFrequency : point.frequency
+          scaleType === 'log' ? point.logFrequency : point.frequency,
         ),
         borderColor: STRING_COLORS[string],
         backgroundColor: STRING_COLORS[string] + '40',
@@ -144,7 +144,7 @@ export function FrequencyPlot() {
   const createChartOptions = (
     data: typeof chartData,
     isLogScale: boolean,
-    title: string
+    title: string,
   ): ChartOptions<'line'> => ({
     responsive: true,
     maintainAspectRatio: false,
@@ -257,9 +257,9 @@ export function FrequencyPlot() {
         scaleType === 'log',
         scaleType === 'log'
           ? t('frequencyPlot.logChartTitle')
-          : t('frequencyPlot.linearChartTitle')
+          : t('frequencyPlot.linearChartTitle'),
       ),
-    [scaleType, chartData, audio, t]
+    [scaleType, chartData, audio, t],
   )
 
   // Chart options for linear chart in "both" mode
@@ -268,20 +268,16 @@ export function FrequencyPlot() {
       createChartOptions(
         linearChartData,
         false,
-        t('frequencyPlot.linearChartTitle')
+        t('frequencyPlot.linearChartTitle'),
       ),
-    [linearChartData, audio, t]
+    [linearChartData, audio, t],
   )
 
   // Chart options for log chart in "both" mode
   const logChartOptions: ChartOptions<'line'> = useMemo(
     () =>
-      createChartOptions(
-        logChartData,
-        true,
-        t('frequencyPlot.logChartTitle')
-      ),
-    [logChartData, audio, t]
+      createChartOptions(logChartData, true, t('frequencyPlot.logChartTitle')),
+    [logChartData, audio, t],
   )
 
   return (

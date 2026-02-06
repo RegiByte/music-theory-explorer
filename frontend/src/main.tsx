@@ -6,11 +6,10 @@ import App from './App.tsx'
 import './i18n'
 import './index.css'
 
-
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Suspense fallback={<PageLoadingFallback />}>
       <App />
     </Suspense>
-  </StrictMode>
+  </StrictMode>,
 )

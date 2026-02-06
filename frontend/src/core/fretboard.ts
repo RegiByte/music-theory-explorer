@@ -6,10 +6,7 @@ import type { Note, UkuleleString } from '@/schemas'
  * Get note at a specific fretboard position
  * Extracted from Fretboard component for reusability
  */
-export function getNoteAtPosition(
-  string: UkuleleString,
-  fret: number
-): Note {
+export function getNoteAtPosition(string: UkuleleString, fret: number): Note {
   const stringBaseSemitone = UKULELE_TUNING[string]
   const semitones = stringBaseSemitone + fret
   const noteIdx = (noteToIndex('C') + semitones) % 12
@@ -22,7 +19,7 @@ export function getNoteAtPosition(
 export function getFrequencyAtPosition(
   string: UkuleleString,
   fret: number,
-  baseFreq: number = 261.63 // C4
+  baseFreq: number = 261.63, // C4
 ): number {
   const stringBaseSemitone = UKULELE_TUNING[string]
   const semitones = stringBaseSemitone + fret
@@ -37,7 +34,7 @@ export function getFrequencyAtPosition(
 export function findNotePositions(
   notes: Note[],
   strings: UkuleleString[] = ['A', 'E', 'C', 'G'],
-  maxFret: number = 12
+  maxFret: number = 12,
 ): Array<{ string: UkuleleString; fret: number; note: Note }> {
   const positions: Array<{ string: UkuleleString; fret: number; note: Note }> =
     []
@@ -60,7 +57,7 @@ export function findNotePositions(
 export function findPositionsForNote(
   note: Note,
   strings: UkuleleString[] = ['A', 'E', 'C', 'G'],
-  maxFret: number = 12
+  maxFret: number = 12,
 ): Array<{ string: UkuleleString; fret: number }> {
   const positions: Array<{ string: UkuleleString; fret: number }> = []
 
@@ -82,7 +79,7 @@ export function findPositionsForNote(
  */
 export function getAllFretboardNotes(
   strings: UkuleleString[] = ['A', 'E', 'C', 'G'],
-  maxFret: number = 12
+  maxFret: number = 12,
 ): Note[] {
   const noteSet = new Set<Note>()
 

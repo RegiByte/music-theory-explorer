@@ -15,7 +15,11 @@ import { useResource } from '@/system'
 import { Card } from '@/components/ui/card'
 import { GenrePicker } from '@/components/pickers'
 import { GENRE_DISPLAY, GENRE_COLORS, ALL_GENRES } from '@/core/musicData'
-import { computeGenreFingerprint, FINGERPRINT_DIMENSIONS, type GenreFingerprint } from './genreFingerprints'
+import {
+  computeGenreFingerprint,
+  FINGERPRINT_DIMENSIONS,
+  type GenreFingerprint,
+} from './genreFingerprints'
 import type { Genre } from '@/schemas'
 
 ChartJS.register(
@@ -24,25 +28,37 @@ ChartJS.register(
   LineElement,
   Filler,
   Tooltip,
-  Legend
+  Legend,
 )
 
 /** Chart.js needs border/bg format for datasets */
 const CHART_GENRE_COLORS: Record<Genre, { border: string; bg: string }> = {
-  pop:         { border: GENRE_COLORS.pop.solid,         bg: GENRE_COLORS.pop.bg },
-  rock:        { border: GENRE_COLORS.rock.solid,        bg: GENRE_COLORS.rock.bg },
-  country:     { border: GENRE_COLORS.country.solid,     bg: GENRE_COLORS.country.bg },
-  punk:        { border: GENRE_COLORS.punk.solid,        bg: GENRE_COLORS.punk.bg },
-  alternative: { border: GENRE_COLORS.alternative.solid, bg: GENRE_COLORS.alternative.bg },
-  'pop rock':  { border: GENRE_COLORS['pop rock'].solid, bg: GENRE_COLORS['pop rock'].bg },
-  rap:         { border: GENRE_COLORS.rap.solid,         bg: GENRE_COLORS.rap.bg },
-  metal:       { border: GENRE_COLORS.metal.solid,       bg: GENRE_COLORS.metal.bg },
-  soul:        { border: GENRE_COLORS.soul.solid,        bg: GENRE_COLORS.soul.bg },
+  pop: { border: GENRE_COLORS.pop.solid, bg: GENRE_COLORS.pop.bg },
+  rock: { border: GENRE_COLORS.rock.solid, bg: GENRE_COLORS.rock.bg },
+  country: { border: GENRE_COLORS.country.solid, bg: GENRE_COLORS.country.bg },
+  punk: { border: GENRE_COLORS.punk.solid, bg: GENRE_COLORS.punk.bg },
+  alternative: {
+    border: GENRE_COLORS.alternative.solid,
+    bg: GENRE_COLORS.alternative.bg,
+  },
+  'pop rock': {
+    border: GENRE_COLORS['pop rock'].solid,
+    bg: GENRE_COLORS['pop rock'].bg,
+  },
+  rap: { border: GENRE_COLORS.rap.solid, bg: GENRE_COLORS.rap.bg },
+  metal: { border: GENRE_COLORS.metal.solid, bg: GENRE_COLORS.metal.bg },
+  soul: { border: GENRE_COLORS.soul.solid, bg: GENRE_COLORS.soul.bg },
 }
 
 export function GenreFingerprintsChart() {
-  const [selectedGenres, setSelectedGenres] = useState<Genre[]>(['pop', 'rock', 'metal'])
-  const [fingerprints, setFingerprints] = useState<Record<Genre, GenreFingerprint>>({} as any)
+  const [selectedGenres, setSelectedGenres] = useState<Genre[]>([
+    'pop',
+    'rock',
+    'metal',
+  ])
+  const [fingerprints, setFingerprints] = useState<
+    Record<Genre, GenreFingerprint>
+  >({} as any)
   const [loading, setLoading] = useState(true)
   const { t } = useTranslation('tools')
   const recommender = useResource('recommender')
@@ -57,7 +73,11 @@ export function GenreFingerprintsChart() {
           recommender.getChordFrequencies(genre),
           recommender.getTransitionMatrix(genre),
         ])
-        results[genre] = computeGenreFingerprint(genre, frequencies, transitions)
+        results[genre] = computeGenreFingerprint(
+          genre,
+          frequencies,
+          transitions,
+        )
       }
       setFingerprints(results as Record<Genre, GenreFingerprint>)
       setLoading(false)
@@ -140,13 +160,15 @@ export function GenreFingerprintsChart() {
         },
       },
     }),
-    [t]
+    [t],
   )
 
   if (loading) {
     return (
       <Card className="p-6">
-        <p className="text-muted-foreground text-center py-12">{t('genreFingerprintsChart.loading')}</p>
+        <p className="text-muted-foreground text-center py-12">
+          {t('genreFingerprintsChart.loading')}
+        </p>
       </Card>
     )
   }
@@ -154,7 +176,9 @@ export function GenreFingerprintsChart() {
   return (
     <Card className="p-6">
       <div className="mb-4 space-y-2">
-        <h3 className="text-xl font-semibold">{t('genreFingerprintsChart.title')}</h3>
+        <h3 className="text-xl font-semibold">
+          {t('genreFingerprintsChart.title')}
+        </h3>
         <GenrePicker
           value={selectedGenres}
           onValueChange={setSelectedGenres}

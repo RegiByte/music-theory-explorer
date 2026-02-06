@@ -23,11 +23,11 @@ export function VoicingCard({
 }: VoicingCardProps) {
   const { t } = useTranslation('tools')
   const difficulty = getDifficultyLabel(voicing.difficulty)
-  
+
   // Check if detected quality differs from expected quality
   const qualityMismatch =
     voicing.detectedQuality && voicing.detectedQuality !== voicing.chord.quality
-  
+
   const detectedChordSymbol =
     qualityMismatch && voicing.detectedQuality
       ? getChordSymbol({ ...voicing.chord, quality: voicing.detectedQuality })
@@ -40,8 +40,9 @@ export function VoicingCard({
 
   return (
     <Card
-      className={`cursor-pointer transition-all hover:shadow-md ${isSelected ? 'ring-2 ring-blue-500 shadow-md' : ''
-        }`}
+      className={`cursor-pointer transition-all hover:shadow-md ${
+        isSelected ? 'ring-2 ring-blue-500 shadow-md' : ''
+      }`}
       onClick={onSelect}
     >
       <CardContent className="p-4 space-y-3">
@@ -82,7 +83,10 @@ export function VoicingCard({
         {/* Quality mismatch badge (if applicable) */}
         {qualityMismatch && detectedChordSymbol && (
           <div className="flex items-center justify-center">
-            <Badge variant="secondary" className="bg-amber-100 text-amber-800 border-amber-300">
+            <Badge
+              variant="secondary"
+              className="bg-amber-100 text-amber-800 border-amber-300"
+            >
               {t('voicingCard.actually', { chord: detectedChordSymbol })}
             </Badge>
           </div>
@@ -93,7 +97,9 @@ export function VoicingCard({
           <div className="flex items-center gap-2">
             <Badge variant={difficulty.variant}>{difficulty.label}</Badge>
             <span className="text-gray-600">
-              {voicing.fretSpan === 1 ? t('voicingCard.span', { count: 1 }) : t('voicingCard.span_plural', { count: voicing.fretSpan })}
+              {voicing.fretSpan === 1
+                ? t('voicingCard.span', { count: 1 })
+                : t('voicingCard.span_plural', { count: voicing.fretSpan })}
             </span>
           </div>
           <span className="text-gray-600">

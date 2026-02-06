@@ -1,10 +1,10 @@
 /**
  * Enharmonic equivalence utilities.
- * 
+ *
  * In music, some notes have two names: A# and Bb are the same pitch.
  * This module provides the canonical mapping between sharp and flat forms,
  * display preference logic, and enharmonic-aware comparison.
- * 
+ *
  * Internal convention: CHROMATIC array uses sharps as the canonical form.
  * Display: user can toggle between sharps, flats, or auto (key-based).
  */
@@ -17,11 +17,11 @@ export type NotationPreference = 'sharp' | 'flat' | 'auto'
 // --- Enharmonic mappings ---
 
 const FLAT_TO_SHARP: Record<string, string> = {
-  'Bb': 'A#',
-  'Db': 'C#',
-  'Eb': 'D#',
-  'Gb': 'F#',
-  'Ab': 'G#',
+  Bb: 'A#',
+  Db: 'C#',
+  Eb: 'D#',
+  Gb: 'F#',
+  Ab: 'G#',
 }
 
 const SHARP_TO_FLAT: Record<string, string> = {
@@ -47,7 +47,7 @@ const FLAT_MINOR_KEYS = new Set(['D', 'G', 'C', 'F', 'Bb', 'Eb'])
 /**
  * Convert a note to its sharp equivalent.
  * Natural notes and already-sharp notes pass through unchanged.
- * 
+ *
  * Examples: Bb -> A#, Db -> C#, C -> C, F# -> F#
  */
 export function toSharp(note: Note): Note {
@@ -57,7 +57,7 @@ export function toSharp(note: Note): Note {
 /**
  * Convert a note to its flat equivalent.
  * Natural notes and already-flat notes pass through unchanged.
- * 
+ *
  * Examples: A# -> Bb, C# -> Db, C -> C, Bb -> Bb
  */
 export function toFlat(note: Note): Note {
@@ -67,7 +67,7 @@ export function toFlat(note: Note): Note {
 /**
  * Get the canonical (sharp) form of a note.
  * This is what we use for internal indexing and comparison.
- * 
+ *
  * Examples: Bb -> A#, C -> C, F# -> F#
  */
 export function canonicalNote(note: Note): Note {
@@ -76,7 +76,7 @@ export function canonicalNote(note: Note): Note {
 
 /**
  * Check if two notes are enharmonically equivalent.
- * 
+ *
  * Examples: enharmonicEqual('A#', 'Bb') -> true
  *          enharmonicEqual('C', 'C') -> true
  *          enharmonicEqual('C', 'D') -> false
@@ -89,15 +89,18 @@ export function enharmonicEqual(a: Note, b: Note): boolean {
 
 /**
  * Determine the preferred notation for a given key.
- * 
+ *
  * Based on music theory convention:
  * - F major, Bb major, Eb major, Ab major, Db major, Gb major -> flats
  * - G major, D major, A major, E major, B major, F# major, C# major -> sharps
  * - C major -> sharps (convention)
  */
-export function getPreferredNotation(key: Note, scaleType?: string): 'sharp' | 'flat' {
+export function getPreferredNotation(
+  key: Note,
+  scaleType?: string,
+): 'sharp' | 'flat' {
   const canonical = canonicalNote(key)
-  
+
   if (scaleType === 'minor') {
     // For minor keys, check the flat minor keys set
     // We check both the original and canonical forms
@@ -106,7 +109,7 @@ export function getPreferredNotation(key: Note, scaleType?: string): 'sharp' | '
     }
     return 'sharp'
   }
-  
+
   // For major keys (or unspecified)
   if (FLAT_MAJOR_KEYS.has(key) || FLAT_MAJOR_KEYS.has(canonical)) {
     return 'flat'
@@ -116,7 +119,7 @@ export function getPreferredNotation(key: Note, scaleType?: string): 'sharp' | '
 
 /**
  * Display a note according to the user's notation preference.
- * 
+ *
  * - 'sharp': always use sharps (A#, C#, D#, F#, G#)
  * - 'flat': always use flats (Bb, Db, Eb, Gb, Ab)
  * - 'auto': use the musically conventional notation for the given key
@@ -125,11 +128,11 @@ export function displayNote(
   note: Note,
   preference: NotationPreference,
   key?: Note,
-  scaleType?: string
+  scaleType?: string,
 ): Note {
   if (preference === 'sharp') return toSharp(note)
   if (preference === 'flat') return toFlat(note)
-  
+
   // Auto mode: determine from key
   const effectivePref = key ? getPreferredNotation(key, scaleType) : 'sharp'
   return effectivePref === 'flat' ? toFlat(note) : toSharp(note)
@@ -140,7 +143,7 @@ export function displayNote(
 /**
  * Extract the root note portion from a chord ID string.
  * Returns [rootNote, remainder] or null if parsing fails.
- * 
+ *
  * Examples:
  *   "Bbm7" -> ["Bb", "m7"]
  *   "C#dim" -> ["C#", "dim"]
@@ -166,7 +169,7 @@ function splitChordRoot(chordId: string): [string, string] | null {
 
 /**
  * Normalize a chord ID to its canonical (sharp) form.
- * 
+ *
  * Examples: "Bbm" -> "A#m", "Ebmaj7" -> "D#maj7", "Am" -> "Am"
  */
 export function normalizeChordId(chordId: string): string {
@@ -180,7 +183,7 @@ export function normalizeChordId(chordId: string): string {
 
 /**
  * Convert a chord ID to display form based on notation preference.
- * 
+ *
  * Examples with 'flat' preference:
  *   "A#m" -> "Bbm"
  *   "C#7" -> "Db7"
@@ -190,19 +193,19 @@ export function displayChordId(
   chordId: string,
   preference: NotationPreference,
   key?: Note,
-  scaleType?: string
+  scaleType?: string,
 ): string {
   const parts = splitChordRoot(chordId)
   if (!parts) return chordId
   const [root, suffix] = parts
-  
+
   const displayRoot = displayNote(root as Note, preference, key, scaleType)
   return `${displayRoot}${suffix}`
 }
 
 /**
  * Check if two chord IDs are enharmonically equivalent.
- * 
+ *
  * Examples: enharmonicChordEqual("Bbm", "A#m") -> true
  *          enharmonicChordEqual("C", "C") -> true
  *          enharmonicChordEqual("Cm", "C") -> false (different quality)

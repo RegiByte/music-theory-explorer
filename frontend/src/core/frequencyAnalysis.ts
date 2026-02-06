@@ -20,7 +20,7 @@ export interface FretboardDataPoint {
  * From notebook: Step 1 - The "Ahhh" Moment
  */
 export function generateFretboardData(
-  maxFret: number = 12
+  maxFret: number = 12,
 ): FretboardDataPoint[] {
   const strings: UkuleleString[] = ['G', 'C', 'E', 'A']
   const data: FretboardDataPoint[] = []
@@ -50,7 +50,7 @@ export function generateFretboardData(
  */
 export function getStringData(
   string: UkuleleString,
-  maxFret: number = 12
+  maxFret: number = 12,
 ): FretboardDataPoint[] {
   const data: FretboardDataPoint[] = []
 
@@ -76,7 +76,7 @@ export function getStringData(
  * Returns data grouped by string, ready for Chart.js
  */
 export function getAllStringsData(
-  maxFret: number = 12
+  maxFret: number = 12,
 ): Record<UkuleleString, FretboardDataPoint[]> {
   const strings: UkuleleString[] = ['G', 'C', 'E', 'A']
   const result: Partial<Record<UkuleleString, FretboardDataPoint[]>> = {}

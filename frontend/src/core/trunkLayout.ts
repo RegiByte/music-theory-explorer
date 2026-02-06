@@ -1,11 +1,11 @@
 import type { TrunkNode, TrunkEdge } from '@/schemas'
 
 export const LAYOUT_CONSTANTS = {
-  HORIZONTAL_SPACING: 200,  // Distance between depth levels
-  VERTICAL_SPACING: 120,    // Base vertical spacing
-  DIAGONAL_OFFSET: 60,      // Vertical offset per depth for diagonals
-  ROOT_X: 100,              // Starting X position
-  ROOT_Y: 400,              // Center Y position (for 800px height)
+  HORIZONTAL_SPACING: 200, // Distance between depth levels
+  VERTICAL_SPACING: 120, // Base vertical spacing
+  DIAGONAL_OFFSET: 60, // Vertical offset per depth for diagonals
+  ROOT_X: 100, // Starting X position
+  ROOT_Y: 400, // Center Y position (for 800px height)
 }
 
 /**
@@ -16,19 +16,23 @@ export const LAYOUT_CONSTANTS = {
  * - Trunk 1 (middle): straight horizontal
  * - Trunk 2 (bottom): diagonal downward
  */
-export function calculateNodePosition(node: TrunkNode): { x: number; y: number } {
-  const { ROOT_X, ROOT_Y, HORIZONTAL_SPACING, DIAGONAL_OFFSET } = LAYOUT_CONSTANTS
-  
+export function calculateNodePosition(node: TrunkNode): {
+  x: number
+  y: number
+} {
+  const { ROOT_X, ROOT_Y, HORIZONTAL_SPACING, DIAGONAL_OFFSET } =
+    LAYOUT_CONSTANTS
+
   // Root node
   if (node.isRoot) {
     return { x: ROOT_X, y: ROOT_Y }
   }
-  
+
   const x = ROOT_X + node.depth * HORIZONTAL_SPACING
-  
+
   // Calculate Y based on trunk
   let y = ROOT_Y
-  
+
   if (node.trunkId === 0) {
     // Top trunk: diagonal upward
     y = ROOT_Y - node.depth * DIAGONAL_OFFSET
@@ -39,7 +43,7 @@ export function calculateNodePosition(node: TrunkNode): { x: number; y: number }
     // Bottom trunk: diagonal downward
     y = ROOT_Y + node.depth * DIAGONAL_OFFSET
   }
-  
+
   return { x, y }
 }
 
@@ -49,10 +53,10 @@ export function calculateNodePosition(node: TrunkNode): { x: number; y: number }
 export function toReactFlowNode(
   trunkNode: TrunkNode,
   isSelected: boolean = false,
-  showExpand: boolean = false
+  showExpand: boolean = false,
 ): any {
   const position = calculateNodePosition(trunkNode)
-  
+
   return {
     id: trunkNode.id,
     type: 'chordNode', // Custom node type

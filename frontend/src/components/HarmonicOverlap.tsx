@@ -34,7 +34,7 @@ ChartJS.register(
   LineElement,
   PointElement,
   Tooltip,
-  Legend
+  Legend,
 )
 
 const COLORS = {
@@ -45,7 +45,7 @@ const COLORS = {
 } as const
 
 function getConsonanceBadgeColor(
-  consonance: number
+  consonance: number,
 ): 'default' | 'secondary' | 'destructive' {
   if (consonance >= 0.8) return 'default'
   if (consonance >= 0.5) return 'secondary'
@@ -76,7 +76,7 @@ export function HarmonicOverlap() {
   // Analyze interval
   const interval = useMemo(
     () => analyzeInterval(note1, note2, freq1, freq2),
-    [note1, note2, freq1, freq2]
+    [note1, note2, freq1, freq2],
   )
 
   // Generate harmonics and find overlaps
@@ -84,13 +84,13 @@ export function HarmonicOverlap() {
   const harmonics2 = useMemo(() => generateHarmonics(freq2), [freq2])
   const overlaps = useMemo(
     () => findHarmonicOverlap(freq1, freq2),
-    [freq1, freq2]
+    [freq1, freq2],
   )
 
   // Count overlapping harmonics
   const overlapCount = useMemo(
     () => overlaps.filter((o) => o.isOverlapping).length,
-    [overlaps]
+    [overlaps],
   )
 
   // Animation loop
@@ -130,12 +130,14 @@ export function HarmonicOverlap() {
   // Generate waveforms for visualization
   const waveforms = useMemo(
     () => generateWaveformPair(freq1, freq2, 3, phase),
-    [freq1, freq2, phase]
+    [freq1, freq2, phase],
   )
 
   // Waveform chart data
   const waveformChartData = useMemo(() => {
-    const timeLabels = waveforms.waveform1.map((p) => (p.time * 1000).toFixed(1))
+    const timeLabels = waveforms.waveform1.map((p) =>
+      (p.time * 1000).toFixed(1),
+    )
 
     return {
       labels: timeLabels,
@@ -232,7 +234,7 @@ export function HarmonicOverlap() {
         },
       },
     }),
-    [t]
+    [t],
   )
 
   // Harmonic bar chart data
@@ -255,15 +257,13 @@ export function HarmonicOverlap() {
           data: harmonics1.map((h) => h.frequency),
           backgroundColor: harmonics1.map((h) => {
             const hasOverlap = overlaps.some(
-              (o) =>
-                o.harmonic1Number === h.harmonicNumber && o.isOverlapping
+              (o) => o.harmonic1Number === h.harmonicNumber && o.isOverlapping,
             )
             return hasOverlap ? COLORS.overlap : COLORS.note1
           }),
           borderColor: harmonics1.map((h) => {
             const hasOverlap = overlaps.some(
-              (o) =>
-                o.harmonic1Number === h.harmonicNumber && o.isOverlapping
+              (o) => o.harmonic1Number === h.harmonicNumber && o.isOverlapping,
             )
             return hasOverlap ? COLORS.overlap : COLORS.note1
           }),
@@ -276,15 +276,13 @@ export function HarmonicOverlap() {
           data: harmonics2.map((h) => h.frequency),
           backgroundColor: harmonics2.map((h) => {
             const hasOverlap = overlaps.some(
-              (o) =>
-                o.harmonic2Number === h.harmonicNumber && o.isOverlapping
+              (o) => o.harmonic2Number === h.harmonicNumber && o.isOverlapping,
             )
             return hasOverlap ? COLORS.overlap : COLORS.note2
           }),
           borderColor: harmonics2.map((h) => {
             const hasOverlap = overlaps.some(
-              (o) =>
-                o.harmonic2Number === h.harmonicNumber && o.isOverlapping
+              (o) => o.harmonic2Number === h.harmonicNumber && o.isOverlapping,
             )
             return hasOverlap ? COLORS.overlap : COLORS.note2
           }),
@@ -323,7 +321,9 @@ export function HarmonicOverlap() {
           callbacks: {
             title: (items) => {
               const item = items[0]
-              return t('harmonicOverlap.tooltipHarmonic', { number: item.label })
+              return t('harmonicOverlap.tooltipHarmonic', {
+                number: item.label,
+              })
             },
             label: (context) => {
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -336,7 +336,7 @@ export function HarmonicOverlap() {
                   (o.harmonic1Number === harmonic.harmonicNumber &&
                     dataset._note === note1) ||
                   (o.harmonic2Number === harmonic.harmonicNumber &&
-                    dataset._note === note2)
+                    dataset._note === note2),
               )
 
               const lines = [
@@ -347,14 +347,16 @@ export function HarmonicOverlap() {
                 t('harmonicOverlap.tooltipFrequency', {
                   value: harmonic.frequency.toFixed(2),
                 }),
-                t('harmonicOverlap.tooltipNote', { note: harmonic.closestNote }),
+                t('harmonicOverlap.tooltipNote', {
+                  note: harmonic.closestNote,
+                }),
               ]
 
               if (overlap?.isOverlapping) {
                 lines.push(
                   t('harmonicOverlap.tooltipOverlaps', {
                     value: overlap.centsDifference.toFixed(1),
-                  })
+                  }),
                 )
               }
 
@@ -392,14 +394,16 @@ export function HarmonicOverlap() {
         },
       },
     }),
-    [audio, harmonicChartData, overlaps, note1, note2, t]
+    [audio, harmonicChartData, overlaps, note1, note2, t],
   )
 
   return (
     <Card className="p-6">
       <div className="mb-6 space-y-4">
         <div>
-          <h3 className="text-xl font-semibold mb-2">{t('harmonicOverlap.title')}</h3>
+          <h3 className="text-xl font-semibold mb-2">
+            {t('harmonicOverlap.title')}
+          </h3>
           <p className="text-sm text-gray-600">
             {t('harmonicOverlap.description')}
           </p>
@@ -408,11 +412,15 @@ export function HarmonicOverlap() {
         {/* Controls */}
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-muted-foreground w-12 shrink-0">{t('harmonicOverlap.note1')}</span>
+            <span className="text-xs font-medium text-muted-foreground w-12 shrink-0">
+              {t('harmonicOverlap.note1')}
+            </span>
             <NotePicker value={note1} onValueChange={(v) => v && setNote1(v)} />
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-muted-foreground w-12 shrink-0">{t('harmonicOverlap.note2')}</span>
+            <span className="text-xs font-medium text-muted-foreground w-12 shrink-0">
+              {t('harmonicOverlap.note2')}
+            </span>
             <NotePicker value={note2} onValueChange={(v) => v && setNote2(v)} />
           </div>
 
@@ -443,7 +451,9 @@ export function HarmonicOverlap() {
               size="sm"
               onClick={() => setIsAnimating(!isAnimating)}
             >
-              {isAnimating ? t('harmonicOverlap.pause') : t('harmonicOverlap.animate')}
+              {isAnimating
+                ? t('harmonicOverlap.pause')
+                : t('harmonicOverlap.animate')}
             </Button>
           </div>
         </div>
@@ -451,11 +461,11 @@ export function HarmonicOverlap() {
         {/* Interval Info */}
         <div className="rounded-lg bg-linear-to-r from-blue-50 to-purple-50 p-4 border border-blue-200">
           <div className="flex flex-wrap items-center gap-4 mb-2">
-            <h4 className="text-lg font-bold text-gray-800">
-              {interval.name}
-            </h4>
+            <h4 className="text-lg font-bold text-gray-800">{interval.name}</h4>
             <Badge variant={getConsonanceBadgeColor(interval.consonance)}>
-              {t('harmonicOverlap.consonanceLabel', { value: Math.round(interval.consonance * 100) })}
+              {t('harmonicOverlap.consonanceLabel', {
+                value: Math.round(interval.consonance * 100),
+              })}
             </Badge>
             <span className="text-sm text-gray-600">
               {t('harmonicOverlap.semitonesRatio', {
@@ -466,11 +476,15 @@ export function HarmonicOverlap() {
             </span>
           </div>
           <div className="text-sm text-gray-700">
-            <span className="font-semibold">{t('harmonicOverlap.harmonicAlignment')}</span>{' '}
-            {t('harmonicOverlap.harmonicsOverlap', { count: overlapCount, total: harmonics1.length })}
+            <span className="font-semibold">
+              {t('harmonicOverlap.harmonicAlignment')}
+            </span>{' '}
+            {t('harmonicOverlap.harmonicsOverlap', {
+              count: overlapCount,
+              total: harmonics1.length,
+            })}
           </div>
         </div>
-
       </div>
 
       {/* Waveform Visualization */}

@@ -9,7 +9,14 @@ import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { RecommendationDialog } from './RecommendationDialog'
 import { displayChordId, type NotationPreference } from '@/core/enharmonic'
-import type { ProgressionNode, CategorizedRecommendations, GenreCategorizedRecommendations, Genre, Note, ScaleType } from '@/schemas'
+import type {
+  ProgressionNode,
+  CategorizedRecommendations,
+  GenreCategorizedRecommendations,
+  Genre,
+  Note,
+  ScaleType,
+} from '@/schemas'
 import { IconPlayerPlay, IconPlus, IconTrash } from '@tabler/icons-react'
 import { cn } from '@/lib/utils'
 import { useTranslation } from 'react-i18next'
@@ -39,7 +46,10 @@ interface ChordNodeData {
   onPractice?: () => void
   candidates?: CandidateSuggestion[]
   categorizedCandidates?: CategorizedRecommendations | null | undefined
-  genreCandidates?: Record<Genre, GenreCategorizedRecommendations> | null | undefined
+  genreCandidates?:
+    | Record<Genre, GenreCategorizedRecommendations>
+    | null
+    | undefined
   notationPreference?: NotationPreference
   mapKey?: Note
   scaleType?: ScaleType
@@ -69,11 +79,16 @@ export const ChordNode = memo(({ data }: { data: ChordNodeData }) => {
     scaleType: nodeScaleType,
     onSelectCandidate,
   } = data
-  
+
   const { t } = useTranslation('tools')
-  
+
   // Display chord ID with notation preference
-  const displayId = displayChordId(chordId, notationPreference, mapKey, nodeScaleType)
+  const displayId = displayChordId(
+    chordId,
+    notationPreference,
+    mapKey,
+    nodeScaleType,
+  )
 
   const [popoverOpen, setPopoverOpen] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -88,7 +103,7 @@ export const ChordNode = memo(({ data }: { data: ChordNodeData }) => {
       })
     }
   }, [genreCandidates, requestedExpand])
-  
+
   // Fallback: Open dialog for categorized candidates
   useEffect(() => {
     if (requestedExpand && !genreCandidates && categorizedCandidates) {
@@ -98,10 +113,16 @@ export const ChordNode = memo(({ data }: { data: ChordNodeData }) => {
       })
     }
   }, [categorizedCandidates, genreCandidates, requestedExpand])
-  
+
   // Fallback: Open popover for legacy candidates
   useEffect(() => {
-    if (requestedExpand && !genreCandidates && !categorizedCandidates && candidates && candidates.length > 0) {
+    if (
+      requestedExpand &&
+      !genreCandidates &&
+      !categorizedCandidates &&
+      candidates &&
+      candidates.length > 0
+    ) {
       startTransition(() => {
         setPopoverOpen(true)
         setRequestedExpand(false)
@@ -215,7 +236,7 @@ export const ChordNode = memo(({ data }: { data: ChordNodeData }) => {
               }
             />
           </div>
-          
+
           {/* Legacy popover fallback */}
           <Popover
             open={popoverOpen}
@@ -227,9 +248,15 @@ export const ChordNode = memo(({ data }: { data: ChordNodeData }) => {
             }}
           >
             <PopoverTrigger className="hidden" />
-            <PopoverContent side="right" align="start" className="w-80 p-4 z-50">
+            <PopoverContent
+              side="right"
+              align="start"
+              className="w-80 p-4 z-50"
+            >
               <div className="space-y-2">
-                <h3 className="font-bold text-sm mb-3">{t('chordNode.chooseNextChord')}</h3>
+                <h3 className="font-bold text-sm mb-3">
+                  {t('chordNode.chooseNextChord')}
+                </h3>
                 {candidates && candidates.length > 0 ? (
                   candidates.map((candidate, idx) => (
                     <Card
@@ -269,7 +296,8 @@ export const ChordNode = memo(({ data }: { data: ChordNodeData }) => {
                             </Badge>
                             {candidate.node.category !== 'diatonic' && (
                               <Badge variant="outline" className="text-xs">
-                                {candidate.node.category === 'secondary-dominant'
+                                {candidate.node.category ===
+                                'secondary-dominant'
                                   ? t('chordNode.secDom')
                                   : t('chordNode.dimPass')}
                               </Badge>
@@ -306,7 +334,8 @@ export const ChordNode = memo(({ data }: { data: ChordNodeData }) => {
                               {candidate.matchedProgressions
                                 .slice(0, 2)
                                 .join(', ')}
-                              {candidate.matchedProgressions.length > 2 && '...'}
+                              {candidate.matchedProgressions.length > 2 &&
+                                '...'}
                             </div>
                           )}
                         </div>

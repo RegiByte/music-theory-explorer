@@ -3,11 +3,28 @@ import { GenrePicker, NotePicker, ScalePicker } from '@/components/pickers'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { findChordVoicings } from '@/core/chords'
-import { displayChordId, enharmonicChordEqual, normalizeChordId, type NotationPreference } from '@/core/enharmonic'
+import {
+  displayChordId,
+  enharmonicChordEqual,
+  normalizeChordId,
+  type NotationPreference,
+} from '@/core/enharmonic'
 import { toReactFlowEdge, toReactFlowNode } from '@/core/trunkLayout'
-import type { ChordVoicing, Note, ProgressionMap, ScaleType, TrunkNode } from '@/schemas'
+import type {
+  ChordVoicing,
+  Note,
+  ProgressionMap,
+  ScaleType,
+  TrunkNode,
+} from '@/schemas'
 import { useResource } from '@/system'
 import type { ProgressionExplorerStore } from '@/system/progressionExplorerResource'
 import {
@@ -18,7 +35,15 @@ import {
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import ELK from 'elkjs/lib/elk.bundled.js'
-import { startTransition, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
+import {
+  startTransition,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChordNode } from './ChordNode'
 import { HarmonicEdge } from './HarmonicEdge'
@@ -43,7 +68,7 @@ const edgeTypes = {
 
 const getLayoutedElements = async (
   nodes: ReturnType<typeof toReactFlowNode>[],
-  edges: ReturnType<typeof toReactFlowEdge>[]
+  edges: ReturnType<typeof toReactFlowEdge>[],
 ) => {
   const orderedNodes = [...nodes].sort((a, b) => {
     const aTrunk = a.data?.trunkId ?? 0
@@ -89,7 +114,11 @@ const getLayoutedElements = async (
 
   const laneGap = 120
   const trunkIds = Array.from(
-    new Set(centeredNodes.map((node) => node.data?.trunkId).filter((id) => id !== undefined && id >= 0))
+    new Set(
+      centeredNodes
+        .map((node) => node.data?.trunkId)
+        .filter((id) => id !== undefined && id >= 0),
+    ),
   ).sort((a, b) => a - b)
   const trunkIndex = new Map(trunkIds.map((id, idx) => [id, idx]))
   const trunkMid = trunkIds.length > 0 ? Math.floor(trunkIds.length / 2) : 0
@@ -120,7 +149,9 @@ const getLayoutedElements = async (
 
 export function ProgressionExplorerRoot() {
   const audio = useResource('audio')
-  const explorer = useResource('progressionExplorer') as ProgressionExplorerStore
+  const explorer = useResource(
+    'progressionExplorer',
+  ) as ProgressionExplorerStore
   const { t } = useTranslation('tools')
   const [reactFlowInstance, setReactFlowInstance] =
     useState<ReactFlowInstance | null>(null)
@@ -128,7 +159,7 @@ export function ProgressionExplorerRoot() {
   const state = useSyncExternalStore(
     explorer.subscribe,
     explorer.getState,
-    explorer.getState
+    explorer.getState,
   )
 
   const {
@@ -161,7 +192,8 @@ export function ProgressionExplorerRoot() {
     (chordId: string) => {
       if (!map) return
       // Check registry first (covers synthetic chords), then fall back to map
-      const node = nodeRegistry[chordId] ?? map.nodes.find((n) => n.id === chordId)
+      const node =
+        nodeRegistry[chordId] ?? map.nodes.find((n) => n.id === chordId)
       if (!node) return
 
       const voicings = findChordVoicings(node.chord)
@@ -170,7 +202,7 @@ export function ProgressionExplorerRoot() {
         audio.playChord(frequencies, 0.8)
       }
     },
-    [map, nodeRegistry, audio]
+    [map, nodeRegistry, audio],
   )
 
   const flowNodes = useMemo(() => {
@@ -179,10 +211,18 @@ export function ProgressionExplorerRoot() {
       flowNode.data.isMuted = mutedNodes.has(node.id)
       flowNode.data.onPlay = () => handlePlayChord(node.chordId)
       flowNode.data.onPlayChord = handlePlayChord
-      flowNode.data.onExpand = node.isLeaf ? () => expandNode(node.id) : undefined
-      flowNode.data.onDelete = !node.isRoot ? () => deleteNode(node.id) : undefined
-      flowNode.data.onMute = !node.isRoot ? () => toggleMute(node.id) : undefined
-      flowNode.data.onPractice = node.isLeaf ? () => enterPracticeMode(node.id) : undefined
+      flowNode.data.onExpand = node.isLeaf
+        ? () => expandNode(node.id)
+        : undefined
+      flowNode.data.onDelete = !node.isRoot
+        ? () => deleteNode(node.id)
+        : undefined
+      flowNode.data.onMute = !node.isRoot
+        ? () => toggleMute(node.id)
+        : undefined
+      flowNode.data.onPractice = node.isLeaf
+        ? () => enterPracticeMode(node.id)
+        : undefined
       flowNode.data.candidates = nodeCandidates[node.id] || []
       flowNode.data.categorizedCandidates = nodeCandidatesV2[node.id] || null
       flowNode.data.genreCandidates = genreCandidates[node.id] || null
@@ -194,7 +234,22 @@ export function ProgressionExplorerRoot() {
         : undefined
       return flowNode
     })
-  }, [trunkNodes, nodeCandidates, nodeCandidatesV2, genreCandidates, mutedNodes, notationPreference, key, scaleType, expandNode, selectCandidate, deleteNode, toggleMute, enterPracticeMode, handlePlayChord])
+  }, [
+    trunkNodes,
+    nodeCandidates,
+    nodeCandidatesV2,
+    genreCandidates,
+    mutedNodes,
+    notationPreference,
+    key,
+    scaleType,
+    expandNode,
+    selectCandidate,
+    deleteNode,
+    toggleMute,
+    enterPracticeMode,
+    handlePlayChord,
+  ])
 
   const flowEdges = useMemo(() => {
     return trunkEdges.map((edge) => toReactFlowEdge(edge))
@@ -204,9 +259,9 @@ export function ProgressionExplorerRoot() {
   const [layoutedEdges, setLayoutedEdges] = useState(flowEdges)
 
   // Track node structure (not data) to avoid re-layout on candidate changes
-  const nodeStructure = useMemo(() =>
-    trunkNodes.map(n => `${n.id}-${n.parentId}`).join(','),
-    [trunkNodes]
+  const nodeStructure = useMemo(
+    () => trunkNodes.map((n) => `${n.id}-${n.parentId}`).join(','),
+    [trunkNodes],
   )
 
   // Refs to decouple layout triggers from data-only changes.
@@ -217,8 +272,12 @@ export function ProgressionExplorerRoot() {
   const flowNodesRef = useRef(flowNodes)
   const reactFlowInstanceRef = useRef(reactFlowInstance)
 
-  useEffect(() => { flowNodesRef.current = flowNodes }, [flowNodes])
-  useEffect(() => { reactFlowInstanceRef.current = reactFlowInstance }, [reactFlowInstance])
+  useEffect(() => {
+    flowNodesRef.current = flowNodes
+  }, [flowNodes])
+  useEffect(() => {
+    reactFlowInstanceRef.current = reactFlowInstance
+  }, [reactFlowInstance])
 
   // Explicit fit-view control: only fitView on initial layout or full reset
   // (key/scale change). Set to true before the state change that triggers
@@ -226,15 +285,16 @@ export function ProgressionExplorerRoot() {
   const shouldFitViewRef = useRef(true)
 
   // Merge node data changes into layouted nodes without re-layout
-  const mergedLayoutedNodes = useMemo(() =>
-    layoutedNodes.map(layoutNode => {
-      const flowNode = flowNodes.find(fn => fn.id === layoutNode.id)
-      if (flowNode) {
-        return { ...layoutNode, data: flowNode.data }
-      }
-      return layoutNode
-    }),
-    [layoutedNodes, flowNodes]
+  const mergedLayoutedNodes = useMemo(
+    () =>
+      layoutedNodes.map((layoutNode) => {
+        const flowNode = flowNodes.find((fn) => fn.id === layoutNode.id)
+        if (flowNode) {
+          return { ...layoutNode, data: flowNode.data }
+        }
+        return layoutNode
+      }),
+    [layoutedNodes, flowNodes],
   )
 
   useEffect(() => {
@@ -275,7 +335,7 @@ export function ProgressionExplorerRoot() {
       shouldFitViewRef.current = true
       initialize(nextKey, scaleType)
     },
-    [initialize, scaleType]
+    [initialize, scaleType],
   )
 
   const handleScaleChange = useCallback(
@@ -283,7 +343,7 @@ export function ProgressionExplorerRoot() {
       shouldFitViewRef.current = true
       initialize(key, nextScale)
     },
-    [initialize, key]
+    [initialize, key],
   )
 
   if (!map) {
@@ -329,20 +389,25 @@ export function ProgressionExplorerRoot() {
           size="xs"
         />
 
-        <GenrePicker
-          value={selectedGenre}
-          onValueChange={setGenre}
-          size="xs"
-        />
+        <GenrePicker value={selectedGenre} onValueChange={setGenre} size="xs" />
 
-        <Select value={notationPreference} onValueChange={(v) => setNotationPreference(v as NotationPreference)}>
+        <Select
+          value={notationPreference}
+          onValueChange={(v) => setNotationPreference(v as NotationPreference)}
+        >
           <SelectTrigger className="w-24">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="auto">{t('progressionExplorer.auto')}</SelectItem>
-            <SelectItem value="sharp">{t('progressionExplorer.sharps')}</SelectItem>
-            <SelectItem value="flat">{t('progressionExplorer.flats')}</SelectItem>
+            <SelectItem value="auto">
+              {t('progressionExplorer.auto')}
+            </SelectItem>
+            <SelectItem value="sharp">
+              {t('progressionExplorer.sharps')}
+            </SelectItem>
+            <SelectItem value="flat">
+              {t('progressionExplorer.flats')}
+            </SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -367,7 +432,11 @@ export function ProgressionExplorerRoot() {
       {/* Instructions */}
       <div className="p-4 bg-gray-50 border-t text-sm text-gray-600">
         <p>
-          <span dangerouslySetInnerHTML={{ __html: t('progressionExplorer.instructions') }} />
+          <span
+            dangerouslySetInnerHTML={{
+              __html: t('progressionExplorer.instructions'),
+            }}
+          />
         </p>
       </div>
     </div>
@@ -406,7 +475,9 @@ function PracticeView({
   audio,
 }: PracticeViewProps) {
   const { t } = useTranslation('tools')
-  const [voicingSelections, setVoicingSelections] = useState<Record<string, number>>({})
+  const [voicingSelections, setVoicingSelections] = useState<
+    Record<string, number>
+  >({})
 
   // Multi-fallback node lookup: registry (covers synthetic + map nodes) -> map -> enharmonic
   const lookupNode = useCallback(
@@ -418,7 +489,7 @@ function PracticeView({
         map.nodes.find((n) => enharmonicChordEqual(n.id, chordId))
       )
     },
-    [nodeRegistry, map]
+    [nodeRegistry, map],
   )
 
   // Get the path from root to the selected leaf node
@@ -473,7 +544,9 @@ function PracticeView({
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold">{t('progressionExplorer.practiceMode')}</h2>
+          <h2 className="text-2xl font-bold">
+            {t('progressionExplorer.practiceMode')}
+          </h2>
           <Button variant="outline" onClick={onBack}>
             {t('progressionExplorer.backToExplorer')}
           </Button>
@@ -481,11 +554,18 @@ function PracticeView({
 
         {/* Progression Display */}
         <div className="flex items-center gap-2 text-lg font-medium flex-wrap mb-4">
-          <span className="text-gray-600">{t('progressionExplorer.progression')}</span>
+          <span className="text-gray-600">
+            {t('progressionExplorer.progression')}
+          </span>
           {pathNodes.map((node, idx) => (
             <span key={node.id}>
               <Badge variant="secondary" className="text-base px-3 py-1">
-                {displayChordId(node.chordId, notationPreference, mapKey, scaleType)}
+                {displayChordId(
+                  node.chordId,
+                  notationPreference,
+                  mapKey,
+                  scaleType,
+                )}
               </Badge>
               {idx < pathNodes.length - 1 && (
                 <span className="mx-2 text-gray-400">→</span>
@@ -495,7 +575,11 @@ function PracticeView({
         </div>
 
         {/* Play All Button */}
-        <Button onClick={handlePlayAll} disabled={pathNodes.length === 0} size="lg">
+        <Button
+          onClick={handlePlayAll}
+          disabled={pathNodes.length === 0}
+          size="lg"
+        >
           {t('progressionExplorer.playAll', { count: pathNodes.length })}
         </Button>
       </div>
@@ -509,7 +593,12 @@ function PracticeView({
 
             const voicings = nodeVoicings[node.chordId] || []
             const selectedIndex = voicingSelections[node.chordId] || 0
-            const displayName = displayChordId(node.chordId, notationPreference, mapKey, scaleType)
+            const displayName = displayChordId(
+              node.chordId,
+              notationPreference,
+              mapKey,
+              scaleType,
+            )
 
             return (
               <Card key={node.id} className="overflow-hidden">
@@ -517,7 +606,9 @@ function PracticeView({
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="font-bold text-lg">{displayName}</h3>
-                      <p className="text-sm text-gray-600">{progNode.romanNumeral}</p>
+                      <p className="text-sm text-gray-600">
+                        {progNode.romanNumeral}
+                      </p>
                     </div>
                     <Button
                       size="sm"
@@ -534,9 +625,13 @@ function PracticeView({
                     chord={progNode.chord}
                     voicings={voicings}
                     selectedIndex={selectedIndex}
-                    onVoicingChange={(index: number) => handleVoicingChange(node.chordId, index)}
+                    onVoicingChange={(index: number) =>
+                      handleVoicingChange(node.chordId, index)
+                    }
                     onPlay={(voicing) => {
-                      const frequencies = voicing.positions.map((p) => p.frequency)
+                      const frequencies = voicing.positions.map(
+                        (p) => p.frequency,
+                      )
                       audio.playChord(frequencies, 0.8)
                     }}
                   />

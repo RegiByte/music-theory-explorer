@@ -49,18 +49,24 @@ export function CompactVoicingSelector({
   if (displayedVoicings.length === 0) {
     return (
       <div className="p-3 text-center">
-        <p className="text-xs text-gray-500">{t('compactVoicingSelector.noVoicings')}</p>
+        <p className="text-xs text-gray-500">
+          {t('compactVoicingSelector.noVoicings')}
+        </p>
       </div>
     )
   }
 
   // Get difficulty info
-  const difficulty = selectedVoicing ? getDifficultyLabel(selectedVoicing.difficulty) : null
+  const difficulty = selectedVoicing
+    ? getDifficultyLabel(selectedVoicing.difficulty)
+    : null
 
   return (
     <div className="p-3 space-y-2">
       {/* Mini Fretboard */}
-      {selectedVoicing && <MiniFretboard voicing={selectedVoicing} compact={true} />}
+      {selectedVoicing && (
+        <MiniFretboard voicing={selectedVoicing} compact={true} />
+      )}
 
       {/* Navigation Controls */}
       <div className="flex items-center justify-center gap-2">
@@ -74,7 +80,10 @@ export function CompactVoicingSelector({
           ◀
         </Button>
         <span className="text-xs font-medium text-gray-700 min-w-[60px] text-center">
-          {t('compactVoicingSelector.voicingOf', { current: selectedIndex + 1, total: displayedVoicings.length })}
+          {t('compactVoicingSelector.voicingOf', {
+            current: selectedIndex + 1,
+            total: displayedVoicings.length,
+          })}
         </span>
         <Button
           size="sm"
@@ -94,7 +103,9 @@ export function CompactVoicingSelector({
             {difficulty.label}
           </Badge>
           <span className="text-gray-600">
-            {t('compactVoicingSelector.span', { count: selectedVoicing.fretSpan })}
+            {t('compactVoicingSelector.span', {
+              count: selectedVoicing.fretSpan,
+            })}
           </span>
         </div>
       )}

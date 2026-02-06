@@ -99,7 +99,10 @@ function getScaleNotes(key: Note, scaleType: ScaleType): Note[] {
   return generateScale(key, scaleType).notes
 }
 
-function getChordNotes(root: Note | null, quality: ChordQuality | null): Note[] {
+function getChordNotes(
+  root: Note | null,
+  quality: ChordQuality | null,
+): Note[] {
   if (!root || !quality) return []
   try {
     return generateChord(root, quality).notes
@@ -157,11 +160,23 @@ export const melodyExplorerResource = defineResource({
       },
 
       setKey: (key) => {
-        set({ key, paths: [], selectedPathId: null, editingNoteIndex: null, suggestions: [] })
+        set({
+          key,
+          paths: [],
+          selectedPathId: null,
+          editingNoteIndex: null,
+          suggestions: [],
+        })
       },
 
       setScaleType: (scaleType) => {
-        set({ scaleType, paths: [], selectedPathId: null, editingNoteIndex: null, suggestions: [] })
+        set({
+          scaleType,
+          paths: [],
+          selectedPathId: null,
+          editingNoteIndex: null,
+          suggestions: [],
+        })
       },
 
       setChordContext: (root, quality) => {
@@ -169,7 +184,13 @@ export const melodyExplorerResource = defineResource({
       },
 
       setTargetLength: (length) => {
-        set({ targetLength: length, paths: [], selectedPathId: null, editingNoteIndex: null, suggestions: [] })
+        set({
+          targetLength: length,
+          paths: [],
+          selectedPathId: null,
+          editingNoteIndex: null,
+          suggestions: [],
+        })
       },
 
       // -----------------------------------------------------------------------
@@ -181,34 +202,52 @@ export const melodyExplorerResource = defineResource({
         const scaleNotes = getScaleNotes(key, scaleType)
         const chordNotes = getChordNotes(chordRoot, chordQuality)
         // If no chord context, default to the tonic triad (1st, 3rd, 5th of scale)
-        const effectiveChordNotes = chordNotes.length > 0
-          ? chordNotes
-          : scaleNotes.length >= 5
-            ? [scaleNotes[0], scaleNotes[2], scaleNotes[4]]
-            : [scaleNotes[0]]
+        const effectiveChordNotes =
+          chordNotes.length > 0
+            ? chordNotes
+            : scaleNotes.length >= 5
+              ? [scaleNotes[0], scaleNotes[2], scaleNotes[4]]
+              : [scaleNotes[0]]
 
-        const paths = generateAllPaths(scaleNotes, effectiveChordNotes, targetLength)
-        set({ paths, selectedPathId: null, editingNoteIndex: null, suggestions: [] })
+        const paths = generateAllPaths(
+          scaleNotes,
+          effectiveChordNotes,
+          targetLength,
+        )
+        set({
+          paths,
+          selectedPathId: null,
+          editingNoteIndex: null,
+          suggestions: [],
+        })
       },
 
       regeneratePath: (pathId) => {
-        const { key, scaleType, chordRoot, chordQuality, targetLength, paths } = get()
-        const existingPath = paths.find(p => p.id === pathId)
+        const { key, scaleType, chordRoot, chordQuality, targetLength, paths } =
+          get()
+        const existingPath = paths.find((p) => p.id === pathId)
         if (!existingPath) return
 
         const scaleNotes = getScaleNotes(key, scaleType)
         const chordNotes = getChordNotes(chordRoot, chordQuality)
-        const effectiveChordNotes = chordNotes.length > 0
-          ? chordNotes
-          : scaleNotes.length >= 5
-            ? [scaleNotes[0], scaleNotes[2], scaleNotes[4]]
-            : [scaleNotes[0]]
+        const effectiveChordNotes =
+          chordNotes.length > 0
+            ? chordNotes
+            : scaleNotes.length >= 5
+              ? [scaleNotes[0], scaleNotes[2], scaleNotes[4]]
+              : [scaleNotes[0]]
 
-        const newPath = generateSinglePath(existingPath.style, scaleNotes, effectiveChordNotes, targetLength)
+        const newPath = generateSinglePath(
+          existingPath.style,
+          scaleNotes,
+          effectiveChordNotes,
+          targetLength,
+        )
         set({
-          paths: paths.map(p => p.id === pathId ? newPath : p),
+          paths: paths.map((p) => (p.id === pathId ? newPath : p)),
           // If this was the selected path, update the selection to the new path
-          selectedPathId: get().selectedPathId === pathId ? newPath.id : get().selectedPathId,
+          selectedPathId:
+            get().selectedPathId === pathId ? newPath.id : get().selectedPathId,
           editingNoteIndex: null,
           suggestions: [],
         })
@@ -228,16 +267,17 @@ export const melodyExplorerResource = defineResource({
 
       editNote: (pathId, noteIndex, newNote) => {
         const { paths, key, scaleType, chordRoot, chordQuality } = get()
-        const path = paths.find(p => p.id === pathId)
+        const path = paths.find((p) => p.id === pathId)
         if (!path || noteIndex < 0 || noteIndex >= path.notes.length) return
 
         const scaleNotes = getScaleNotes(key, scaleType)
         const chordNotes = getChordNotes(chordRoot, chordQuality)
-        const effectiveChordNotes = chordNotes.length > 0
-          ? chordNotes
-          : scaleNotes.length >= 5
-            ? [scaleNotes[0], scaleNotes[2], scaleNotes[4]]
-            : [scaleNotes[0]]
+        const effectiveChordNotes =
+          chordNotes.length > 0
+            ? chordNotes
+            : scaleNotes.length >= 5
+              ? [scaleNotes[0], scaleNotes[2], scaleNotes[4]]
+              : [scaleNotes[0]]
 
         const updatedNotes = [...path.notes]
         updatedNotes[noteIndex] = {
@@ -252,23 +292,24 @@ export const melodyExplorerResource = defineResource({
         )
 
         set({
-          paths: paths.map(p => p.id === pathId ? updatedPath : p),
+          paths: paths.map((p) => (p.id === pathId ? updatedPath : p)),
         })
       },
 
       deleteNote: (pathId, noteIndex) => {
         const { paths, key, scaleType, chordRoot, chordQuality } = get()
-        const path = paths.find(p => p.id === pathId)
+        const path = paths.find((p) => p.id === pathId)
         if (!path || noteIndex < 0 || noteIndex >= path.notes.length) return
         if (path.notes.length <= 2) return // Don't allow deletion below 2 notes
 
         const scaleNotes = getScaleNotes(key, scaleType)
         const chordNotes = getChordNotes(chordRoot, chordQuality)
-        const effectiveChordNotes = chordNotes.length > 0
-          ? chordNotes
-          : scaleNotes.length >= 5
-            ? [scaleNotes[0], scaleNotes[2], scaleNotes[4]]
-            : [scaleNotes[0]]
+        const effectiveChordNotes =
+          chordNotes.length > 0
+            ? chordNotes
+            : scaleNotes.length >= 5
+              ? [scaleNotes[0], scaleNotes[2], scaleNotes[4]]
+              : [scaleNotes[0]]
 
         const updatedNotes = path.notes.filter((_, i) => i !== noteIndex)
         const updatedPath = rebuildPathAnalysis(
@@ -289,23 +330,24 @@ export const melodyExplorerResource = defineResource({
         }
 
         set({
-          paths: paths.map(p => p.id === pathId ? updatedPath : p),
+          paths: paths.map((p) => (p.id === pathId ? updatedPath : p)),
           editingNoteIndex: newEditingIndex,
         })
       },
 
       insertNote: (pathId, noteIndex, note) => {
         const { paths, key, scaleType, chordRoot, chordQuality } = get()
-        const path = paths.find(p => p.id === pathId)
+        const path = paths.find((p) => p.id === pathId)
         if (!path) return
 
         const scaleNotes = getScaleNotes(key, scaleType)
         const chordNotes = getChordNotes(chordRoot, chordQuality)
-        const effectiveChordNotes = chordNotes.length > 0
-          ? chordNotes
-          : scaleNotes.length >= 5
-            ? [scaleNotes[0], scaleNotes[2], scaleNotes[4]]
-            : [scaleNotes[0]]
+        const effectiveChordNotes =
+          chordNotes.length > 0
+            ? chordNotes
+            : scaleNotes.length >= 5
+              ? [scaleNotes[0], scaleNotes[2], scaleNotes[4]]
+              : [scaleNotes[0]]
 
         const newMelodyNote: MelodyNote = {
           id: `note-insert-${Date.now()}`,
@@ -328,7 +370,7 @@ export const melodyExplorerResource = defineResource({
         )
 
         set({
-          paths: paths.map(p => p.id === pathId ? updatedPath : p),
+          paths: paths.map((p) => (p.id === pathId ? updatedPath : p)),
           editingNoteIndex: noteIndex,
         })
       },
@@ -352,19 +394,20 @@ export const melodyExplorerResource = defineResource({
 
       getSuggestions: (pathId, noteIndex) => {
         const { paths, key, scaleType, chordRoot, chordQuality } = get()
-        const path = paths.find(p => p.id === pathId)
+        const path = paths.find((p) => p.id === pathId)
         if (!path) return
 
         const scaleNotes = getScaleNotes(key, scaleType)
         const chordNotes = getChordNotes(chordRoot, chordQuality)
-        const effectiveChordNotes = chordNotes.length > 0
-          ? chordNotes
-          : scaleNotes.length >= 5
-            ? [scaleNotes[0], scaleNotes[2], scaleNotes[4]]
-            : [scaleNotes[0]]
+        const effectiveChordNotes =
+          chordNotes.length > 0
+            ? chordNotes
+            : scaleNotes.length >= 5
+              ? [scaleNotes[0], scaleNotes[2], scaleNotes[4]]
+              : [scaleNotes[0]]
 
         // Build the melody up to the editing position
-        const melodyBefore = path.notes.slice(0, noteIndex).map(n => n.note)
+        const melodyBefore = path.notes.slice(0, noteIndex).map((n) => n.note)
 
         const suggestions = suggestNextNotes(
           melodyBefore,
@@ -411,7 +454,7 @@ export const melodyExplorerResource = defineResource({
 
       advancePracticeStep: () => {
         const { selectedPathId, paths, practiceStep } = get()
-        const path = paths.find(p => p.id === selectedPathId)
+        const path = paths.find((p) => p.id === selectedPathId)
         if (!path) return
 
         if (practiceStep < path.notes.length - 1) {
@@ -439,7 +482,7 @@ export const melodyExplorerResource = defineResource({
           set({ practiceStep: prevStep })
 
           const { selectedPathId, paths } = get()
-          const path = paths.find(p => p.id === selectedPathId)
+          const path = paths.find((p) => p.id === selectedPathId)
           if (path && path.notes[prevStep]) {
             audio.playNote(noteToFrequency(path.notes[prevStep].note), 0.5)
           }
@@ -456,7 +499,7 @@ export const melodyExplorerResource = defineResource({
 
       startPracticePlayback: () => {
         const { selectedPathId, paths, practiceTempo } = get()
-        const path = paths.find(p => p.id === selectedPathId)
+        const path = paths.find((p) => p.id === selectedPathId)
         if (!path) return
 
         set({ practicePlaying: true, practiceStep: 0 })
@@ -507,7 +550,7 @@ export const melodyExplorerResource = defineResource({
 
       playPath: (pathId) => {
         const { paths } = get()
-        const path = paths.find(p => p.id === pathId)
+        const path = paths.find((p) => p.id === pathId)
         if (!path || path.notes.length === 0) return
 
         // Play notes in sequence with setTimeout

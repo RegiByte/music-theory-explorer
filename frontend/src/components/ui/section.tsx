@@ -11,7 +11,13 @@ interface SectionProps {
   children: React.ReactNode
 }
 
-export function Section({ number, title, subtitle, className, children }: SectionProps) {
+export function Section({
+  number,
+  title,
+  subtitle,
+  className,
+  children,
+}: SectionProps) {
   return (
     <section className={cn('py-16 first:pt-0', className)}>
       {/* Section header */}
@@ -28,9 +34,7 @@ export function Section({ number, title, subtitle, className, children }: Sectio
       </div>
 
       {/* Section body */}
-      <div className="space-y-8">
-        {children}
-      </div>
+      <div className="space-y-8">{children}</div>
     </section>
   )
 }
@@ -50,7 +54,7 @@ export function KnowledgeBlock({ className, children }: KnowledgeBlockProps) {
         '[&>p]:mb-4 [&>p:last-child]:mb-0',
         '[&>ul]:mb-4 [&>ul]:list-disc [&>ul]:pl-6 [&>ul>li]:mb-1.5',
         '[&>ol]:mb-4 [&>ol]:list-decimal [&>ol]:pl-6 [&>ol>li]:mb-1.5',
-        className
+        className,
       )}
     >
       {children}
@@ -67,11 +71,21 @@ interface DeepDiveProps {
   children: React.ReactNode
 }
 
-export function DeepDive({ title, defaultOpen = false, className, children }: DeepDiveProps) {
+export function DeepDive({
+  title,
+  defaultOpen = false,
+  className,
+  children,
+}: DeepDiveProps) {
   const [isOpen, setIsOpen] = React.useState(defaultOpen)
 
   return (
-    <div className={cn('max-w-3xl border border-border rounded-lg overflow-hidden', className)}>
+    <div
+      className={cn(
+        'max-w-3xl border border-border rounded-lg overflow-hidden',
+        className,
+      )}
+    >
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
@@ -80,7 +94,7 @@ export function DeepDive({ title, defaultOpen = false, className, children }: De
         <svg
           className={cn(
             'w-4 h-4 shrink-0 text-muted-foreground transition-transform duration-200',
-            isOpen && 'rotate-90'
+            isOpen && 'rotate-90',
           )}
           viewBox="0 0 16 16"
           fill="currentColor"
@@ -111,9 +125,7 @@ interface ConceptTermProps {
 
 export function ConceptTerm({ definition, href, children }: ConceptTermProps) {
   if (!definition && !href) {
-    return (
-      <span className="font-semibold text-foreground">{children}</span>
-    )
+    return <span className="font-semibold text-foreground">{children}</span>
   }
 
   const content = (
@@ -121,12 +133,18 @@ export function ConceptTerm({ definition, href, children }: ConceptTermProps) {
       <span
         className={cn(
           'font-semibold text-foreground border-b border-dotted border-foreground/40',
-          href ? 'cursor-pointer hover:text-primary hover:border-primary/60 transition-colors' : 'cursor-help'
+          href
+            ? 'cursor-pointer hover:text-primary hover:border-primary/60 transition-colors'
+            : 'cursor-help',
         )}
       >
         {children}
         {href && (
-          <svg className="inline-block w-3 h-3 ml-0.5 mb-0.5 opacity-40 group-hover/term:opacity-70 transition-opacity" viewBox="0 0 16 16" fill="currentColor">
+          <svg
+            className="inline-block w-3 h-3 ml-0.5 mb-0.5 opacity-40 group-hover/term:opacity-70 transition-opacity"
+            viewBox="0 0 16 16"
+            fill="currentColor"
+          >
             <path d="M4.5 2A2.5 2.5 0 0 0 2 4.5v7A2.5 2.5 0 0 0 4.5 14h7a2.5 2.5 0 0 0 2.5-2.5v-3a.5.5 0 0 0-1 0v3A1.5 1.5 0 0 1 11.5 13h-7A1.5 1.5 0 0 1 3 11.5v-7A1.5 1.5 0 0 1 4.5 3h3a.5.5 0 0 0 0-1h-3zM9 2.5a.5.5 0 0 1 .5-.5H14a.5.5 0 0 1 .5.5V7a.5.5 0 0 1-1 0V3.707l-5.146 5.147a.5.5 0 0 1-.708-.708L12.293 3H9.5a.5.5 0 0 1-.5-.5z" />
           </svg>
         )}
@@ -141,7 +159,12 @@ export function ConceptTerm({ definition, href, children }: ConceptTermProps) {
 
   if (href) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer" className="inline">
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline"
+      >
         {content}
       </a>
     )

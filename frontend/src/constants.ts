@@ -19,20 +19,20 @@ export const SCALE_PATTERNS = {
   lydian: [0, 2, 4, 6, 7, 9, 11],
   mixolydian: [0, 2, 4, 5, 7, 9, 10],
   major_bebop: [0, 2, 4, 5, 7, 8, 9, 11],
-  
+
   // Minor family
   minor: [0, 2, 3, 5, 7, 8, 10], // Natural minor / Aeolian
   dorian: [0, 2, 3, 5, 7, 9, 10],
   phrygian: [0, 1, 3, 5, 7, 8, 10],
   locrian: [0, 1, 3, 5, 6, 8, 10],
   minor_bebop: [0, 2, 3, 5, 7, 8, 9, 10],
-  
+
   // Harmonic minor and modes
   harmonic_minor: [0, 2, 3, 5, 7, 8, 11],
   phrygian_dominant: [0, 1, 4, 5, 7, 8, 10], // Harmonic minor mode 5
   locrian_natural6: [0, 1, 3, 5, 6, 9, 10], // Harmonic minor mode 2
   ionian_augmented: [0, 2, 4, 5, 8, 9, 11], // Harmonic minor mode 3
-  
+
   // Melodic minor and modes (jazz)
   melodic_minor: [0, 2, 3, 5, 7, 9, 11],
   melodic_minor_mode2_dorian_b2: [0, 1, 3, 5, 7, 9, 10], // Phrygian #6
@@ -41,18 +41,18 @@ export const SCALE_PATTERNS = {
   melodic_minor_mode5_mixolydian_b6: [0, 2, 4, 5, 7, 8, 10],
   melodic_minor_mode6_locrian_n2: [0, 2, 3, 5, 6, 8, 10], // Half-diminished bright
   melodic_minor_mode7_altered: [0, 1, 3, 4, 6, 8, 10], // Super locrian / V7alt
-  
+
   // Symmetric scales
   whole_tone: [0, 2, 4, 6, 8, 10],
   diminished_half_whole: [0, 1, 3, 4, 6, 7, 9, 10], // For dominant chords
   diminished_whole_half: [0, 2, 3, 5, 6, 8, 9, 11], // For diminished chords
-  
+
   // Exotic / World scales
   hungarian_minor: [0, 2, 3, 6, 7, 8, 11],
   double_harmonic_major: [0, 1, 4, 5, 7, 8, 11], // Byzantine
   neapolitan_minor: [0, 1, 3, 5, 7, 8, 11],
   neapolitan_major: [0, 1, 3, 5, 7, 9, 11],
-  
+
   // Pentatonic scales
   pentatonic_major: [0, 2, 4, 7, 9],
   pentatonic_minor: [0, 3, 5, 7, 10],
@@ -60,7 +60,7 @@ export const SCALE_PATTERNS = {
   in_sen: [0, 1, 5, 7, 10], // Japanese
   hirajoshi: [0, 2, 3, 7, 8], // Japanese
   iwato: [0, 1, 5, 6, 10], // Japanese
-  
+
   // Blues
   blues: [0, 3, 5, 6, 7, 10],
 } as const
@@ -175,7 +175,7 @@ export const PROGRESSION_TEMPLATES = {
     degrees: [1, 5, 6, 3, 4, 1, 4, 5],
     description: "Pachelbel's Canon progression",
   },
-  
+
   // Tier 1: Jazz Extensions
   jazz_turnaround_extended: {
     name: 'I-vi-ii-V',
@@ -187,7 +187,7 @@ export const PROGRESSION_TEMPLATES = {
     degrees: [1, 4, 7, 3],
     description: 'Minor jazz turnaround - modal resolution',
   },
-  
+
   // Tier 1: Short Cadences (Building Blocks)
   plagal_cadence: {
     name: 'IV-I',
@@ -204,7 +204,7 @@ export const PROGRESSION_TEMPLATES = {
     degrees: [1, 5],
     description: 'Half cadence - open ending',
   },
-  
+
   // Tier 1: Modal Vamps
   dorian_vamp: {
     name: 'i-IV',
@@ -221,7 +221,7 @@ export const PROGRESSION_TEMPLATES = {
     degrees: [1, 2],
     description: 'Lydian vamp - bright, floating quality',
   },
-  
+
   // Tier 2: Neo-Soul/R&B
   neo_soul_loop: {
     name: 'iii-vi-ii-V',
@@ -233,14 +233,14 @@ export const PROGRESSION_TEMPLATES = {
     degrees: [6, 2, 5, 1],
     description: 'R&B progression - emotional resolution',
   },
-  
+
   // Tier 2: More Modal Progressions
   phrygian_cadence: {
     name: 'i-II',
     degrees: [1, 2],
     description: 'Phrygian cadence - Spanish/flamenco flavor',
   },
-  
+
   // Tier 2: Contemporary Pop
   sad_pop: {
     name: 'i-VI-III-VII',

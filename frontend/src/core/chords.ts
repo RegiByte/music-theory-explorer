@@ -23,7 +23,7 @@ export function generateChord(root: Note, quality: ChordQuality): Chord {
   const rootIdx = noteToIndex(root)
   const intervals = [...pattern] // Convert readonly to mutable
   const notes = intervals.map((interval) =>
-    indexToNote(rootIdx + interval)
+    indexToNote(rootIdx + interval),
   ) as Note[]
 
   return {
@@ -40,7 +40,7 @@ export function generateChord(root: Note, quality: ChordQuality): Chord {
  */
 export function detectVoicingQuality(
   positions: FretPosition[],
-  root: Note
+  root: Note,
 ): ChordQuality | null {
   // Extract unique pitch classes from the voicing
   const notes = positions.map((p) => p.note)
@@ -89,16 +89,18 @@ export function detectVoicingQuality(
 
     for (const [quality, pattern] of Object.entries(CHORD_PATTERNS)) {
       // Check if all voicing intervals are present in the pattern
-      const isSubset = intervals.every((interval) => (pattern as readonly number[]).includes(interval))
-      
+      const isSubset = intervals.every((interval) =>
+        (pattern as readonly number[]).includes(interval),
+      )
+
       if (isSubset) {
         const requiredIntervals = characteristicIntervals[quality] || []
-        
+
         // Check if all characteristic intervals are present in the voicing
         const hasAllCharacteristics = requiredIntervals.every((reqInterval) =>
-          intervals.includes(reqInterval)
+          intervals.includes(reqInterval),
         )
-        
+
         if (hasAllCharacteristics) {
           // For sus chords, also verify NO third is present
           if (quality === 'sus2' || quality === 'sus4') {
@@ -107,7 +109,7 @@ export function detectVoicingQuality(
               continue // Skip this match if it has a third
             }
           }
-          
+
           return quality as ChordQuality
         }
       }
@@ -124,7 +126,7 @@ export function detectVoicingQuality(
  */
 export function findChordVoicings(
   chord: Chord,
-  maxFretSpan = MAX_FRET_SPAN
+  maxFretSpan = MAX_FRET_SPAN,
 ): ChordVoicing[] {
   const voicings: ChordVoicing[] = []
   const strings: UkuleleString[] = ['G', 'C', 'E', 'A']
@@ -196,17 +198,17 @@ export function findChordVoicings(
     const bMinFret = b.metadata?.minFret || 0
     const aMaxFret = a.metadata?.maxFret || 0
     const bMaxFret = b.metadata?.maxFret || 0
-    
+
     // Primary sort: closer to neck (lower minimum fret)
     if (aMinFret !== bMinFret) {
       return aMinFret - bMinFret
     }
-    
+
     // Secondary sort: more compact (lower maximum fret)
     if (aMaxFret !== bMaxFret) {
       return aMaxFret - bMaxFret
     }
-    
+
     // Tertiary sort: easier to play (lower difficulty)
     return a.difficulty - b.difficulty
   })
@@ -217,7 +219,7 @@ export function findChordVoicings(
  */
 function generateCombinations(
   stringPositions: Record<UkuleleString, FretPosition[]>,
-  strings: UkuleleString[]
+  strings: UkuleleString[],
 ): FretPosition[][] {
   const combinations: FretPosition[][] = []
 
@@ -246,7 +248,7 @@ function generateCombinations(
  */
 function calculateDifficulty(
   positions: FretPosition[],
-  fretSpan: number
+  fretSpan: number,
 ): number {
   let difficulty = 0
 
@@ -374,20 +376,20 @@ export function formatVoicingString(voicing: ChordVoicing): string {
  */
 export function buildChordFromIntervals(
   root: Note,
-  intervals: number[]
+  intervals: number[],
 ): Chord {
   const rootIdx = noteToIndex(root)
-  
+
   // Always include root (0) and sort intervals
   const uniqueIntervals = [...new Set([0, ...intervals])].sort((a, b) => a - b)
-  
+
   const notes = uniqueIntervals.map((interval) =>
-    indexToNote(rootIdx + interval)
+    indexToNote(rootIdx + interval),
   ) as Note[]
 
   // Try to detect quality from intervals
   let quality: ChordQuality = 'major' // Default fallback
-  
+
   // Create a temporary chord to use detectVoicingQuality
   const tempPositions: FretPosition[] = notes.map((note, i) => ({
     string: 'C' as UkuleleString,
@@ -395,7 +397,7 @@ export function buildChordFromIntervals(
     note,
     frequency: semitonesToHz(uniqueIntervals[i], 261.63),
   }))
-  
+
   const detectedQuality = detectVoicingQuality(tempPositions, root)
   if (detectedQuality) {
     quality = detectedQuality
@@ -483,7 +485,7 @@ export function analyzeChordQuality(chord: Chord): {
       fret: chord.intervals[i],
       note,
       frequency: semitonesToHz(chord.intervals[i], 261.63),
-    }))
+    })),
   )
 
   return {

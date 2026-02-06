@@ -116,7 +116,10 @@ const FULL_SCALE_GROUPS: ScaleGroup[] = [
     label: 'Melodic Minor',
     scales: [
       { value: 'melodic_minor', label: 'Melodic Minor' },
-      { value: 'melodic_minor_mode4_lydian_dominant', label: 'Lydian Dominant' },
+      {
+        value: 'melodic_minor_mode4_lydian_dominant',
+        label: 'Lydian Dominant',
+      },
       { value: 'melodic_minor_mode7_altered', label: 'Altered' },
       { value: 'melodic_minor_mode2_dorian_b2', label: 'Dorian ♭2' },
       { value: 'melodic_minor_mode3_lydian_aug', label: 'Lydian Augmented' },
@@ -245,31 +248,39 @@ export const GENRE_DISPLAY: Record<Genre, string> = {
 
 /** All genres in display order */
 export const ALL_GENRES: Genre[] = [
-  'pop', 'rock', 'country', 'punk', 'alternative', 'pop rock', 'rap', 'metal', 'soul',
+  'pop',
+  'rock',
+  'country',
+  'punk',
+  'alternative',
+  'pop rock',
+  'rap',
+  'metal',
+  'soul',
 ]
 
 /** Per-genre colors — solid for pills/borders, translucent for backgrounds */
 export const GENRE_COLORS: Record<Genre, { solid: string; bg: string }> = {
-  pop:         { solid: 'rgb(239, 68, 68)',   bg: 'rgba(239, 68, 68, 0.15)' },
-  rock:        { solid: 'rgb(59, 130, 246)',   bg: 'rgba(59, 130, 246, 0.15)' },
-  country:     { solid: 'rgb(234, 179, 8)',    bg: 'rgba(234, 179, 8, 0.15)' },
-  punk:        { solid: 'rgb(16, 185, 129)',   bg: 'rgba(16, 185, 129, 0.15)' },
-  alternative: { solid: 'rgb(168, 85, 247)',   bg: 'rgba(168, 85, 247, 0.15)' },
-  'pop rock':  { solid: 'rgb(249, 115, 22)',   bg: 'rgba(249, 115, 22, 0.15)' },
-  rap:         { solid: 'rgb(20, 184, 166)',    bg: 'rgba(20, 184, 166, 0.15)' },
-  metal:       { solid: 'rgb(107, 114, 128)',  bg: 'rgba(107, 114, 128, 0.15)' },
-  soul:        { solid: 'rgb(236, 72, 153)',   bg: 'rgba(236, 72, 153, 0.15)' },
+  pop: { solid: 'rgb(239, 68, 68)', bg: 'rgba(239, 68, 68, 0.15)' },
+  rock: { solid: 'rgb(59, 130, 246)', bg: 'rgba(59, 130, 246, 0.15)' },
+  country: { solid: 'rgb(234, 179, 8)', bg: 'rgba(234, 179, 8, 0.15)' },
+  punk: { solid: 'rgb(16, 185, 129)', bg: 'rgba(16, 185, 129, 0.15)' },
+  alternative: { solid: 'rgb(168, 85, 247)', bg: 'rgba(168, 85, 247, 0.15)' },
+  'pop rock': { solid: 'rgb(249, 115, 22)', bg: 'rgba(249, 115, 22, 0.15)' },
+  rap: { solid: 'rgb(20, 184, 166)', bg: 'rgba(20, 184, 166, 0.15)' },
+  metal: { solid: 'rgb(107, 114, 128)', bg: 'rgba(107, 114, 128, 0.15)' },
+  soul: { solid: 'rgb(236, 72, 153)', bg: 'rgba(236, 72, 153, 0.15)' },
 }
 
 /** Tailwind-friendly class pairs for genre pills (active state) */
 export const GENRE_PILL_CLASSES: Record<Genre, string> = {
-  pop:         'bg-red-500 text-white',
-  rock:        'bg-blue-500 text-white',
-  country:     'bg-yellow-500 text-white',
-  punk:        'bg-emerald-500 text-white',
+  pop: 'bg-red-500 text-white',
+  rock: 'bg-blue-500 text-white',
+  country: 'bg-yellow-500 text-white',
+  punk: 'bg-emerald-500 text-white',
   alternative: 'bg-purple-500 text-white',
-  'pop rock':  'bg-orange-500 text-white',
-  rap:         'bg-teal-500 text-white',
-  metal:       'bg-gray-500 text-white',
-  soul:        'bg-pink-500 text-white',
+  'pop rock': 'bg-orange-500 text-white',
+  rap: 'bg-teal-500 text-white',
+  metal: 'bg-gray-500 text-white',
+  soul: 'bg-pink-500 text-white',
 }

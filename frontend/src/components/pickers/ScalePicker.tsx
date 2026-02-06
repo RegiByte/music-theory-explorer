@@ -33,7 +33,8 @@ export function ScalePicker({
   if (grouping === 'full') {
     // Find which tab the current value belongs to
     const activeTab =
-      groups.find((g) => g.scales.some((s) => s.value === value))?.label ?? groups[0].label
+      groups.find((g) => g.scales.some((s) => s.value === value))?.label ??
+      groups[0].label
 
     return (
       <div className={className}>

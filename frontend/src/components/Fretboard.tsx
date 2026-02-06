@@ -1,9 +1,6 @@
 import { useState } from 'react'
 import { useResource } from '@/system'
-import {
-  getNoteAtPosition,
-  getFrequencyAtPosition,
-} from '@/core/fretboard'
+import { getNoteAtPosition, getFrequencyAtPosition } from '@/core/fretboard'
 import type { UkuleleString, Note } from '@/schemas'
 
 // Enhanced position type with metadata
@@ -75,9 +72,9 @@ function createFretboardLayout(): FretboardLayout {
   const viewportHeight = 280
 
   // Padding configuration
-  const paddingLeft = 40  // Room for string labels
+  const paddingLeft = 40 // Room for string labels
   const paddingRight = 20
-  const paddingTop = 10   // Room at top
+  const paddingTop = 10 // Room at top
   const paddingBottom = 20 // Room for fret numbers
 
   // Nut configuration
@@ -93,8 +90,19 @@ function createFretboardLayout(): FretboardLayout {
   const fretboardPaddingBottom = 20
   const fretboardPaddingLeft = 4
   const fretboardPaddingRight = 4
-  const fretboardWidth = viewportWidth - paddingLeft - paddingRight - nutWidth - fretboardPaddingLeft - fretboardPaddingRight
-  const fretboardHeight = viewportHeight - paddingTop - paddingBottom - fretboardPaddingTop - fretboardPaddingBottom
+  const fretboardWidth =
+    viewportWidth -
+    paddingLeft -
+    paddingRight -
+    nutWidth -
+    fretboardPaddingLeft -
+    fretboardPaddingRight
+  const fretboardHeight =
+    viewportHeight -
+    paddingTop -
+    paddingBottom -
+    fretboardPaddingTop -
+    fretboardPaddingBottom
   const fretboardStartX = paddingLeft + fretboardPaddingLeft
   const fretboardStartY = paddingTop + fretboardPaddingTop
   const fretboardEndX = viewportWidth - paddingRight - fretboardPaddingRight
@@ -172,7 +180,11 @@ export function Fretboard({
       return layout.fretboardStartX + layout.nutWidth / 2
     }
     // Frets are positioned at their center point
-    return layout.fretboardStartX + layout.nutWidth + (fret - 0.5) * layout.fretSpacing
+    return (
+      layout.fretboardStartX +
+      layout.nutWidth +
+      (fret - 0.5) * layout.fretSpacing
+    )
   }
 
   // Helper function to get Y position for a string
@@ -204,23 +216,21 @@ export function Fretboard({
   // Get position metadata if highlighted
   const getPositionMetadata = (
     string: UkuleleString,
-    fret: number
+    fret: number,
   ): FretboardPosition | undefined => {
     return highlightedPositions.find(
-      (pos) => pos.string === string && pos.fret === fret
+      (pos) => pos.string === string && pos.fret === fret,
     )
   }
 
   const isHovered = (string: UkuleleString, fret: number): boolean => {
-    return (
-      hoveredPosition?.string === string && hoveredPosition?.fret === fret
-    )
+    return hoveredPosition?.string === string && hoveredPosition?.fret === fret
   }
 
   // Color mapping for different highlight types
   const getHighlightColors = (
     color: FretboardPosition['color'] = 'primary',
-    emphasis: FretboardPosition['emphasis'] = 'normal'
+    emphasis: FretboardPosition['emphasis'] = 'normal',
   ) => {
     const colorMap = {
       primary: {
@@ -356,7 +366,10 @@ export function Fretboard({
 
                 // Get colors based on position metadata
                 const colors = positionMeta
-                  ? getHighlightColors(positionMeta.color, positionMeta.emphasis)
+                  ? getHighlightColors(
+                      positionMeta.color,
+                      positionMeta.emphasis,
+                    )
                   : null
 
                 return (
@@ -372,26 +385,14 @@ export function Fretboard({
                             ? layout.positionCircleRadiusStrong
                             : layout.positionCircleRadius
                       }
-                      fill={
-                        colors
-                          ? colors.fill
-                          : hovered
-                            ? '#60a5fa'
-                            : '#fff'
-                      }
+                      fill={colors ? colors.fill : hovered ? '#60a5fa' : '#fff'}
                       stroke={
-                        colors
-                          ? colors.stroke
-                          : hovered
-                            ? '#3b82f6'
-                            : '#666'
+                        colors ? colors.stroke : hovered ? '#3b82f6' : '#666'
                       }
                       strokeWidth={positionMeta || hovered ? 2 : 1}
                       className="cursor-pointer transition-all duration-150"
                       onClick={() => handleNoteClick(string, fret)}
-                      onMouseEnter={() =>
-                        setHoveredPosition({ string, fret })
-                      }
+                      onMouseEnter={() => setHoveredPosition({ string, fret })}
                       onMouseLeave={() => setHoveredPosition(null)}
                     />
 
@@ -399,17 +400,17 @@ export function Fretboard({
                     {positionMeta?.label && (
                       <>
                         <circle
-                          cx={x - layout.positionCircleRadius * .5}
+                          cx={x - layout.positionCircleRadius * 0.5}
                           cy={y - layout.positionCircleRadius * 1.1}
-                          r={layout.positionCircleRadius * .4}
+                          r={layout.positionCircleRadius * 0.4}
                           fill={'#000'}
                           stroke={'#000'}
                           strokeWidth={2}
                         />
                         <text
-                          x={x - layout.positionCircleRadius * .5}
+                          x={x - layout.positionCircleRadius * 0.5}
                           y={y - layout.positionCircleRadius * 1}
-                          fontSize={layout.degreeLabeSize * .8}
+                          fontSize={layout.degreeLabeSize * 0.8}
                           fontWeight="bold"
                           fill={colors?.text || '#333'}
                           textAnchor="middle"
@@ -424,15 +425,20 @@ export function Fretboard({
                     {/* Note label - always visible but subtle when not hovered */}
                     <text
                       x={x}
-                      y={y + (positionMeta?.label ? layout.noteLabelSize / 2.4 : layout.noteLabelSize / 3)}
-                      fontSize={hovered ? layout.noteLabelSizeHovered : layout.noteLabelSize}
+                      y={
+                        y +
+                        (positionMeta?.label
+                          ? layout.noteLabelSize / 2.4
+                          : layout.noteLabelSize / 3)
+                      }
+                      fontSize={
+                        hovered
+                          ? layout.noteLabelSizeHovered
+                          : layout.noteLabelSize
+                      }
                       fontWeight={hovered || positionMeta ? 'bold' : 'normal'}
                       fill={
-                        colors
-                          ? colors.text
-                          : hovered
-                            ? '#1e40af'
-                            : '#9ca3af'
+                        colors ? colors.text : hovered ? '#1e40af' : '#9ca3af'
                       }
                       textAnchor="middle"
                       pointerEvents="none"
@@ -455,7 +461,11 @@ export function Fretboard({
             <text
               key={`fret-num-${fret}`}
               x={getFretX(fret)}
-              y={layout.fretboardEndY + layout.fretNumberSize + (layout.paddingBottom)}
+              y={
+                layout.fretboardEndY +
+                layout.fretNumberSize +
+                layout.paddingBottom
+              }
               fontSize={layout.fretNumberSize}
               fill="#666"
               textAnchor="middle"
@@ -486,10 +496,17 @@ export function Fretboard({
             {hoveredPosition.string} string • Fret {hoveredPosition.fret}
           </div>
           <div className="text-gray-700 mb-1">
-            Note: <span className="font-mono font-bold">{getNoteAtPosition(hoveredPosition.string, hoveredPosition.fret)}</span>
+            Note:{' '}
+            <span className="font-mono font-bold">
+              {getNoteAtPosition(hoveredPosition.string, hoveredPosition.fret)}
+            </span>
           </div>
           <div className="text-gray-600 text-xs mb-2">
-            {getFrequencyAtPosition(hoveredPosition.string, hoveredPosition.fret).toFixed(2)} Hz
+            {getFrequencyAtPosition(
+              hoveredPosition.string,
+              hoveredPosition.fret,
+            ).toFixed(2)}{' '}
+            Hz
           </div>
           <div className="text-xs text-gray-500 pt-2 border-t border-gray-200">
             Click to play

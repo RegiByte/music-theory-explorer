@@ -4,7 +4,11 @@ import {
   A4_FREQUENCY,
 } from '@/constants'
 import { CHROMATIC, CHROMATIC_FLATS } from '@/keywords'
-import { canonicalNote, type NotationPreference, displayNote } from '@/core/enharmonic'
+import {
+  canonicalNote,
+  type NotationPreference,
+  displayNote,
+} from '@/core/enharmonic'
 import type { Note } from '@/schemas'
 
 /**
@@ -14,7 +18,7 @@ import type { Note } from '@/schemas'
  */
 export function semitonesToHz(
   semitones: number,
-  baseFreq = A4_FREQUENCY
+  baseFreq = A4_FREQUENCY,
 ): number {
   return baseFreq * Math.pow(2, semitones / SEMITONES_PER_OCTAVE)
 }
@@ -36,11 +40,11 @@ export function hzToCents(freq1: number, freq2: number): number {
  */
 export function noteToIndex(note: Note): number {
   // First try direct lookup in the sharp array
-  const idx = CHROMATIC.indexOf(note as typeof CHROMATIC[number])
+  const idx = CHROMATIC.indexOf(note as (typeof CHROMATIC)[number])
   if (idx !== -1) return idx
   // Normalize flats to sharps for lookup
   const canonical = canonicalNote(note)
-  return CHROMATIC.indexOf(canonical as typeof CHROMATIC[number])
+  return CHROMATIC.indexOf(canonical as (typeof CHROMATIC)[number])
 }
 
 /**
@@ -49,8 +53,7 @@ export function noteToIndex(note: Note): number {
  */
 export function indexToNote(idx: number): Note {
   const normalized =
-    ((idx % SEMITONES_PER_OCTAVE) + SEMITONES_PER_OCTAVE) %
-    SEMITONES_PER_OCTAVE
+    ((idx % SEMITONES_PER_OCTAVE) + SEMITONES_PER_OCTAVE) % SEMITONES_PER_OCTAVE
   return CHROMATIC[normalized] as Note
 }
 
@@ -62,12 +65,11 @@ export function indexToDisplayNote(
   idx: number,
   preference: NotationPreference,
   key?: Note,
-  scaleType?: string
+  scaleType?: string,
 ): Note {
   const normalized =
-    ((idx % SEMITONES_PER_OCTAVE) + SEMITONES_PER_OCTAVE) %
-    SEMITONES_PER_OCTAVE
-  
+    ((idx % SEMITONES_PER_OCTAVE) + SEMITONES_PER_OCTAVE) % SEMITONES_PER_OCTAVE
+
   if (preference === 'flat') {
     return CHROMATIC_FLATS[normalized] as Note
   }

@@ -79,7 +79,12 @@ export const MELODY_STYLE_PRESETS: Record<MelodyStyle, StyleParams> = {
   },
 }
 
-export const MELODY_STYLES: MelodyStyle[] = ['smooth', 'melodic', 'angular', 'arpeggiated']
+export const MELODY_STYLES: MelodyStyle[] = [
+  'smooth',
+  'melodic',
+  'angular',
+  'arpeggiated',
+]
 
 // ---------------------------------------------------------------------------
 // Generation Engine
@@ -87,7 +92,7 @@ export const MELODY_STYLES: MelodyStyle[] = ['smooth', 'melodic', 'angular', 'ar
 
 /**
  * Generate a melody with parameterized style.
- * 
+ *
  * Algorithm:
  * 1. Start on a chord tone
  * 2. For each subsequent position:
@@ -104,12 +109,14 @@ export function generateStyledMelody(
   params: StyleParams,
 ): MelodyNote[] {
   if (scaleNotes.length === 0) return []
-  
-  const effectiveChordNotes = chordNotes.length > 0 ? chordNotes : [scaleNotes[0]]
+
+  const effectiveChordNotes =
+    chordNotes.length > 0 ? chordNotes : [scaleNotes[0]]
   const melody: MelodyNote[] = []
 
   // Start on a chord tone
-  let currentNote = effectiveChordNotes[Math.floor(Math.random() * effectiveChordNotes.length)]
+  let currentNote =
+    effectiveChordNotes[Math.floor(Math.random() * effectiveChordNotes.length)]
   melody.push(createMelodyNote(0, currentNote, effectiveChordNotes, scaleNotes))
 
   for (let i = 1; i < length; i++) {
@@ -119,14 +126,21 @@ export function generateStyledMelody(
     // End on root for closure
     if (isLastNote) {
       currentNote = effectiveChordNotes[0] // root
-      melody.push(createMelodyNote(i, currentNote, effectiveChordNotes, scaleNotes))
+      melody.push(
+        createMelodyNote(i, currentNote, effectiveChordNotes, scaleNotes),
+      )
       continue
     }
 
     // On strong beats, prefer chord tones
     if (isStrongBeat && Math.random() < params.chordToneAffinity) {
-      currentNote = effectiveChordNotes[Math.floor(Math.random() * effectiveChordNotes.length)]
-      melody.push(createMelodyNote(i, currentNote, effectiveChordNotes, scaleNotes))
+      currentNote =
+        effectiveChordNotes[
+          Math.floor(Math.random() * effectiveChordNotes.length)
+        ]
+      melody.push(
+        createMelodyNote(i, currentNote, effectiveChordNotes, scaleNotes),
+      )
       continue
     }
 
@@ -134,10 +148,17 @@ export function generateStyledMelody(
     if (Math.random() < params.stepProbability) {
       currentNote = pickStepwiseNote(currentNote, scaleNotes, params.maxLeap)
     } else {
-      currentNote = pickLeapNote(currentNote, scaleNotes, effectiveChordNotes, params)
+      currentNote = pickLeapNote(
+        currentNote,
+        scaleNotes,
+        effectiveChordNotes,
+        params,
+      )
     }
 
-    melody.push(createMelodyNote(i, currentNote, effectiveChordNotes, scaleNotes))
+    melody.push(
+      createMelodyNote(i, currentNote, effectiveChordNotes, scaleNotes),
+    )
   }
 
   return melody
@@ -154,7 +175,7 @@ function pickStepwiseNote(
   const currentIdx = noteToIndex(current)
 
   // Find scale notes within maxStep semitones (excluding current)
-  const candidates = scaleNotes.filter(n => {
+  const candidates = scaleNotes.filter((n) => {
     const idx = noteToIndex(n)
     let interval = Math.abs(idx - currentIdx)
     if (interval > 6) interval = 12 - interval
@@ -182,14 +203,14 @@ function pickLeapNote(
 
   // For arpeggiated style, strongly prefer chord tones even on leaps
   if (params.chordToneAffinity > 0.8) {
-    const otherChordNotes = chordNotes.filter(n => n !== current)
+    const otherChordNotes = chordNotes.filter((n) => n !== current)
     if (otherChordNotes.length > 0) {
       return otherChordNotes[Math.floor(Math.random() * otherChordNotes.length)]
     }
   }
 
   // Otherwise, pick a scale note that's further away (a real leap)
-  const leapCandidates = scaleNotes.filter(n => {
+  const leapCandidates = scaleNotes.filter((n) => {
     const idx = noteToIndex(n)
     let interval = Math.abs(idx - currentIdx)
     if (interval > 6) interval = 12 - interval
@@ -201,7 +222,7 @@ function pickLeapNote(
   }
 
   // Fallback: any scale note other than current
-  const others = scaleNotes.filter(n => n !== current)
+  const others = scaleNotes.filter((n) => n !== current)
   return others.length > 0
     ? others[Math.floor(Math.random() * others.length)]
     : scaleNotes[Math.floor(Math.random() * scaleNotes.length)]
@@ -236,7 +257,7 @@ function createMelodyNote(
  */
 export function analyzeMelodyPath(notes: MelodyNote[]): MelodyAnalysis {
   // Convert to MelodyNoteWithMute format for existing analyzer
-  const withMute: MelodyNoteWithMute[] = notes.map(n => ({
+  const withMute: MelodyNoteWithMute[] = notes.map((n) => ({
     ...n,
     muted: false,
   }))
@@ -282,7 +303,7 @@ export function generateAllPaths(
   chordNotes: Note[],
   length: number,
 ): MelodyPath[] {
-  return MELODY_STYLES.map(style => {
+  return MELODY_STYLES.map((style) => {
     const params = MELODY_STYLE_PRESETS[style]
     const notes = generateStyledMelody(scaleNotes, chordNotes, length, params)
     const analysis = analyzeMelodyPath(notes)
@@ -333,7 +354,8 @@ export function rebuildPathAnalysis(
     id: `note-${i}`,
     isChordTone: chordNotes.includes(n.note),
     isStrongBeat: i === 0 || i % 2 === 0,
-    scaleDegree: scaleNotes.indexOf(n.note) >= 0 ? scaleNotes.indexOf(n.note) + 1 : null,
+    scaleDegree:
+      scaleNotes.indexOf(n.note) >= 0 ? scaleNotes.indexOf(n.note) + 1 : null,
   }))
 
   return {

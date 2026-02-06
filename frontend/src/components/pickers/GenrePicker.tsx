@@ -46,7 +46,11 @@ export function GenrePicker(props: GenrePickerProps) {
         className={className}
       >
         {ALL_GENRES.map((genre) => (
-          <Pill key={genre} value={genre} activeClassName={GENRE_PILL_CLASSES[genre]}>
+          <Pill
+            key={genre}
+            value={genre}
+            activeClassName={GENRE_PILL_CLASSES[genre]}
+          >
             {GENRE_DISPLAY[genre]}
           </Pill>
         ))}
@@ -64,7 +68,11 @@ export function GenrePicker(props: GenrePickerProps) {
       className={className}
     >
       {ALL_GENRES.map((genre) => (
-        <Pill key={genre} value={genre} activeClassName={GENRE_PILL_CLASSES[genre]}>
+        <Pill
+          key={genre}
+          value={genre}
+          activeClassName={GENRE_PILL_CLASSES[genre]}
+        >
           {GENRE_DISPLAY[genre]}
         </Pill>
       ))}

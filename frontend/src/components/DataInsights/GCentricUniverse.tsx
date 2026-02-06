@@ -25,22 +25,42 @@ import type { Genre } from '@/schemas'
 const elk = new ELK()
 
 const NOTE_FREQS: Record<string, number> = {
-  C: 261.63, 'C#': 277.18, Db: 277.18,
-  D: 293.66, 'D#': 311.13, Eb: 311.13,
-  E: 329.63, F: 349.23,
-  'F#': 369.99, Gb: 369.99,
-  G: 392.00, 'G#': 415.30, Ab: 415.30,
-  A: 440.00, 'A#': 466.16, Bb: 466.16,
+  C: 261.63,
+  'C#': 277.18,
+  Db: 277.18,
+  D: 293.66,
+  'D#': 311.13,
+  Eb: 311.13,
+  E: 329.63,
+  F: 349.23,
+  'F#': 369.99,
+  Gb: 369.99,
+  G: 392.0,
+  'G#': 415.3,
+  Ab: 415.3,
+  A: 440.0,
+  'A#': 466.16,
+  Bb: 466.16,
   B: 493.88,
 }
 
 const NOTE_INDEX: Record<string, number> = {
-  C: 0, 'C#': 1, Db: 1,
-  D: 2, 'D#': 3, Eb: 3,
-  E: 4, F: 5,
-  'F#': 6, Gb: 6,
-  G: 7, 'G#': 8, Ab: 8,
-  A: 9, 'A#': 10, Bb: 10,
+  C: 0,
+  'C#': 1,
+  Db: 1,
+  D: 2,
+  'D#': 3,
+  Eb: 3,
+  E: 4,
+  F: 5,
+  'F#': 6,
+  Gb: 6,
+  G: 7,
+  'G#': 8,
+  Ab: 8,
+  A: 9,
+  'A#': 10,
+  Bb: 10,
   B: 11,
 }
 
@@ -56,7 +76,10 @@ function extractRoot(chord: string): string | null {
   return match ? match[1] : null
 }
 
-function classifyMovement(fromChord: string, toChord: string): 'resolution' | 'tension' | 'departure' {
+function classifyMovement(
+  fromChord: string,
+  toChord: string,
+): 'resolution' | 'tension' | 'departure' {
   const fromRoot = extractRoot(fromChord)
   const toRoot = extractRoot(toChord)
   if (!fromRoot || !toRoot) return 'departure'
@@ -65,7 +88,7 @@ function classifyMovement(fromChord: string, toChord: string): 'resolution' | 't
   const toIdx = NOTE_INDEX[toRoot]
   if (fromIdx === undefined || toIdx === undefined) return 'departure'
 
-  const interval = ((toIdx - fromIdx) % 12 + 12) % 12
+  const interval = (((toIdx - fromIdx) % 12) + 12) % 12
 
   if (interval === 7) return 'tension'
   if (interval === 5) return 'resolution'
@@ -77,7 +100,7 @@ function classifyMovement(fromChord: string, toChord: string): 'resolution' | 't
 // ─── Handle Routing ───────────────────────────────────────────────────────────
 
 const HANDLE_POSITIONS = ['top', 'right', 'bottom', 'left'] as const
-type HandleDir = typeof HANDLE_POSITIONS[number]
+type HandleDir = (typeof HANDLE_POSITIONS)[number]
 
 /**
  * Given a source node position+size and target node position+size,
@@ -90,25 +113,36 @@ function getHandleAnchor(
   nodePos: { x: number; y: number },
   nodeWidth: number,
   nodeHeight: number,
-  dir: HandleDir
+  dir: HandleDir,
 ): { x: number; y: number } {
   const cx = nodePos.x + nodeWidth / 2
   const cy = nodePos.y + nodeHeight / 2
   switch (dir) {
-    case 'top':    return { x: cx, y: nodePos.y }
-    case 'right':  return { x: nodePos.x + nodeWidth, y: cy }
-    case 'bottom': return { x: cx, y: nodePos.y + nodeHeight }
-    case 'left':   return { x: nodePos.x, y: cy }
+    case 'top':
+      return { x: cx, y: nodePos.y }
+    case 'right':
+      return { x: nodePos.x + nodeWidth, y: cy }
+    case 'bottom':
+      return { x: cx, y: nodePos.y + nodeHeight }
+    case 'left':
+      return { x: nodePos.x, y: cy }
   }
 }
 
-function dist(a: { x: number; y: number }, b: { x: number; y: number }): number {
+function dist(
+  a: { x: number; y: number },
+  b: { x: number; y: number },
+): number {
   return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2)
 }
 
 function bestHandlePair(
-  srcPos: { x: number; y: number }, srcW: number, srcH: number,
-  tgtPos: { x: number; y: number }, tgtW: number, tgtH: number
+  srcPos: { x: number; y: number },
+  srcW: number,
+  srcH: number,
+  tgtPos: { x: number; y: number },
+  tgtW: number,
+  tgtH: number,
 ): { sourceHandle: string; targetHandle: string } {
   let bestDist = Infinity
   let bestSrc: HandleDir = 'right'
@@ -157,7 +191,12 @@ const edgeTypes = { gravityEdge: GravityEdge }
 
 // ─── Custom Node ──────────────────────────────────────────────────────────────
 
-const hiddenStyle = { opacity: 0, width: 1, height: 1, pointerEvents: 'none' as const }
+const hiddenStyle = {
+  opacity: 0,
+  width: 1,
+  height: 1,
+  pointerEvents: 'none' as const,
+}
 
 interface GravityNodeData {
   chord: string
@@ -170,7 +209,8 @@ interface GravityNodeData {
 }
 
 function GravityNode({ data }: { data: GravityNodeData }) {
-  const { chord, frequency, maxFrequency, isHighlighted, onPlay, onHover } = data
+  const { chord, frequency, maxFrequency, isHighlighted, onPlay, onHover } =
+    data
   const relSize = Math.max(0.4, frequency / Math.max(maxFrequency, 0.001))
   const size = 40 + relSize * 40
 
@@ -186,7 +226,9 @@ function GravityNode({ data }: { data: GravityNodeData }) {
         height: size,
         backgroundColor: `hsl(${hue}, ${saturation}%, ${lightness}%)`,
         opacity: isHighlighted ? 1 : 0.85,
-        border: isHighlighted ? '3px solid #312e81' : '2px solid rgba(255,255,255,0.7)',
+        border: isHighlighted
+          ? '3px solid #312e81'
+          : '2px solid rgba(255,255,255,0.7)',
         boxShadow: isHighlighted
           ? '0 0 16px rgba(99, 102, 241, 0.5)'
           : '0 2px 8px rgba(0, 0, 0, 0.15)',
@@ -207,15 +249,55 @@ function GravityNode({ data }: { data: GravityNodeData }) {
         {chord}
       </span>
       {/* Source handles — one per direction */}
-      <Handle id="s-top"    type="source" position={Position.Top}    style={hiddenStyle} />
-      <Handle id="s-right"  type="source" position={Position.Right}  style={hiddenStyle} />
-      <Handle id="s-bottom" type="source" position={Position.Bottom} style={hiddenStyle} />
-      <Handle id="s-left"   type="source" position={Position.Left}   style={hiddenStyle} />
+      <Handle
+        id="s-top"
+        type="source"
+        position={Position.Top}
+        style={hiddenStyle}
+      />
+      <Handle
+        id="s-right"
+        type="source"
+        position={Position.Right}
+        style={hiddenStyle}
+      />
+      <Handle
+        id="s-bottom"
+        type="source"
+        position={Position.Bottom}
+        style={hiddenStyle}
+      />
+      <Handle
+        id="s-left"
+        type="source"
+        position={Position.Left}
+        style={hiddenStyle}
+      />
       {/* Target handles — one per direction */}
-      <Handle id="t-top"    type="target" position={Position.Top}    style={hiddenStyle} />
-      <Handle id="t-right"  type="target" position={Position.Right}  style={hiddenStyle} />
-      <Handle id="t-bottom" type="target" position={Position.Bottom} style={hiddenStyle} />
-      <Handle id="t-left"   type="target" position={Position.Left}   style={hiddenStyle} />
+      <Handle
+        id="t-top"
+        type="target"
+        position={Position.Top}
+        style={hiddenStyle}
+      />
+      <Handle
+        id="t-right"
+        type="target"
+        position={Position.Right}
+        style={hiddenStyle}
+      />
+      <Handle
+        id="t-bottom"
+        type="target"
+        position={Position.Bottom}
+        style={hiddenStyle}
+      />
+      <Handle
+        id="t-left"
+        type="target"
+        position={Position.Left}
+        style={hiddenStyle}
+      />
     </div>
   )
 }
@@ -237,8 +319,12 @@ export function GCentricUniverse() {
   const [topN, setTopN] = useState(20)
   const [edgeThreshold, setEdgeThreshold] = useState(0.02)
   const [hoveredChord, setHoveredChord] = useState<string | null>(null)
-  const [layouted, setLayouted] = useState<{ nodes: Node[]; edges: Edge[] }>({ nodes: [], edges: [] })
-  const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null)
+  const [layouted, setLayouted] = useState<{ nodes: Node[]; edges: Edge[] }>({
+    nodes: [],
+    edges: [],
+  })
+  const [reactFlowInstance, setReactFlowInstance] =
+    useState<ReactFlowInstance | null>(null)
   const [loading, setLoading] = useState(true)
 
   const recommender = useResource('recommender')
@@ -252,7 +338,7 @@ export function GCentricUniverse() {
         if (freq) audio.playNote(freq, 0.3)
       }
     },
-    [audio]
+    [audio],
   )
 
   // Load data and compute layout
@@ -291,7 +377,10 @@ export function GCentricUniverse() {
       }))
 
       // Build deduplicated edges
-      const edgeMap = new Map<string, { from: string; to: string; prob: number }>()
+      const edgeMap = new Map<
+        string,
+        { from: string; to: string; prob: number }
+      >()
       for (const from of topChords) {
         const trans = transitions[from] || {}
         for (const [to, prob] of Object.entries(trans)) {
@@ -347,38 +436,44 @@ export function GCentricUniverse() {
         }))
 
         // Now build edges with optimal handle pairs based on actual positions
-        const laidOutEdges: Edge[] = Array.from(edgeMap.values()).map(({ from, to, prob }) => {
-          const srcPos = posMap[from] ?? { x: 0, y: 0 }
-          const tgtPos = posMap[to] ?? { x: 0, y: 0 }
-          const srcSize = nodeSizes[from]
-          const tgtSize = nodeSizes[to]
-          const { sourceHandle, targetHandle } = bestHandlePair(
-            srcPos, srcSize, srcSize,
-            tgtPos, tgtSize, tgtSize
-          )
+        const laidOutEdges: Edge[] = Array.from(edgeMap.values()).map(
+          ({ from, to, prob }) => {
+            const srcPos = posMap[from] ?? { x: 0, y: 0 }
+            const tgtPos = posMap[to] ?? { x: 0, y: 0 }
+            const srcSize = nodeSizes[from]
+            const tgtSize = nodeSizes[to]
+            const { sourceHandle, targetHandle } = bestHandlePair(
+              srcPos,
+              srcSize,
+              srcSize,
+              tgtPos,
+              tgtSize,
+              tgtSize,
+            )
 
-          return {
-            id: `${from}->${to}`,
-            source: from,
-            target: to,
-            sourceHandle,
-            targetHandle,
-            type: 'gravityEdge',
-            animated: false,
-            data: { probability: prob, from, to },
-            style: {
-              stroke: MOVEMENT_COLORS.neutral,
-              strokeWidth: Math.max(1, prob * 10),
-              opacity: 0.5,
-            },
-            markerEnd: {
-              type: MarkerType.ArrowClosed,
-              width: 10,
-              height: 10,
-              color: MOVEMENT_COLORS.neutral,
-            },
-          }
-        })
+            return {
+              id: `${from}->${to}`,
+              source: from,
+              target: to,
+              sourceHandle,
+              targetHandle,
+              type: 'gravityEdge',
+              animated: false,
+              data: { probability: prob, from, to },
+              style: {
+                stroke: MOVEMENT_COLORS.neutral,
+                strokeWidth: Math.max(1, prob * 10),
+                opacity: 0.5,
+              },
+              markerEnd: {
+                type: MarkerType.ArrowClosed,
+                width: 10,
+                height: 10,
+                color: MOVEMENT_COLORS.neutral,
+              },
+            }
+          },
+        )
 
         setLayouted({ nodes: laidOutNodes, edges: laidOutEdges })
       } catch {
@@ -392,18 +487,20 @@ export function GCentricUniverse() {
             y: radius * Math.sin(i * angleStep),
           },
         }))
-        const fallbackEdges: Edge[] = Array.from(edgeMap.values()).map(({ from, to, prob }) => ({
-          id: `${from}->${to}`,
-          source: from,
-          target: to,
-          type: 'gravityEdge',
-          data: { probability: prob, from, to },
-          style: {
-            stroke: MOVEMENT_COLORS.neutral,
-            strokeWidth: Math.max(1, prob * 10),
-            opacity: 0.5,
-          },
-        }))
+        const fallbackEdges: Edge[] = Array.from(edgeMap.values()).map(
+          ({ from, to, prob }) => ({
+            id: `${from}->${to}`,
+            source: from,
+            target: to,
+            type: 'gravityEdge',
+            data: { probability: prob, from, to },
+            style: {
+              stroke: MOVEMENT_COLORS.neutral,
+              strokeWidth: Math.max(1, prob * 10),
+              opacity: 0.5,
+            },
+          }),
+        )
         setLayouted({ nodes: fallbackNodes, edges: fallbackEdges })
       }
 
@@ -411,7 +508,9 @@ export function GCentricUniverse() {
     }
 
     compute()
-    return () => { cancelled = true }
+    return () => {
+      cancelled = true
+    }
   }, [genre, topN, edgeThreshold, recommender, playChord])
 
   // Node highlighting on hover
@@ -496,7 +595,7 @@ export function GCentricUniverse() {
     if (!node) return null
     const freq = (node.data as any).frequency as number
     const connectedEdges = layouted.edges.filter(
-      (e) => e.source === hoveredChord || e.target === hoveredChord
+      (e) => e.source === hoveredChord || e.target === hoveredChord,
     )
     const topConnections = connectedEdges
       .map((e) => {
@@ -531,7 +630,9 @@ export function GCentricUniverse() {
             ))}
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="text-xs text-gray-500">{t('gCentricUniverse.edgeCutoff')}</span>
+            <span className="text-xs text-gray-500">
+              {t('gCentricUniverse.edgeCutoff')}
+            </span>
             <input
               type="range"
               min={0}
@@ -541,7 +642,9 @@ export function GCentricUniverse() {
               onChange={(e) => setEdgeThreshold(Number(e.target.value) / 100)}
               className="w-20"
             />
-            <span className="text-xs font-mono text-gray-600">{(edgeThreshold * 100).toFixed(0)}%</span>
+            <span className="text-xs font-mono text-gray-600">
+              {(edgeThreshold * 100).toFixed(0)}%
+            </span>
           </div>
         </div>
       </div>
@@ -576,8 +679,10 @@ export function GCentricUniverse() {
       <div className="min-h-[48px] mt-2 flex items-center">
         {hoveredInfo ? (
           <div className="text-sm text-gray-700">
-            <strong>{hoveredInfo.chord}</strong>: {' '}
-            <span className="font-mono">{(hoveredInfo.frequency * 100).toFixed(1)}%</span> {' '}
+            <strong>{hoveredInfo.chord}</strong>:{' '}
+            <span className="font-mono">
+              {(hoveredInfo.frequency * 100).toFixed(1)}%
+            </span>{' '}
             {t('gCentricUniverse.ofSongs', { genre: GENRE_DISPLAY[genre] })}
             {hoveredInfo.topConnections.length > 0 && (
               <span className="ml-3 text-gray-500">
@@ -585,10 +690,15 @@ export function GCentricUniverse() {
                 {hoveredInfo.topConnections.map((c, i) => (
                   <span key={c.chord}>
                     {i > 0 && ', '}
-                    <span style={{ color: MOVEMENT_COLORS[c.movement], fontWeight: 600 }}>
+                    <span
+                      style={{
+                        color: MOVEMENT_COLORS[c.movement],
+                        fontWeight: 600,
+                      }}
+                    >
                       {c.chord}
-                    </span>
-                    {' '}({(c.probability * 100).toFixed(0)}%)
+                    </span>{' '}
+                    ({(c.probability * 100).toFixed(0)}%)
                   </span>
                 ))}
               </span>
@@ -603,32 +713,63 @@ export function GCentricUniverse() {
 
       {/* Movement legend */}
       <div className="flex items-center gap-4 mt-1 text-xs text-gray-500">
-        <span className="font-medium text-gray-600">{t('gCentricUniverse.onHover')}</span>
+        <span className="font-medium text-gray-600">
+          {t('gCentricUniverse.onHover')}
+        </span>
         <span className="flex items-center gap-1.5">
-          <span className="w-3 h-0.5 rounded" style={{ backgroundColor: MOVEMENT_COLORS.resolution, display: 'inline-block' }} />
+          <span
+            className="w-3 h-0.5 rounded"
+            style={{
+              backgroundColor: MOVEMENT_COLORS.resolution,
+              display: 'inline-block',
+            }}
+          />
           {t('gCentricUniverse.resolution')}
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="w-3 h-0.5 rounded" style={{ backgroundColor: MOVEMENT_COLORS.tension, display: 'inline-block' }} />
+          <span
+            className="w-3 h-0.5 rounded"
+            style={{
+              backgroundColor: MOVEMENT_COLORS.tension,
+              display: 'inline-block',
+            }}
+          />
           {t('gCentricUniverse.tension')}
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="w-3 h-0.5 rounded" style={{ backgroundColor: MOVEMENT_COLORS.departure, display: 'inline-block' }} />
+          <span
+            className="w-3 h-0.5 rounded"
+            style={{
+              backgroundColor: MOVEMENT_COLORS.departure,
+              display: 'inline-block',
+            }}
+          />
           {t('gCentricUniverse.departure')}
         </span>
       </div>
 
       <div className="mt-3 p-4 bg-linear-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
-        <p 
+        <p
           className="text-sm text-gray-700 leading-relaxed"
           dangerouslySetInnerHTML={{
-            __html: t('gCentricUniverse.nodeSizeDescription', { genre: GENRE_DISPLAY[genre] })
-              .replace(/<blue>/g, `<span style="color: ${MOVEMENT_COLORS.resolution}; font-weight: 600;">`)
+            __html: t('gCentricUniverse.nodeSizeDescription', {
+              genre: GENRE_DISPLAY[genre],
+            })
+              .replace(
+                /<blue>/g,
+                `<span style="color: ${MOVEMENT_COLORS.resolution}; font-weight: 600;">`,
+              )
               .replace(/<\/blue>/g, '</span>')
-              .replace(/<orange>/g, `<span style="color: ${MOVEMENT_COLORS.tension}; font-weight: 600;">`)
+              .replace(
+                /<orange>/g,
+                `<span style="color: ${MOVEMENT_COLORS.tension}; font-weight: 600;">`,
+              )
               .replace(/<\/orange>/g, '</span>')
-              .replace(/<green>/g, `<span style="color: ${MOVEMENT_COLORS.departure}; font-weight: 600;">`)
-              .replace(/<\/green>/g, '</span>')
+              .replace(
+                /<green>/g,
+                `<span style="color: ${MOVEMENT_COLORS.departure}; font-weight: 600;">`,
+              )
+              .replace(/<\/green>/g, '</span>'),
           }}
         />
       </div>

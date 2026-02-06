@@ -8,12 +8,22 @@ import { GENRE_DISPLAY } from '@/core/musicData'
 import type { Genre } from '@/schemas'
 
 const NOTE_FREQS: Record<string, number> = {
-  C: 261.63, 'C#': 277.18, Db: 277.18,
-  D: 293.66, 'D#': 311.13, Eb: 311.13,
-  E: 329.63, F: 349.23,
-  'F#': 369.99, Gb: 369.99,
-  G: 392.00, 'G#': 415.30, Ab: 415.30,
-  A: 440.00, 'A#': 466.16, Bb: 466.16,
+  C: 261.63,
+  'C#': 277.18,
+  Db: 277.18,
+  D: 293.66,
+  'D#': 311.13,
+  Eb: 311.13,
+  E: 329.63,
+  F: 349.23,
+  'F#': 369.99,
+  Gb: 369.99,
+  G: 392.0,
+  'G#': 415.3,
+  Ab: 415.3,
+  A: 440.0,
+  'A#': 466.16,
+  Bb: 466.16,
   B: 493.88,
 }
 
@@ -30,7 +40,7 @@ function probToColor(prob: number, maxProb: number): string {
   // White -> Indigo gradient
   const r = Math.round(255 - intensity * 186) // 255 -> 69
   const g = Math.round(255 - intensity * 193) // 255 -> 62
-  const b = Math.round(255 - intensity * 14)  // 255 -> 241
+  const b = Math.round(255 - intensity * 14) // 255 -> 241
   return `rgb(${r}, ${g}, ${b})`
 }
 
@@ -47,8 +57,13 @@ export function TransitionHeatmap({ mode }: TransitionHeatmapProps) {
   const [genre, setGenre] = useState<Genre>('pop')
   const [topN, setTopN] = useState(mode === 'matrix' ? 15 : 20)
   const [selectedChord, setSelectedChord] = useState<string>('C')
-  const [hoveredCell, setHoveredCell] = useState<{ row: number; col: number } | null>(null)
-  const [transitions, setTransitions] = useState<Record<string, Record<string, number>>>({})
+  const [hoveredCell, setHoveredCell] = useState<{
+    row: number
+    col: number
+  } | null>(null)
+  const [transitions, setTransitions] = useState<
+    Record<string, Record<string, number>>
+  >({})
   const [topChords, setTopChords] = useState<string[]>([])
   const recommender = useResource('recommender')
   const audio = useResource('audio')
@@ -74,7 +89,7 @@ export function TransitionHeatmap({ mode }: TransitionHeatmapProps) {
       const freq = chordToFreq(chord)
       if (freq) audio.playNote(freq, 0.3)
     },
-    [audio]
+    [audio],
   )
 
   const playTransition = useCallback(
@@ -84,36 +99,40 @@ export function TransitionHeatmap({ mode }: TransitionHeatmapProps) {
       if (f1) audio.playNote(f1, 0.3)
       if (f2) setTimeout(() => audio.playNote(f2, 0.3), 400)
     },
-    [audio]
+    [audio],
   )
 
   // --- Single-chord mode ---
   if (mode === 'single-chord') {
-    return <SingleChordView
-      genre={genre}
-      setGenre={setGenre}
-      selectedChord={selectedChord}
-      setSelectedChord={setSelectedChord}
-      transitions={transitions}
-      topChords={topChords}
-      playChord={playChord}
-      playTransition={playTransition}
-    />
+    return (
+      <SingleChordView
+        genre={genre}
+        setGenre={setGenre}
+        selectedChord={selectedChord}
+        setSelectedChord={setSelectedChord}
+        transitions={transitions}
+        topChords={topChords}
+        playChord={playChord}
+        playTransition={playTransition}
+      />
+    )
   }
 
   // --- Full matrix mode ---
-  return <MatrixView
-    genre={genre}
-    setGenre={setGenre}
-    topN={topN}
-    setTopN={setTopN}
-    transitions={transitions}
-    topChords={topChords}
-    hoveredCell={hoveredCell}
-    setHoveredCell={setHoveredCell}
-    playTransition={playTransition}
-    playChord={playChord}
-  />
+  return (
+    <MatrixView
+      genre={genre}
+      setGenre={setGenre}
+      topN={topN}
+      setTopN={setTopN}
+      transitions={transitions}
+      topChords={topChords}
+      hoveredCell={hoveredCell}
+      setHoveredCell={setHoveredCell}
+      playTransition={playTransition}
+      playChord={playChord}
+    />
+  )
 }
 
 // ─── Single-Chord View ────────────────────────────────────────────────────────
@@ -130,8 +149,13 @@ interface SingleChordViewProps {
 }
 
 function SingleChordView({
-  genre, setGenre, selectedChord, setSelectedChord,
-  transitions, topChords, playTransition,
+  genre,
+  setGenre,
+  selectedChord,
+  setSelectedChord,
+  transitions,
+  topChords,
+  playTransition,
 }: SingleChordViewProps) {
   const chordTransitions = useMemo(() => {
     const trans = transitions[selectedChord] || {}
@@ -145,7 +169,9 @@ function SingleChordView({
   if (topChords.length === 0) {
     return (
       <Card className="p-6">
-        <p className="text-muted-foreground text-center py-8">Loading transition data...</p>
+        <p className="text-muted-foreground text-center py-8">
+          Loading transition data...
+        </p>
       </Card>
     )
   }
@@ -180,7 +206,9 @@ function SingleChordView({
             className="w-full flex items-center gap-3 group cursor-pointer hover:bg-gray-50 rounded-md px-2 py-1 transition-colors"
             onClick={() => playTransition(selectedChord, chord)}
           >
-            <span className="w-12 text-sm font-bold text-right shrink-0">{chord}</span>
+            <span className="w-12 text-sm font-bold text-right shrink-0">
+              {chord}
+            </span>
             <div className="flex-1 h-7 bg-gray-100 rounded-md overflow-hidden relative">
               <div
                 className="h-full rounded-md transition-all duration-300"
@@ -223,10 +251,16 @@ interface MatrixViewProps {
 }
 
 function MatrixView({
-  genre, setGenre, topN, setTopN,
-  transitions, topChords,
-  hoveredCell, setHoveredCell,
-  playTransition, playChord,
+  genre,
+  setGenre,
+  topN,
+  setTopN,
+  transitions,
+  topChords,
+  hoveredCell,
+  setHoveredCell,
+  playTransition,
+  playChord,
 }: MatrixViewProps) {
   const { t } = useTranslation('tools')
   const chords = topChords.slice(0, topN)
@@ -247,7 +281,9 @@ function MatrixView({
   if (chords.length === 0) {
     return (
       <Card className="p-6">
-        <p className="text-muted-foreground text-center py-12">{t('transitionHeatmap.loadingMatrix')}</p>
+        <p className="text-muted-foreground text-center py-12">
+          {t('transitionHeatmap.loadingMatrix')}
+        </p>
       </Card>
     )
   }
@@ -258,7 +294,9 @@ function MatrixView({
   return (
     <Card className="p-6">
       <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
-        <h3 className="text-xl font-semibold">{t('transitionHeatmap.chordTransitionMatrix')}</h3>
+        <h3 className="text-xl font-semibold">
+          {t('transitionHeatmap.chordTransitionMatrix')}
+        </h3>
         <div className="flex gap-2 items-center flex-wrap">
           <GenrePicker value={genre} onValueChange={setGenre} size="xs" />
           <div className="flex gap-1">
@@ -288,9 +326,7 @@ function MatrixView({
           }}
         >
           {/* Top-left corner */}
-          <div
-            className="flex items-end justify-end pr-1 pb-1 text-[10px] text-gray-400"
-          >
+          <div className="flex items-end justify-end pr-1 pb-1 text-[10px] text-gray-400">
             <span>{t('transitionHeatmap.fromTo')}</span>
           </div>
 
@@ -299,9 +335,14 @@ function MatrixView({
             <button
               key={`col-${chord}`}
               className={`flex items-center justify-center text-xs font-bold cursor-pointer transition-colors rounded-sm ${
-                hoveredCell?.col === colIdx ? 'bg-indigo-100 text-indigo-800' : 'text-gray-600 hover:text-gray-900'
+                hoveredCell?.col === colIdx
+                  ? 'bg-indigo-100 text-indigo-800'
+                  : 'text-gray-600 hover:text-gray-900'
               }`}
-              style={{ writingMode: 'vertical-lr', transform: 'rotate(180deg)' }}
+              style={{
+                writingMode: 'vertical-lr',
+                transform: 'rotate(180deg)',
+              }}
               onClick={() => playChord(chord)}
             >
               {chord}
@@ -315,7 +356,9 @@ function MatrixView({
               <button
                 key={`row-${fromChord}`}
                 className={`flex items-center justify-end pr-2 text-xs font-bold cursor-pointer transition-colors rounded-sm ${
-                  hoveredCell?.row === rowIdx ? 'bg-indigo-100 text-indigo-800' : 'text-gray-600 hover:text-gray-900'
+                  hoveredCell?.row === rowIdx
+                    ? 'bg-indigo-100 text-indigo-800'
+                    : 'text-gray-600 hover:text-gray-900'
                 }`}
                 onClick={() => playChord(fromChord)}
               >
@@ -341,9 +384,12 @@ function MatrixView({
                           : 'border-transparent'
                     }`}
                     style={{
-                      backgroundColor: prob > 0 ? probToColor(prob, maxProb) : '#f9fafb',
+                      backgroundColor:
+                        prob > 0 ? probToColor(prob, maxProb) : '#f9fafb',
                     }}
-                    onMouseEnter={() => setHoveredCell({ row: rowIdx, col: colIdx })}
+                    onMouseEnter={() =>
+                      setHoveredCell({ row: rowIdx, col: colIdx })
+                    }
                     onMouseLeave={() => setHoveredCell(null)}
                     onClick={() => playTransition(fromChord, toChord)}
                     title={`${fromChord} → ${toChord}: ${(prob * 100).toFixed(1)}%`}
@@ -368,11 +414,14 @@ function MatrixView({
       <div className="h-6 mt-2">
         {hoveredCell && (
           <p className="text-sm text-gray-600">
-            <strong>{chords[hoveredCell.row]}</strong> → <strong>{chords[hoveredCell.col]}</strong>:{' '}
+            <strong>{chords[hoveredCell.row]}</strong> →{' '}
+            <strong>{chords[hoveredCell.col]}</strong>:{' '}
             <span className="font-mono">
               {(matrix[hoveredCell.row][hoveredCell.col] * 100).toFixed(2)}%
             </span>{' '}
-            {t('transitionHeatmap.probability', { genre: GENRE_DISPLAY[genre] })}
+            {t('transitionHeatmap.probability', {
+              genre: GENRE_DISPLAY[genre],
+            })}
           </p>
         )}
       </div>
@@ -392,7 +441,9 @@ function MatrixView({
             )
           })}
         </div>
-        <span className="text-xs text-gray-500">{(maxProb * 100).toFixed(0)}%</span>
+        <span className="text-xs text-gray-500">
+          {(maxProb * 100).toFixed(0)}%
+        </span>
         <span className="text-xs text-muted-foreground ml-2 italic">
           {t('transitionHeatmap.clickCell')}
         </span>

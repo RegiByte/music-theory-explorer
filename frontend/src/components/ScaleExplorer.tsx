@@ -14,14 +14,14 @@ import type { Note, ScaleType, UkuleleString } from '@/schemas'
 function getScalePattern(scaleType: ScaleType): string {
   const intervals = SCALE_PATTERNS[scaleType]
   const steps: string[] = []
-  
+
   for (let i = 0; i < intervals.length - 1; i++) {
     const diff = intervals[i + 1] - intervals[i]
     if (diff === 2) steps.push('W')
     else if (diff === 1) steps.push('H')
     else if (diff === 3) steps.push('W+H')
   }
-  
+
   return steps.join('-')
 }
 
@@ -30,7 +30,9 @@ export function ScaleExplorer() {
   const audio = useResource('audio')
   const [root, setRoot] = useState<Note>('C')
   const [scaleType, setScaleType] = useState<ScaleType>('major')
-  const [currentlyPlayingNote, setCurrentlyPlayingNote] = useState<Note | null>(null)
+  const [currentlyPlayingNote, setCurrentlyPlayingNote] = useState<Note | null>(
+    null,
+  )
 
   // Generate scale using existing function
   const scale = generateScale(root, scaleType)
@@ -59,7 +61,8 @@ export function ScaleExplorer() {
   // Play scale ascending or descending
   const playScale = (direction: 'ascending' | 'descending' = 'ascending') => {
     // Get notes in the correct order
-    const notesToPlay = direction === 'descending' ? [...scale.notes].reverse() : scale.notes
+    const notesToPlay =
+      direction === 'descending' ? [...scale.notes].reverse() : scale.notes
 
     const frequencies = notesToPlay.map((note) => {
       const semitones = noteToIndex(note) - noteToIndex('C')
@@ -75,18 +78,23 @@ export function ScaleExplorer() {
 
     // Play notes sequentially with visual feedback
     notesToPlay.forEach((note, i) => {
-      setTimeout(() => {
-        // Highlight the note being played
-        setCurrentlyPlayingNote(note)
-        
-        // Play the note
-        audio.playNote(frequencies[i], noteDuration)
-        
-        // Clear highlight after note finishes
-        setTimeout(() => {
-          setCurrentlyPlayingNote((current) => current === note ? null : current)
-        }, noteDuration * 1000)
-      }, i * noteInterval * 1000)
+      setTimeout(
+        () => {
+          // Highlight the note being played
+          setCurrentlyPlayingNote(note)
+
+          // Play the note
+          audio.playNote(frequencies[i], noteDuration)
+
+          // Clear highlight after note finishes
+          setTimeout(() => {
+            setCurrentlyPlayingNote((current) =>
+              current === note ? null : current,
+            )
+          }, noteDuration * 1000)
+        },
+        i * noteInterval * 1000,
+      )
     })
   }
 
@@ -124,7 +132,9 @@ export function ScaleExplorer() {
       {/* Scale Info */}
       <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 space-y-2">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-sm font-medium text-gray-700">{t('scaleExplorer.notes')}</span>
+          <span className="text-sm font-medium text-gray-700">
+            {t('scaleExplorer.notes')}
+          </span>
           <div className="flex gap-2">
             {scale.notes.map((note, i) => (
               <span
@@ -141,7 +151,9 @@ export function ScaleExplorer() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-700">{t('scaleExplorer.pattern')}</span>
+          <span className="text-sm font-medium text-gray-700">
+            {t('scaleExplorer.pattern')}
+          </span>
           <span className="text-sm font-mono text-gray-600">
             {getScalePattern(scaleType)}
           </span>

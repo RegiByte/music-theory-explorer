@@ -53,7 +53,9 @@ export function CentsCalculator() {
   return (
     <Card className="p-6">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold mb-2">{t('centsCalculator.title')}</h2>
+        <h2 className="text-2xl font-bold mb-2">
+          {t('centsCalculator.title')}
+        </h2>
         <p className="text-sm text-gray-600">
           {t('centsCalculator.description')}
         </p>
@@ -118,12 +120,16 @@ export function CentsCalculator() {
         <div className="text-xs text-center text-gray-500">
           {cents > 0
             ? t('centsCalculator.sharpBy', { value: cents.toFixed(2) })
-            : t('centsCalculator.flatBy', { value: Math.abs(cents).toFixed(2) })}
+            : t('centsCalculator.flatBy', {
+                value: Math.abs(cents).toFixed(2),
+              })}
         </div>
       </div>
 
       <div className="mt-6 pt-6 border-t">
-        <h3 className="font-semibold mb-2">{t('centsCalculator.quickReference')}</h3>
+        <h3 className="font-semibold mb-2">
+          {t('centsCalculator.quickReference')}
+        </h3>
         <ul className="text-sm text-gray-600 space-y-1">
           <li>• {t('centsCalculator.ref5cents')}</li>
           <li>• {t('centsCalculator.ref10cents')}</li>

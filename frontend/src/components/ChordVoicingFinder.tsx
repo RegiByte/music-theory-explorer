@@ -43,7 +43,7 @@ export function ChordVoicingFinder() {
   const chord = useMemo(() => generateChord(root, quality), [root, quality])
   const voicings = useMemo(
     () => findChordVoicings(chord, maxFretSpan),
-    [chord, maxFretSpan]
+    [chord, maxFretSpan],
   )
 
   // Filter voicings by quality if needed
@@ -57,17 +57,19 @@ export function ChordVoicingFinder() {
   // Limit to top 20 voicings for performance
   const displayedVoicings = filteredVoicings.slice(0, 20)
   const selectedVoicing =
-    selectedVoicingIndex !== null ? displayedVoicings[selectedVoicingIndex] : null
+    selectedVoicingIndex !== null
+      ? displayedVoicings[selectedVoicingIndex]
+      : null
 
   // Convert selected voicing to fretboard positions
   const highlightedPositions: FretboardPosition[] = selectedVoicing
     ? selectedVoicing.positions.map((pos) => ({
-      string: pos.string,
-      fret: pos.fret,
-      color: pos.note === chord.root ? 'primary' : 'secondary',
-      emphasis: 'strong' as const,
-      label: getChordDegree(pos.note, chord),
-    }))
+        string: pos.string,
+        fret: pos.fret,
+        color: pos.note === chord.root ? 'primary' : 'secondary',
+        emphasis: 'strong' as const,
+        label: getChordDegree(pos.note, chord),
+      }))
     : []
 
   // Play a voicing
@@ -95,13 +97,17 @@ export function ChordVoicingFinder() {
       <div className="flex items-end gap-4 flex-wrap">
         {/* Root Note Selector */}
         <div className="flex flex-col gap-2">
-          <Label className="text-sm font-medium">{t('chordVoicingFinder.rootNote')}</Label>
+          <Label className="text-sm font-medium">
+            {t('chordVoicingFinder.rootNote')}
+          </Label>
           <NotePicker value={root} onValueChange={(v) => v && setRoot(v)} />
         </div>
 
         {/* Chord Quality Selector */}
         <div className="flex flex-col gap-2">
-          <Label className="text-sm font-medium">{t('chordVoicingFinder.chordQuality')}</Label>
+          <Label className="text-sm font-medium">
+            {t('chordVoicingFinder.chordQuality')}
+          </Label>
           <ChordQualityPicker value={quality} onValueChange={setQuality} />
         </div>
 
@@ -143,14 +149,18 @@ export function ChordVoicingFinder() {
             onClick={() => setShowOnlyMatching(!showOnlyMatching)}
             className="w-[180px]"
           >
-            {showOnlyMatching ? t('chordVoicingFinder.matchingOnly') : t('chordVoicingFinder.showAllQualities')}
+            {showOnlyMatching
+              ? t('chordVoicingFinder.matchingOnly')
+              : t('chordVoicingFinder.showAllQualities')}
           </Button>
         </div>
 
         {/* Chord Info */}
         <div className="flex-1 flex items-end">
           <div className="bg-linear-to-r from-blue-50 to-purple-50 rounded-lg px-4 py-2">
-            <span className="text-sm text-gray-600">{t('chordVoicingFinder.chord')}</span>
+            <span className="text-sm text-gray-600">
+              {t('chordVoicingFinder.chord')}
+            </span>
             <span className="text-lg font-bold text-gray-800">
               {chordSymbol}
             </span>
@@ -169,10 +179,17 @@ export function ChordVoicingFinder() {
           </h3>
           <span className="text-sm text-gray-600">
             {displayedVoicings.length}
-            {filteredVoicings.length > 20 && ` ${t('chordVoicingFinder.ofTotal', { total: filteredVoicings.length })}`}
-            {!showOnlyMatching && filteredVoicings.length !== voicings.length && (
-              <span className="text-gray-500"> {t('chordVoicingFinder.filteredFrom', { total: voicings.length })}</span>
-            )}
+            {filteredVoicings.length > 20 &&
+              ` ${t('chordVoicingFinder.ofTotal', { total: filteredVoicings.length })}`}
+            {!showOnlyMatching &&
+              filteredVoicings.length !== voicings.length && (
+                <span className="text-gray-500">
+                  {' '}
+                  {t('chordVoicingFinder.filteredFrom', {
+                    total: voicings.length,
+                  })}
+                </span>
+              )}
           </span>
         </div>
 
@@ -219,20 +236,26 @@ export function ChordVoicingFinder() {
           {selectedVoicing && (
             <div className="text-sm text-gray-600 mb-4">
               <span className="font-medium">
-                {t('chordVoicingFinder.voicingOf', { current: selectedVoicingIndex! + 1, total: displayedVoicings.length })}
+                {t('chordVoicingFinder.voicingOf', {
+                  current: selectedVoicingIndex! + 1,
+                  total: displayedVoicings.length,
+                })}
               </span>
               <span className="mx-2">•</span>
               <span>
                 {t('chordVoicingFinder.difficulty')}{' '}
-                {
-                  [t('chordVoicingFinder.easy'), t('chordVoicingFinder.medium'), t('chordVoicingFinder.hard')][
-                  Math.min(2, Math.floor(selectedVoicing.difficulty / 3.5))
-                  ] || t('chordVoicingFinder.hard')
-                }
+                {[
+                  t('chordVoicingFinder.easy'),
+                  t('chordVoicingFinder.medium'),
+                  t('chordVoicingFinder.hard'),
+                ][Math.min(2, Math.floor(selectedVoicing.difficulty / 3.5))] ||
+                  t('chordVoicingFinder.hard')}
               </span>
               <span className="mx-2">•</span>
               <span>
-                {t('chordVoicingFinder.consonance', { value: Math.round(selectedVoicing.consonance * 100) })}
+                {t('chordVoicingFinder.consonance', {
+                  value: Math.round(selectedVoicing.consonance * 100),
+                })}
               </span>
             </div>
           )}

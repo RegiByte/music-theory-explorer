@@ -16,7 +16,7 @@ export function generateScale(root: Note, scaleType: ScaleType): Scale {
   const rootIdx = noteToIndex(root)
   const intervals = [...pattern] // Convert readonly to mutable
   const notes = intervals.map((interval) =>
-    indexToNote(rootIdx + interval)
+    indexToNote(rootIdx + interval),
   ) as Note[]
 
   return {
@@ -69,7 +69,7 @@ export function getScaleDegree(note: Note, scale: Scale): number | null {
 export function getScaleNotesInRange(
   scale: Scale,
   _minFreq: number,
-  _maxFreq: number
+  _maxFreq: number,
 ): Note[] {
   // This is a simplified version - in practice you'd need to consider octaves
   return scale.notes
@@ -83,7 +83,7 @@ export function findScalePositions(
   root: Note,
   scaleType: ScaleType,
   stringNote: Note,
-  startFret = 0
+  startFret = 0,
 ): number[] {
   const scale = generateScale(root, scaleType)
   const positions: number[] = []

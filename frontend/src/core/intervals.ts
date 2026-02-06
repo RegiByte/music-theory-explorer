@@ -9,7 +9,7 @@ import type { Interval, Note, UkuleleString } from '@/schemas'
  */
 export function calculateIntervalSemitones(
   note1Idx: number,
-  note2Idx: number
+  note2Idx: number,
 ): number {
   return Math.abs(note2Idx - note1Idx)
 }
@@ -44,7 +44,7 @@ export function isConsonant(semitones: number): boolean {
  */
 export function isPerfectInterval(semitones: number): boolean {
   const perfectSemitones: number[] = Object.values(PERFECT_INTERVALS).map(
-    (i) => i.semitones
+    (i) => i.semitones,
   )
   return perfectSemitones.includes(semitones % 12)
 }
@@ -54,7 +54,7 @@ export function isPerfectInterval(semitones: number): boolean {
  */
 export function getIdealRatio(semitones: number): number | null {
   const interval = Object.values(PERFECT_INTERVALS).find(
-    (i) => i.semitones === (semitones % 12)
+    (i) => i.semitones === semitones % 12,
   )
   return interval?.ratio || null
 }
@@ -66,7 +66,7 @@ export function analyzeInterval(
   note1: Note,
   note2: Note,
   freq1: number,
-  freq2: number
+  freq2: number,
 ): Interval {
   const idx1 = noteToIndex(note1)
   const idx2 = noteToIndex(note2)
@@ -114,23 +114,23 @@ function getIntervalName(semitones: number): string {
 export function findIntervalPositions(
   note1: Note,
   note2: Note,
-  maxFret: number = 12
+  maxFret: number = 12,
 ): Array<{
   position1: { string: UkuleleString; fret: number }
   position2: { string: UkuleleString; fret: number }
 }> {
   const strings: UkuleleString[] = ['A', 'E', 'C', 'G']
-  
+
   // Find all positions for both notes
   const note1Positions = findPositionsForNote(note1, strings, maxFret)
   const note2Positions = findPositionsForNote(note2, strings, maxFret)
-  
+
   // Create all pairs - this shows the pattern across the fretboard
   const pairs: Array<{
     position1: { string: UkuleleString; fret: number }
     position2: { string: UkuleleString; fret: number }
   }> = []
-  
+
   for (const pos1 of note1Positions) {
     for (const pos2 of note2Positions) {
       pairs.push({
@@ -139,6 +139,6 @@ export function findIntervalPositions(
       })
     }
   }
-  
+
   return pairs
 }

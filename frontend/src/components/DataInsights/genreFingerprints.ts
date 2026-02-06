@@ -15,11 +15,31 @@ export interface GenreFingerprint {
 }
 
 export const FINGERPRINT_DIMENSIONS = [
-  { key: 'chordDiversity' as const, label: 'Chord Diversity', description: 'How many different chords are commonly used' },
-  { key: 'majorMinorRatio' as const, label: 'Major/Minor Ratio', description: 'Balance of major vs minor chord usage' },
-  { key: 'dominantUsage' as const, label: 'Dominant Usage', description: 'How often dominant-function chords appear' },
-  { key: 'repetitiveness' as const, label: 'Predictability', description: 'How concentrated the chord transitions are' },
-  { key: 'chromaticColor' as const, label: 'Chromatic Color', description: 'Usage of extended, altered, and non-diatonic chords' },
+  {
+    key: 'chordDiversity' as const,
+    label: 'Chord Diversity',
+    description: 'How many different chords are commonly used',
+  },
+  {
+    key: 'majorMinorRatio' as const,
+    label: 'Major/Minor Ratio',
+    description: 'Balance of major vs minor chord usage',
+  },
+  {
+    key: 'dominantUsage' as const,
+    label: 'Dominant Usage',
+    description: 'How often dominant-function chords appear',
+  },
+  {
+    key: 'repetitiveness' as const,
+    label: 'Predictability',
+    description: 'How concentrated the chord transitions are',
+  },
+  {
+    key: 'chromaticColor' as const,
+    label: 'Chromatic Color',
+    description: 'Usage of extended, altered, and non-diatonic chords',
+  },
 ]
 
 // Simple heuristic: is this chord name a "major" chord?
@@ -27,7 +47,17 @@ function isMajorChord(chord: string): boolean {
   // Major chords: C, G, D, A, E, F, etc. (no 'm' suffix, not 'dim', not 'aug')
   // But "Am" is minor, "A" is major, "A7" is major-family
   const cleaned = chord.replace(/^[A-G][#b]?/, '') // Remove root note
-  if (cleaned === '' || cleaned.startsWith('7') || cleaned.startsWith('maj') || cleaned.startsWith('sus') || cleaned.startsWith('add') || cleaned.startsWith('6') || cleaned.startsWith('9') || cleaned.startsWith('11') || cleaned.startsWith('13')) {
+  if (
+    cleaned === '' ||
+    cleaned.startsWith('7') ||
+    cleaned.startsWith('maj') ||
+    cleaned.startsWith('sus') ||
+    cleaned.startsWith('add') ||
+    cleaned.startsWith('6') ||
+    cleaned.startsWith('9') ||
+    cleaned.startsWith('11') ||
+    cleaned.startsWith('13')
+  ) {
     return true
   }
   return false
@@ -41,7 +71,12 @@ function isMinorChord(chord: string): boolean {
 function isDominantOrExtended(chord: string): boolean {
   // Dominant 7th chords (not maj7), sus chords
   const cleaned = chord.replace(/^[A-G][#b]?/, '')
-  return cleaned.includes('7') || cleaned.includes('sus') || cleaned.includes('dim') || cleaned.includes('aug')
+  return (
+    cleaned.includes('7') ||
+    cleaned.includes('sus') ||
+    cleaned.includes('dim') ||
+    cleaned.includes('aug')
+  )
 }
 
 function isChromaticOrExtended(chord: string): boolean {
@@ -56,7 +91,7 @@ function isChromaticOrExtended(chord: string): boolean {
 export function computeGenreFingerprint(
   genre: Genre,
   frequencies: Record<string, number>,
-  transitions: Record<string, Record<string, number>>
+  transitions: Record<string, Record<string, number>>,
 ): GenreFingerprint {
   const chords = Object.entries(frequencies)
   const totalFreq = chords.reduce((sum, [, f]) => sum + f, 0)
@@ -74,9 +109,8 @@ export function computeGenreFingerprint(
     if (isMajorChord(chord)) majorFreq += freq
     if (isMinorChord(chord)) minorFreq += freq
   }
-  const majorMinorRatio = majorFreq + minorFreq > 0
-    ? majorFreq / (majorFreq + minorFreq)
-    : 0.5
+  const majorMinorRatio =
+    majorFreq + minorFreq > 0 ? majorFreq / (majorFreq + minorFreq) : 0.5
 
   // 3. Dominant usage: frequency of chords that are dominant-function (7ths, sus, dim, aug)
   let dominantFreq = 0
@@ -84,7 +118,10 @@ export function computeGenreFingerprint(
     if (isDominantOrExtended(chord)) dominantFreq += freq
   }
   // Normalize: typically 0-30% of total
-  const dominantUsage = Math.min(1, (dominantFreq / Math.max(totalFreq, 0.001)) * 3.3)
+  const dominantUsage = Math.min(
+    1,
+    (dominantFreq / Math.max(totalFreq, 0.001)) * 3.3,
+  )
 
   // 4. Repetitiveness: average concentration of top 3 transitions per chord
   let totalConcentration = 0
@@ -105,7 +142,10 @@ export function computeGenreFingerprint(
     if (isChromaticOrExtended(chord)) chromaticFreq += freq
   }
   // Normalize: typically 10-60%
-  const chromaticColor = Math.min(1, (chromaticFreq / Math.max(totalFreq, 0.001)) * 1.5)
+  const chromaticColor = Math.min(
+    1,
+    (chromaticFreq / Math.max(totalFreq, 0.001)) * 1.5,
+  )
 
   return {
     genre,

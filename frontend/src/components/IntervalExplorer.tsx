@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge'
 
 // Helper to get consonance badge variant
 function getConsonanceVariant(
-  consonance: number
+  consonance: number,
 ): 'default' | 'secondary' | 'destructive' {
   if (consonance >= 0.8) return 'default' // Green-ish (high consonance)
   if (consonance >= 0.5) return 'secondary' // Yellow-ish (moderate)
@@ -86,11 +86,15 @@ export function IntervalExplorer() {
       {/* Controls */}
       <div className="space-y-3">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-muted-foreground w-12 shrink-0">{t('common:labels.note1')}</span>
+          <span className="text-xs font-medium text-muted-foreground w-12 shrink-0">
+            {t('common:labels.note1')}
+          </span>
           <NotePicker value={note1} onValueChange={(v) => v && setNote1(v)} />
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-muted-foreground w-12 shrink-0">{t('common:labels.note2')}</span>
+          <span className="text-xs font-medium text-muted-foreground w-12 shrink-0">
+            {t('common:labels.note2')}
+          </span>
           <NotePicker value={note2} onValueChange={(v) => v && setNote2(v)} />
         </div>
 
@@ -112,14 +116,22 @@ export function IntervalExplorer() {
 
         {/* Metrics row */}
         <div className="flex items-center gap-4 flex-wrap text-sm">
-          <span className="font-medium">{interval.semitones} {t('common:labels.semitones')}</span>
-          <span className="font-medium">{interval.ratio.toFixed(3)}:1 {t('common:labels.ratio')}</span>
-          <span className="font-medium">{interval.cents.toFixed(0)} {t('common:labels.cents')}</span>
+          <span className="font-medium">
+            {interval.semitones} {t('common:labels.semitones')}
+          </span>
+          <span className="font-medium">
+            {interval.ratio.toFixed(3)}:1 {t('common:labels.ratio')}
+          </span>
+          <span className="font-medium">
+            {interval.cents.toFixed(0)} {t('common:labels.cents')}
+          </span>
         </div>
 
         {/* Consonance badge */}
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-gray-700">{t('intervalExplorer.consonance')}:</span>
+          <span className="text-sm font-medium text-gray-700">
+            {t('intervalExplorer.consonance')}:
+          </span>
           <Badge variant={getConsonanceVariant(interval.consonance)}>
             {(interval.consonance * 100).toFixed(0)}%
           </Badge>
@@ -168,7 +180,9 @@ export function IntervalExplorer() {
             components={{
               note1: <span className="text-blue-500">{note1}</span>,
               note2: <span className="text-purple-500">{note2}</span>,
-              intervalName: <span className="text-gray-500">{interval.name}</span>,
+              intervalName: (
+                <span className="text-gray-500">{interval.name}</span>
+              ),
             }}
           />
         </p>

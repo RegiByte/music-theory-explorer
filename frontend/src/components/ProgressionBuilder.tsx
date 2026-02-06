@@ -22,10 +22,14 @@ export function ProgressionBuilder() {
   const [scaleType, setScaleType] = useState<ScaleType>('major')
   const [progression, setProgression] = useState<ProgressionChord[]>([])
   const [currentDegrees, setCurrentDegrees] = useState<readonly number[]>([])
-  
+
   // Voicing state management
-  const [selectedVoicings, setSelectedVoicings] = useState<Record<string, number>>({})
-  const [chordVoicings, setChordVoicings] = useState<Record<string, ChordVoicing[]>>({})
+  const [selectedVoicings, setSelectedVoicings] = useState<
+    Record<string, number>
+  >({})
+  const [chordVoicings, setChordVoicings] = useState<
+    Record<string, ChordVoicing[]>
+  >({})
 
   // Load template
   const loadTemplate = (degrees: readonly number[]) => {
@@ -54,7 +58,7 @@ export function ProgressionBuilder() {
         // Find voicings for this chord (limit to top 20)
         const voicings = findChordVoicings(chord.chord, 4).slice(0, 20)
         newVoicings[chord.id] = voicings
-        
+
         // Auto-select first voicing
         newSelectedVoicings[chord.id] = 0
       })
@@ -99,7 +103,7 @@ export function ProgressionBuilder() {
   // Analysis
   const rootMovements = useMemo(
     () => analyzeRootMovement(progression),
-    [progression]
+    [progression],
   )
 
   return (
@@ -177,7 +181,9 @@ export function ProgressionBuilder() {
 
           {/* Playback Controls */}
           <div className="flex gap-2 mb-6">
-            <Button onClick={playProgression}>{t('progressionBuilder.playProgression')}</Button>
+            <Button onClick={playProgression}>
+              {t('progressionBuilder.playProgression')}
+            </Button>
             <Button variant="outline" onClick={() => audio.stop()}>
               {t('progressionBuilder.stop')}
             </Button>
@@ -185,7 +191,9 @@ export function ProgressionBuilder() {
 
           {/* Analysis */}
           <div className="bg-linear-to-r from-blue-50 to-purple-50 p-4 rounded-lg">
-            <h4 className="font-semibold mb-2">{t('progressionBuilder.analysis')}</h4>
+            <h4 className="font-semibold mb-2">
+              {t('progressionBuilder.analysis')}
+            </h4>
             <div className="text-sm space-y-1">
               <p>
                 <strong>{t('progressionBuilder.rootMovement')}</strong>{' '}
@@ -198,7 +206,10 @@ export function ProgressionBuilder() {
                 ))}
               </p>
               <p>
-                <strong>{t('progressionBuilder.chords')}</strong> {t('progressionBuilder.chordsCount', { count: progression.length })}
+                <strong>{t('progressionBuilder.chords')}</strong>{' '}
+                {t('progressionBuilder.chordsCount', {
+                  count: progression.length,
+                })}
               </p>
             </div>
           </div>

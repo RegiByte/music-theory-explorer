@@ -39,7 +39,12 @@ export interface BeatAnalysis {
   beatFreq: number
   beatsPerSecond: number
   description: string
-  category: 'very-stable' | 'stable' | 'moderate' | 'dissonant' | 'very-dissonant'
+  category:
+    | 'very-stable'
+    | 'stable'
+    | 'moderate'
+    | 'dissonant'
+    | 'very-dissonant'
 }
 
 export interface StabilityAnalysis {
@@ -52,7 +57,8 @@ function getClosestNoteData(frequency: number): {
   closestNote: Note
   centsDeviation: number
 } {
-  const semitonesFromA4 = SEMITONES_PER_OCTAVE * Math.log2(frequency / A4_FREQUENCY)
+  const semitonesFromA4 =
+    SEMITONES_PER_OCTAVE * Math.log2(frequency / A4_FREQUENCY)
   const closestSemitone = Math.round(semitonesFromA4)
   const closestNote = indexToNote(noteToIndex('A') + closestSemitone)
   const equalTempFreq = semitonesToHz(closestSemitone, A4_FREQUENCY)
@@ -63,7 +69,7 @@ function getClosestNoteData(frequency: number): {
 
 function getIntervalFromFundamental(
   frequency: number,
-  fundamentalFreq: number
+  fundamentalFreq: number,
 ): string {
   const semitonesFromFundamental =
     SEMITONES_PER_OCTAVE * Math.log2(frequency / fundamentalFreq)
@@ -73,7 +79,7 @@ function getIntervalFromFundamental(
 
 export function generateHarmonics(
   fundamentalFreq: number,
-  count = MAX_HARMONICS
+  count = MAX_HARMONICS,
 ): HarmonicDataPoint[] {
   return Array.from({ length: count }, (_, index) => {
     const harmonicNumber = index + 1
@@ -81,7 +87,7 @@ export function generateHarmonics(
     const { closestNote, centsDeviation } = getClosestNoteData(frequency)
     const intervalFromFundamental = getIntervalFromFundamental(
       frequency,
-      fundamentalFreq
+      fundamentalFreq,
     )
 
     return {
@@ -98,7 +104,7 @@ export function findHarmonicOverlap(
   freq1: number,
   freq2: number,
   numHarmonics = MAX_HARMONICS,
-  threshold = HARMONIC_OVERLAP_THRESHOLD
+  threshold = HARMONIC_OVERLAP_THRESHOLD,
 ): HarmonicOverlap[] {
   const harmonics1 = generateHarmonics(freq1, numHarmonics)
   const harmonics2 = generateHarmonics(freq2, numHarmonics)
@@ -128,7 +134,7 @@ export function generateWaveform(
   frequency: number,
   totalTime: number,
   sampleRate = 1000,
-  phaseOffset = 0
+  phaseOffset = 0,
 ): WaveformPoint[] {
   const totalSamples = Math.floor(totalTime * sampleRate)
   const timeStep = totalTime / totalSamples
@@ -147,7 +153,7 @@ export function generateWaveformPair(
   freq1: number,
   freq2: number,
   cycles = 3,
-  phaseOffset = 0
+  phaseOffset = 0,
 ): {
   waveform1: WaveformPoint[]
   waveform2: WaveformPoint[]
@@ -179,7 +185,7 @@ export function generateWaveformPair(
 export function generateMultipleWaveforms(
   frequencies: number[],
   cycles = 2,
-  phaseOffset = 0
+  phaseOffset = 0,
 ): {
   waveforms: WaveformPoint[][]
   combined: WaveformPoint[]
@@ -195,7 +201,7 @@ export function generateMultipleWaveforms(
 
   // Generate all waveforms on the same time scale
   const waveforms = frequencies.map((freq) =>
-    generateWaveform(freq, totalTime, sampleRate, phaseOffset)
+    generateWaveform(freq, totalTime, sampleRate, phaseOffset),
   )
 
   // Combine all waveforms (sum amplitudes - this is how sound waves actually combine)
@@ -205,7 +211,7 @@ export function generateMultipleWaveforms(
   for (let i = 0; i < minLength; i++) {
     const sumAmplitude = waveforms.reduce(
       (sum, waveform) => sum + waveform[i].amplitude,
-      0
+      0,
     )
     combined.push({
       time: waveforms[0][i].time,
@@ -259,7 +265,7 @@ export function calculateBeatFrequency(frequencies: number[]): BeatAnalysis {
       for (const h1 of harmonics1) {
         for (const h2 of harmonics2) {
           const beatFreq = Math.abs(h1 - h2)
-          
+
           // Only consider beats in the audible/perceptual range (0.1 - 50 Hz)
           // Beats outside this range are either imperceptible or heard as separate tones
           if (beatFreq >= 0.1 && beatFreq <= 50 && beatFreq < minBeatFreq) {
@@ -303,7 +309,8 @@ export function calculateBeatFrequency(frequencies: number[]): BeatAnalysis {
     description = 'Rapid beating - clear instability. Dissonant.'
   } else {
     category = 'very-dissonant'
-    description = 'Very rapid beating - harsh, unstable sound. Strong dissonance.'
+    description =
+      'Very rapid beating - harsh, unstable sound. Strong dissonance.'
   }
 
   return { beatFreq, beatsPerSecond, description, category }
@@ -312,16 +319,16 @@ export function calculateBeatFrequency(frequencies: number[]): BeatAnalysis {
 /**
  * Extract the amplitude envelope from a waveform using a moving window.
  * The envelope shows the overall amplitude variation over time (the beat pattern).
- * 
+ *
  * Strategy: Window size should be about 1-2 periods of the highest frequency component.
  * This lets us track how the peak amplitude varies over time without being fooled by
  * the individual wave cycles.
- * 
+ *
  * For automatic mode (no highestFreq provided), we estimate from the waveform.
  */
 export function extractEnvelope(
   waveform: WaveformPoint[],
-  highestFreq?: number // Optional: highest frequency in Hz for better accuracy
+  highestFreq?: number, // Optional: highest frequency in Hz for better accuracy
 ): WaveformPoint[] {
   if (waveform.length === 0) {
     return []
@@ -332,11 +339,11 @@ export function extractEnvelope(
 
   // Determine window size based on highest frequency
   let windowSize: number
-  
+
   if (highestFreq && highestFreq > 0) {
     // Use 2 periods of the highest frequency
     // This captures a full wave cycle to find the peak amplitude
-    windowSize = (2 / highestFreq)
+    windowSize = 2 / highestFreq
   } else {
     // Fallback: estimate from waveform
     // Count zero crossings to estimate dominant frequency
@@ -356,20 +363,20 @@ export function extractEnvelope(
   // Calculate samples per window
   const samplesPerWindow = Math.max(
     5, // Minimum 5 samples to get meaningful max
-    Math.floor((windowSize / totalTime) * waveform.length)
+    Math.floor((windowSize / totalTime) * waveform.length),
   )
 
   // Use a sliding window to find local maxima (envelope peaks)
   // Step by 1/4 of window for good resolution
   const step = Math.max(1, Math.floor(samplesPerWindow / 4))
-  
+
   for (let i = 0; i < waveform.length; i += step) {
     const windowEnd = Math.min(i + samplesPerWindow, waveform.length)
     const windowSlice = waveform.slice(i, windowEnd)
 
     // Find max absolute amplitude in this window
     const maxAmplitude = Math.max(
-      ...windowSlice.map((p) => Math.abs(p.amplitude))
+      ...windowSlice.map((p) => Math.abs(p.amplitude)),
     )
 
     // Use the middle time point of the window
@@ -389,7 +396,7 @@ export function extractEnvelope(
  * Less stable waveforms have fluctuating amplitude (high variance).
  */
 export function analyzeWaveformStability(
-  envelope: WaveformPoint[]
+  envelope: WaveformPoint[],
 ): StabilityAnalysis {
   if (envelope.length === 0) {
     return {
@@ -428,7 +435,8 @@ export function analyzeWaveformStability(
   } else if (stability >= 0.3) {
     description = 'Unstable - significant amplitude fluctuations. Dissonant.'
   } else {
-    description = 'Very unstable - chaotic amplitude pattern. Strong dissonance.'
+    description =
+      'Very unstable - chaotic amplitude pattern. Strong dissonance.'
   }
 
   return { stability, variance, description }

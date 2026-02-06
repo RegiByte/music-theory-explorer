@@ -5,7 +5,12 @@ import { getColorClassColor, getColorClassLabel } from '@/core/colorClassifier'
 import { getTensionLabel, getTensionColor } from '@/core/tensionCalculator'
 import { getRarityLabel } from '@/core/genreCategorizer'
 import { displayChordId, type NotationPreference } from '@/core/enharmonic'
-import type { ScoredCandidate, FrequencyStats, Note, ScaleType } from '@/schemas'
+import type {
+  ScoredCandidate,
+  FrequencyStats,
+  Note,
+  ScaleType,
+} from '@/schemas'
 import { useTranslation } from 'react-i18next'
 
 interface RecommendationCardProps {
@@ -31,7 +36,12 @@ export function RecommendationCard({
 }: RecommendationCardProps) {
   const { t } = useTranslation('tools')
   const { node, breakdown } = candidate
-  const displayId = displayChordId(node.id, notationPreference, mapKey, scaleType)
+  const displayId = displayChordId(
+    node.id,
+    notationPreference,
+    mapKey,
+    scaleType,
+  )
   const functionColor =
     node.function === 'tonic'
       ? '#3b82f6'
@@ -47,7 +57,10 @@ export function RecommendationCard({
       {/* Row 1: All identity badges + play button */}
       <div className="flex items-center gap-1 mb-1">
         <span className="font-bold text-sm leading-none">{displayId}</span>
-        <Badge variant="secondary" className="text-[0.6rem] leading-none px-1 py-0 h-4">
+        <Badge
+          variant="secondary"
+          className="text-[0.6rem] leading-none px-1 py-0 h-4"
+        >
           {node.romanNumeral}
         </Badge>
         <Badge
@@ -63,7 +76,10 @@ export function RecommendationCard({
           {node.function}
         </Badge>
         {node.category !== 'diatonic' && (
-          <Badge variant="outline" className="text-[0.6rem] leading-none px-1 py-0 h-4">
+          <Badge
+            variant="outline"
+            className="text-[0.6rem] leading-none px-1 py-0 h-4"
+          >
             {node.category === 'secondary-dominant'
               ? t('recommendationCard.secDom')
               : node.category === 'diminished-passing'
@@ -95,7 +111,9 @@ export function RecommendationCard({
               <div className="flex-1 h-1 bg-gray-200 rounded-full overflow-hidden">
                 <div
                   className="h-full bg-green-500"
-                  style={{ width: `${breakdown.statisticalProbability * 100}%` }}
+                  style={{
+                    width: `${breakdown.statisticalProbability * 100}%`,
+                  }}
                 />
               </div>
               <span className="text-gray-500 font-mono w-10 text-right shrink-0">
@@ -111,20 +129,26 @@ export function RecommendationCard({
                 {t('recommendationCard.frequency')}
               </span>
               <span className="text-gray-600 text-[0.65rem]">
-                {t('recommendationCard.ofSongs', { value: (breakdown.genreFrequency * 100).toFixed(2) })}
+                {t('recommendationCard.ofSongs', {
+                  value: (breakdown.genreFrequency * 100).toFixed(2),
+                })}
               </span>
-              {frequencyStats && (() => {
-                const rarity = getRarityLabel(breakdown.genreFrequency, frequencyStats)
-                return (
-                  <Badge
-                    variant="outline"
-                    className="text-[0.55rem] leading-none px-1 py-0 h-3.5 ml-auto border-current"
-                    style={{ color: rarity.color }}
-                  >
-                    {rarity.label}
-                  </Badge>
-                )
-              })()}
+              {frequencyStats &&
+                (() => {
+                  const rarity = getRarityLabel(
+                    breakdown.genreFrequency,
+                    frequencyStats,
+                  )
+                  return (
+                    <Badge
+                      variant="outline"
+                      className="text-[0.55rem] leading-none px-1 py-0 h-3.5 ml-auto border-current"
+                      style={{ color: rarity.color }}
+                    >
+                      {rarity.label}
+                    </Badge>
+                  )
+                })()}
             </div>
           )}
 
@@ -181,10 +205,14 @@ export function RecommendationCard({
                     : t('recommendationCard.far')}
             </span>
             <span className="text-gray-300 mx-0.5">·</span>
-            <span className="font-medium">{t('recommendationCard.tension')}</span>
+            <span className="font-medium">
+              {t('recommendationCard.tension')}
+            </span>
             <div
               className="w-1.5 h-1.5 rounded-full shrink-0"
-              style={{ backgroundColor: getTensionColor(breakdown.tensionLevel) }}
+              style={{
+                backgroundColor: getTensionColor(breakdown.tensionLevel),
+              }}
             />
             <span>{getTensionLabel(breakdown.tensionLevel)}</span>
             {breakdown.tensionDelta !== undefined && (

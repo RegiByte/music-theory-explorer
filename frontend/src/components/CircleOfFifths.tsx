@@ -38,11 +38,11 @@ export function CircleOfFifths() {
   const circle = useMemo(() => calculateCircleOfFifths(), [])
   const diatonicChords = useMemo(
     () => getDiatonicChords(selectedKey),
-    [selectedKey]
+    [selectedKey],
   )
   const primaryChords = useMemo(
     () => getPrimaryChords(selectedKey),
-    [selectedKey]
+    [selectedKey],
   )
 
   // Calculate positions for each note
@@ -98,7 +98,9 @@ export function CircleOfFifths() {
   return (
     <Card className="p-6">
       <div className="mb-6">
-        <h3 className="text-xl font-semibold mb-2">{t('circleOfFifths.title')}</h3>
+        <h3 className="text-xl font-semibold mb-2">
+          {t('circleOfFifths.title')}
+        </h3>
         <p className="text-sm text-gray-600 mb-4">
           {t('circleOfFifths.description')}
         </p>
@@ -215,7 +217,10 @@ export function CircleOfFifths() {
       {/* Selected Key Info */}
       <div className="mb-6 p-4 bg-linear-to-r from-blue-50 to-purple-50 rounded-lg border border-blue-200">
         <h4 className="font-semibold mb-3 text-gray-800">
-          {t('circleOfFifths.selectedKey')}: <span className="text-blue-600">{selectedKey} {t('circleOfFifths.major')}</span>
+          {t('circleOfFifths.selectedKey')}:{' '}
+          <span className="text-blue-600">
+            {selectedKey} {t('circleOfFifths.major')}
+          </span>
         </h4>
 
         {/* Diatonic Chords */}
@@ -238,7 +243,9 @@ export function CircleOfFifths() {
                   onClick={() => handleChordClick(chordInfo.chord)}
                   className="text-xs"
                 >
-                  <span className="font-semibold">{chordInfo.romanNumeral}</span>
+                  <span className="font-semibold">
+                    {chordInfo.romanNumeral}
+                  </span>
                   <span className="ml-1 opacity-75">
                     ({chordInfo.root}
                     {chordInfo.quality === 'minor' ? 'm' : ''}
@@ -277,12 +284,42 @@ export function CircleOfFifths() {
           {t('circleOfFifths.reference')}
         </h4>
         <ul className="text-sm text-gray-700 space-y-1 list-disc list-inside">
-          <li><Trans i18nKey="tools:circleOfFifths.refClockwise" components={{ b: <strong /> }} /></li>
-          <li><Trans i18nKey="tools:circleOfFifths.refCounterClockwise" components={{ b: <strong /> }} /></li>
-          <li><Trans i18nKey="tools:circleOfFifths.refAdjacentKeys" components={{ b: <strong /> }} /></li>
-          <li><Trans i18nKey="tools:circleOfFifths.refIIVV" components={{ b: <strong /> }} /></li>
-          <li><Trans i18nKey="tools:circleOfFifths.refTransposition" components={{ b: <strong /> }} /></li>
-          <li><Trans i18nKey="tools:circleOfFifths.refModulation" components={{ b: <strong /> }} /></li>
+          <li>
+            <Trans
+              i18nKey="tools:circleOfFifths.refClockwise"
+              components={{ b: <strong /> }}
+            />
+          </li>
+          <li>
+            <Trans
+              i18nKey="tools:circleOfFifths.refCounterClockwise"
+              components={{ b: <strong /> }}
+            />
+          </li>
+          <li>
+            <Trans
+              i18nKey="tools:circleOfFifths.refAdjacentKeys"
+              components={{ b: <strong /> }}
+            />
+          </li>
+          <li>
+            <Trans
+              i18nKey="tools:circleOfFifths.refIIVV"
+              components={{ b: <strong /> }}
+            />
+          </li>
+          <li>
+            <Trans
+              i18nKey="tools:circleOfFifths.refTransposition"
+              components={{ b: <strong /> }}
+            />
+          </li>
+          <li>
+            <Trans
+              i18nKey="tools:circleOfFifths.refModulation"
+              components={{ b: <strong /> }}
+            />
+          </li>
         </ul>
         <p className="text-xs text-gray-600 mt-3 italic">
           {t('circleOfFifths.clickHint')}

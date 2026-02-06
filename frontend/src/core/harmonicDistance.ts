@@ -5,7 +5,7 @@ import type { Chord, Note, ScaleType } from '@/schemas'
 /**
  * Calculate harmonic distance from key center
  * Returns 0 for diatonic chords, higher values for more chromatic chords
- * 
+ *
  * Components:
  * - Root distance: 1.0 if chromatic root
  * - Chord tone distance: 0.5 per chromatic note
@@ -14,18 +14,18 @@ import type { Chord, Note, ScaleType } from '@/schemas'
 export function calculateHarmonicDistance(
   chord: Chord,
   key: Note,
-  scaleType: ScaleType
+  scaleType: ScaleType,
 ): number {
   const scale = getScalePattern(scaleType)
   const keyIndex = noteToIndex(key)
   let distance = 0
-  
+
   // 1. Root distance
   const rootInterval = (noteToIndex(chord.root) - keyIndex + 12) % 12
   if (!scale.includes(rootInterval)) {
     distance += 1.0
   }
-  
+
   // 2. Chord tone distance
   for (const note of chord.notes) {
     const interval = (noteToIndex(note) - keyIndex + 12) % 12
@@ -33,12 +33,12 @@ export function calculateHarmonicDistance(
       distance += 0.5
     }
   }
-  
+
   // 3. Tritone presence
   if (hasTritone(chord)) {
     distance += 0.5
   }
-  
+
   return distance
 }
 
@@ -47,7 +47,7 @@ export function calculateHarmonicDistance(
  */
 export function hasTritone(chord: Chord): boolean {
   const noteIndices = chord.notes.map(noteToIndex)
-  
+
   for (let i = 0; i < noteIndices.length; i++) {
     for (let j = i + 1; j < noteIndices.length; j++) {
       const interval = Math.abs(noteIndices[i] - noteIndices[j]) % 12
@@ -57,7 +57,7 @@ export function hasTritone(chord: Chord): boolean {
       }
     }
   }
-  
+
   return false
 }
 

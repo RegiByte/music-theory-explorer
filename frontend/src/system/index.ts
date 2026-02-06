@@ -22,6 +22,4 @@ export const { useSystem, useResource, useSystemStatus, SystemProvider } =
 
 // Export types for convenience
 export type SystemConfig = typeof systemConfig
-export type AudioResource = Awaited<
-  ReturnType<typeof audioResource.start>
->
+export type AudioResource = Awaited<ReturnType<typeof audioResource.start>>

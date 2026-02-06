@@ -3,7 +3,7 @@ import type { Chord, Note, HarmonicFunction } from '@/schemas'
 /**
  * Calculate tension level of a chord in context
  * Returns 0-1 where 0 = stable/resolved, 1 = maximum tension
- * 
+ *
  * Components:
  * - Base tension by harmonic function (tonic=0, subdominant=0.3, dominant=0.7)
  * - Chord quality adjustments (dom7, dim7, aug add tension)
@@ -13,10 +13,10 @@ export function calculateTensionLevel(
   chord: Chord,
   _key: Note,
   harmonicFunction: HarmonicFunction,
-  harmonicDistance: number
+  harmonicDistance: number,
 ): number {
   let tension = 0
-  
+
   // Base tension by function
   switch (harmonicFunction) {
     case 'tonic':
@@ -29,7 +29,7 @@ export function calculateTensionLevel(
       tension = 0.7
       break
   }
-  
+
   // Adjust for chord quality
   if (chord.quality === 'dominant7') {
     tension += 0.2
@@ -43,10 +43,10 @@ export function calculateTensionLevel(
   if (chord.quality === 'half_diminished7') {
     tension += 0.2
   }
-  
+
   // Adjust for harmonic distance (chromatic notes add tension)
   tension += harmonicDistance * 0.1
-  
+
   return Math.min(tension, 1.0)
 }
 
@@ -56,7 +56,7 @@ export function calculateTensionLevel(
  */
 export function calculateTensionDelta(
   fromTension: number,
-  toTension: number
+  toTension: number,
 ): number {
   return toTension - fromTension
 }
@@ -67,18 +67,18 @@ export function calculateTensionDelta(
  */
 export function calculateTensionArcBonus(
   pathLength: number,
-  tensionDelta: number
+  tensionDelta: number,
 ): number {
   // Reward resolution (tension decreasing)
   if (tensionDelta < 0) {
     return Math.abs(tensionDelta) * 0.2
   }
-  
+
   // Reward building tension early in progression
   if (tensionDelta > 0 && pathLength < 3) {
     return tensionDelta * 0.1
   }
-  
+
   return 0
 }
 

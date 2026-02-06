@@ -18,13 +18,23 @@ import { MelodyPathCard, STYLE_COLORS } from './MelodyPathCard'
 import { MELODY_STYLE_PRESETS } from '@/core/melodyGenerator'
 import { generateScale } from '@/core/scales'
 import { generateChord } from '@/core/chords'
-import { KeyScalePicker, NotePicker, ChordQualityPicker } from '@/components/pickers'
+import {
+  KeyScalePicker,
+  NotePicker,
+  ChordQualityPicker,
+} from '@/components/pickers'
 import type { Note, ChordQuality } from '@/schemas'
 
 const MELODY_LENGTHS = [4, 8, 12, 16] as const
 
 const MELODY_CHORD_SUBSET: ChordQuality[] = [
-  'major', 'minor', 'diminished', 'augmented', 'dominant7', 'major7', 'minor7',
+  'major',
+  'minor',
+  'diminished',
+  'augmented',
+  'dominant7',
+  'major7',
+  'minor7',
 ]
 
 // ---------------------------------------------------------------------------
@@ -73,7 +83,7 @@ export function MelodyExplorerRoot() {
   const { t } = useTranslation('tools')
 
   const selectedPath = useMemo(
-    () => paths.find(p => p.id === selectedPathId) ?? null,
+    () => paths.find((p) => p.id === selectedPathId) ?? null,
     [paths, selectedPathId],
   )
 
@@ -140,7 +150,10 @@ export function MelodyExplorerRoot() {
         <div className="flex gap-4 items-end">
           <div className="flex-1 space-y-2">
             <label className="text-sm font-medium block">
-              {t('melodyExplorer.chordContext')} <span className="text-muted-foreground">{t('melodyExplorer.optional')}</span>
+              {t('melodyExplorer.chordContext')}{' '}
+              <span className="text-muted-foreground">
+                {t('melodyExplorer.optional')}
+              </span>
             </label>
             <NotePicker
               value={chordRoot}
@@ -161,7 +174,9 @@ export function MelodyExplorerRoot() {
           </div>
 
           <div className="w-[120px]">
-            <label className="text-sm font-medium mb-2 block">{t('melodyExplorer.length')}</label>
+            <label className="text-sm font-medium mb-2 block">
+              {t('melodyExplorer.length')}
+            </label>
             <Select
               value={targetLength.toString()}
               onValueChange={(v) => v && setTargetLength(parseInt(v))}
@@ -171,7 +186,9 @@ export function MelodyExplorerRoot() {
               </SelectTrigger>
               <SelectContent>
                 {MELODY_LENGTHS.map((l) => (
-                  <SelectItem key={l} value={l.toString()}>{t('melodyExplorer.notes', { count: l })}</SelectItem>
+                  <SelectItem key={l} value={l.toString()}>
+                    {t('melodyExplorer.notes', { count: l })}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -214,7 +231,9 @@ export function MelodyExplorerRoot() {
                 onRegenerate={() => regeneratePath(path.id)}
                 onPractice={() => enterPracticeMode(path.id)}
                 onPlayNote={(note) => playNote(note)}
-                onEditNote={(noteIndex, newNote) => editNote(path.id, noteIndex, newNote)}
+                onEditNote={(noteIndex, newNote) =>
+                  editNote(path.id, noteIndex, newNote)
+                }
                 onDeleteNote={(noteIndex) => deleteNote(path.id, noteIndex)}
               />
             ))}
@@ -226,9 +245,7 @@ export function MelodyExplorerRoot() {
       {paths.length === 0 && (
         <div className="text-center text-muted-foreground py-12">
           <p className="text-lg mb-2">{t('melodyExplorer.emptyTitle')}</p>
-          <p className="text-sm">
-            {t('melodyExplorer.emptyDescription')}
-          </p>
+          <p className="text-sm">{t('melodyExplorer.emptyDescription')}</p>
         </div>
       )}
     </Card>
@@ -281,7 +298,7 @@ function MelodyPracticeView({
     const makeKey = (s: string, f: number) => `${s}-${f}`
 
     // 1. Remaining notes (lowest priority) — secondary
-    const remainingNotes = path.notes.slice(practiceStep + 1).map(n => n.note)
+    const remainingNotes = path.notes.slice(practiceStep + 1).map((n) => n.note)
     if (remainingNotes.length > 0) {
       for (const pos of findNotePositions(remainingNotes)) {
         positionMap.set(makeKey(pos.string, pos.fret), {
@@ -294,7 +311,7 @@ function MelodyPracticeView({
     }
 
     // 2. Completed notes (medium priority) — muted, overwrites remaining
-    const completedNotes = path.notes.slice(0, practiceStep).map(n => n.note)
+    const completedNotes = path.notes.slice(0, practiceStep).map((n) => n.note)
     if (completedNotes.length > 0) {
       for (const pos of findNotePositions(completedNotes)) {
         positionMap.set(makeKey(pos.string, pos.fret), {
@@ -334,7 +351,10 @@ function MelodyPracticeView({
           <h3 className="font-semibold">{t('melodyExplorer.practiceMode')}</h3>
         </div>
         <div className="text-sm text-muted-foreground">
-          {t('melodyExplorer.noteOf', { current: practiceStep + 1, total: path.notes.length })}
+          {t('melodyExplorer.noteOf', {
+            current: practiceStep + 1,
+            total: path.notes.length,
+          })}
         </div>
       </div>
 
@@ -349,11 +369,12 @@ function MelodyPracticeView({
               min-w-[36px] h-8 px-2
               text-xs font-bold rounded-full
               border-2 transition-all cursor-pointer
-              ${idx < practiceStep
-                ? 'bg-gray-200 text-gray-500 border-gray-300'
-                : idx === practiceStep
-                  ? 'bg-amber-400 text-amber-900 border-amber-500 scale-110 shadow-md'
-                  : `${colors.notePill}`
+              ${
+                idx < practiceStep
+                  ? 'bg-gray-200 text-gray-500 border-gray-300'
+                  : idx === practiceStep
+                    ? 'bg-amber-400 text-amber-900 border-amber-500 scale-110 shadow-md'
+                    : `${colors.notePill}`
               }
             `}
           >
@@ -370,7 +391,10 @@ function MelodyPracticeView({
           </div>
           <div className="flex gap-2 justify-center">
             {currentNote.isChordTone && (
-              <Badge variant="secondary" className="text-xs bg-green-100 text-green-800">
+              <Badge
+                variant="secondary"
+                className="text-xs bg-green-100 text-green-800"
+              >
                 {t('melodyExplorer.chordTone')}
               </Badge>
             )}
@@ -433,7 +457,9 @@ function MelodyPracticeView({
 
         {/* Tempo control */}
         <div className="flex items-center gap-2">
-          <label className="text-xs text-muted-foreground">{t('melodyExplorer.tempo')}</label>
+          <label className="text-xs text-muted-foreground">
+            {t('melodyExplorer.tempo')}
+          </label>
           <input
             type="range"
             min={40}
@@ -443,7 +469,9 @@ function MelodyPracticeView({
             className="w-24 h-1.5"
             disabled={practicePlaying}
           />
-          <span className="text-xs font-mono w-12">{t('melodyExplorer.bpm', { value: practiceTempo })}</span>
+          <span className="text-xs font-mono w-12">
+            {t('melodyExplorer.bpm', { value: practiceTempo })}
+          </span>
         </div>
       </div>
     </Card>

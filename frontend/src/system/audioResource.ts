@@ -72,7 +72,7 @@ export const audioResource = defineResource({
       // Play sequence of notes
       playSequence: (
         notes: Array<{ frequency: number; duration: number }>,
-        tempo = 120
+        tempo = 120,
       ) => {
         updateState({ isPlaying: true })
 
@@ -81,7 +81,7 @@ export const audioResource = defineResource({
             synth.triggerAttackRelease(note.frequency, note.duration, time)
           },
           notes,
-          '4n'
+          '4n',
         )
 
         Tone.Transport.bpm.value = tempo
@@ -91,15 +91,18 @@ export const audioResource = defineResource({
         // Calculate total duration
         const totalDuration = notes.reduce(
           (sum, note) => sum + note.duration,
-          0
+          0,
         )
 
         // Stop after sequence finishes
-        setTimeout(() => {
-          Tone.Transport.stop()
-          sequence.dispose()
-          updateState({ isPlaying: false })
-        }, (totalDuration * 1000 * 60) / tempo)
+        setTimeout(
+          () => {
+            Tone.Transport.stop()
+            sequence.dispose()
+            updateState({ isPlaying: false })
+          },
+          (totalDuration * 1000 * 60) / tempo,
+        )
       },
 
       // Stop all sounds

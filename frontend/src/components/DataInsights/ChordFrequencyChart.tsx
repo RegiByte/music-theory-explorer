@@ -25,7 +25,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  annotationPlugin
+  annotationPlugin,
 )
 
 const TOP_N = 30
@@ -81,8 +81,12 @@ export function ChordFrequencyChart() {
         {
           label: t('chordFrequencyChart.datasetLabel'),
           data,
-          backgroundColor: sortedChords.map((_, i) => getBarColor(i, sortedChords.length)),
-          hoverBackgroundColor: sortedChords.map((_, i) => getBarHoverColor(i, sortedChords.length)),
+          backgroundColor: sortedChords.map((_, i) =>
+            getBarColor(i, sortedChords.length),
+          ),
+          hoverBackgroundColor: sortedChords.map((_, i) =>
+            getBarHoverColor(i, sortedChords.length),
+          ),
           borderRadius: 4,
           borderSkipped: false,
           _chords: labels,
@@ -108,12 +112,22 @@ export function ChordFrequencyChart() {
           if (chord) {
             // Play a simple tone for the chord root
             const noteFreqs: Record<string, number> = {
-              C: 261.63, 'C#': 277.18, Db: 277.18,
-              D: 293.66, 'D#': 311.13, Eb: 311.13,
-              E: 329.63, F: 349.23,
-              'F#': 369.99, Gb: 369.99,
-              G: 392.00, 'G#': 415.30, Ab: 415.30,
-              A: 440.00, 'A#': 466.16, Bb: 466.16,
+              C: 261.63,
+              'C#': 277.18,
+              Db: 277.18,
+              D: 293.66,
+              'D#': 311.13,
+              Eb: 311.13,
+              E: 329.63,
+              F: 349.23,
+              'F#': 369.99,
+              Gb: 369.99,
+              G: 392.0,
+              'G#': 415.3,
+              Ab: 415.3,
+              A: 440.0,
+              'A#': 466.16,
+              Bb: 466.16,
               B: 493.88,
             }
             // Extract root note from chord name (e.g., "Am" -> "A", "C#m" -> "C#", "Bb7" -> "Bb")
@@ -143,14 +157,20 @@ export function ChordFrequencyChart() {
               const [, freq] = sortedChords[idx] ?? ['', 0]
               const friction = 1.0 - Math.min(freq * 10, 1.0)
               const rank = idx + 1
-              const rarityLabel = friction < 0.3 
-                ? t('chordFrequencyChart.tooltipRarityCommon')
-                : friction < 0.7 
-                ? t('chordFrequencyChart.tooltipRarityUncommon')
-                : t('chordFrequencyChart.tooltipRarityRare')
+              const rarityLabel =
+                friction < 0.3
+                  ? t('chordFrequencyChart.tooltipRarityCommon')
+                  : friction < 0.7
+                    ? t('chordFrequencyChart.tooltipRarityUncommon')
+                    : t('chordFrequencyChart.tooltipRarityRare')
               return [
-                t('chordFrequencyChart.tooltipFrequency', { value: (freq * 100).toFixed(2) }),
-                t('chordFrequencyChart.tooltipRank', { rank, genre: GENRE_DISPLAY[genre] }),
+                t('chordFrequencyChart.tooltipFrequency', {
+                  value: (freq * 100).toFixed(2),
+                }),
+                t('chordFrequencyChart.tooltipRank', {
+                  rank,
+                  genre: GENRE_DISPLAY[genre],
+                }),
                 t('chordFrequencyChart.tooltipRarity', { label: rarityLabel }),
               ]
             },
@@ -167,7 +187,9 @@ export function ChordFrequencyChart() {
               borderDash: [6, 4],
               label: {
                 display: true,
-                content: t('chordFrequencyChart.top10Line', { value: top10Coverage.toFixed(0) }),
+                content: t('chordFrequencyChart.top10Line', {
+                  value: top10Coverage.toFixed(0),
+                }),
                 position: 'end' as const,
                 backgroundColor: 'rgba(239, 68, 68, 0.8)',
                 color: '#fff',
@@ -203,13 +225,15 @@ export function ChordFrequencyChart() {
         },
       },
     }),
-    [sortedChords, genre, top10Coverage, audio, t]
+    [sortedChords, genre, top10Coverage, audio, t],
   )
 
   if (sortedChords.length === 0) {
     return (
       <Card className="p-6">
-        <p className="text-muted-foreground text-center py-12">{t('chordFrequencyChart.loading')}</p>
+        <p className="text-muted-foreground text-center py-12">
+          {t('chordFrequencyChart.loading')}
+        </p>
       </Card>
     )
   }
@@ -217,7 +241,9 @@ export function ChordFrequencyChart() {
   return (
     <Card className="p-6">
       <div className="space-y-3 mb-4">
-        <h3 className="text-xl font-semibold">{t('chordFrequencyChart.title')}</h3>
+        <h3 className="text-xl font-semibold">
+          {t('chordFrequencyChart.title')}
+        </h3>
         <GenrePicker value={genre} onValueChange={setGenre} size="xs" />
       </div>
 
@@ -226,13 +252,13 @@ export function ChordFrequencyChart() {
       </div>
 
       <div className="mt-4 p-4 bg-linear-to-r from-indigo-50 to-purple-50 rounded-lg border border-indigo-200">
-        <p 
+        <p
           className="text-sm text-gray-700 leading-relaxed"
-          dangerouslySetInnerHTML={{ 
-            __html: t('chordFrequencyChart.top10Summary', { 
-              value: top10Coverage.toFixed(0), 
-              genre: GENRE_DISPLAY[genre] 
-            }) 
+          dangerouslySetInnerHTML={{
+            __html: t('chordFrequencyChart.top10Summary', {
+              value: top10Coverage.toFixed(0),
+              genre: GENRE_DISPLAY[genre],
+            }),
           }}
         />
       </div>

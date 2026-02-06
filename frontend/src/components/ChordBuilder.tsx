@@ -39,7 +39,7 @@ ChartJS.register(
   LineElement,
   PointElement,
   Tooltip,
-  Legend
+  Legend,
 )
 
 const COLORS = {
@@ -88,7 +88,7 @@ const AVAILABLE_INTERVALS: IntervalOption[] = [
 ]
 
 function getConsonanceBadgeColor(
-  consonance: number
+  consonance: number,
 ): 'default' | 'secondary' | 'destructive' {
   if (consonance >= 0.8) return 'default'
   if (consonance >= 0.5) return 'secondary'
@@ -107,7 +107,7 @@ export function ChordBuilder() {
   const { t } = useTranslation('tools')
   const [root, setRoot] = useState<Note>('C')
   const [selectedIntervals, setSelectedIntervals] = useState<Set<number>>(
-    new Set([4, 7]) // Start with major triad (M3 + P5)
+    new Set([4, 7]), // Start with major triad (M3 + P5)
   )
 
   // Build chord from selected intervals
@@ -120,7 +120,7 @@ export function ChordBuilder() {
   const noteFrequencies = useMemo(() => {
     const semitonesFromC = noteToIndex(root) - noteToIndex('C')
     const rootFreq = semitonesToHz(semitonesFromC, C4_FREQUENCY)
-    
+
     return chord.notes.map((note, i) => ({
       note,
       interval: chord.intervals[i],
@@ -129,24 +129,21 @@ export function ChordBuilder() {
   }, [root, chord])
 
   // Analyze chord quality and anatomy
-  const analysis = useMemo(
-    () => analyzeChordQuality(chord),
-    [chord]
-  )
+  const analysis = useMemo(() => analyzeChordQuality(chord), [chord])
 
   // Get pairwise interval breakdown
   const intervalBreakdown = useMemo(
     () => getChordIntervalBreakdown(chord),
-    [chord]
+    [chord],
   )
 
   // Generate harmonic overlap data (for first 3 notes to keep it manageable)
   const harmonicData = useMemo(() => {
     if (noteFrequencies.length < 2) return null
-    
+
     const freq1 = noteFrequencies[0].frequency
     const freq2 = noteFrequencies[1].frequency
-    
+
     return {
       harmonics1: generateHarmonics(freq1, 12),
       harmonics2: generateHarmonics(freq2, 12),
@@ -157,7 +154,7 @@ export function ChordBuilder() {
   // Generate waveform data for visualization
   const waveformData = useMemo(() => {
     if (noteFrequencies.length < 2) return null
-    
+
     const frequencies = noteFrequencies.map((nf) => nf.frequency)
     return generateMultipleWaveforms(frequencies, 2)
   }, [noteFrequencies])
@@ -195,7 +192,9 @@ export function ChordBuilder() {
   const harmonicChartData = useMemo(() => {
     if (!harmonicData) return null
 
-    const labels = harmonicData.harmonics1.map((h) => h.harmonicNumber.toString())
+    const labels = harmonicData.harmonics1.map((h) =>
+      h.harmonicNumber.toString(),
+    )
     const overlapMap = new Map<string, boolean>()
     harmonicData.overlaps.forEach((o) => {
       if (o.isOverlapping) {
@@ -211,13 +210,13 @@ export function ChordBuilder() {
           data: harmonicData.harmonics1.map((h) => h.frequency),
           backgroundColor: harmonicData.harmonics1.map((h) => {
             const hasOverlap = harmonicData.overlaps.some(
-              (o) => o.harmonic1Number === h.harmonicNumber && o.isOverlapping
+              (o) => o.harmonic1Number === h.harmonicNumber && o.isOverlapping,
             )
             return hasOverlap ? COLORS.overlap : WAVEFORM_COLORS[0]
           }),
           borderColor: harmonicData.harmonics1.map((h) => {
             const hasOverlap = harmonicData.overlaps.some(
-              (o) => o.harmonic1Number === h.harmonicNumber && o.isOverlapping
+              (o) => o.harmonic1Number === h.harmonicNumber && o.isOverlapping,
             )
             return hasOverlap ? COLORS.overlap : WAVEFORM_COLORS[0]
           }),
@@ -229,13 +228,13 @@ export function ChordBuilder() {
           data: harmonicData.harmonics2.map((h) => h.frequency),
           backgroundColor: harmonicData.harmonics2.map((h) => {
             const hasOverlap = harmonicData.overlaps.some(
-              (o) => o.harmonic2Number === h.harmonicNumber && o.isOverlapping
+              (o) => o.harmonic2Number === h.harmonicNumber && o.isOverlapping,
             )
             return hasOverlap ? COLORS.overlap : WAVEFORM_COLORS[1]
           }),
           borderColor: harmonicData.harmonics2.map((h) => {
             const hasOverlap = harmonicData.overlaps.some(
-              (o) => o.harmonic2Number === h.harmonicNumber && o.isOverlapping
+              (o) => o.harmonic2Number === h.harmonicNumber && o.isOverlapping,
             )
             return hasOverlap ? COLORS.overlap : WAVEFORM_COLORS[1]
           }),
@@ -271,7 +270,8 @@ export function ChordBuilder() {
         },
         tooltip: {
           callbacks: {
-            title: (items) => `${t('chordBuilder.harmonicNumber')} ${items[0].label}`,
+            title: (items) =>
+              `${t('chordBuilder.harmonicNumber')} ${items[0].label}`,
             label: (context) => {
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const dataset = context.dataset as any
@@ -305,7 +305,7 @@ export function ChordBuilder() {
         },
       },
     }),
-    [audio, harmonicChartData, t]
+    [audio, harmonicChartData, t],
   )
 
   // Waveform chart data
@@ -313,7 +313,7 @@ export function ChordBuilder() {
     if (!waveformData) return null
 
     const timeLabels = waveformData.combined.map((p) =>
-      (p.time * 1000).toFixed(1)
+      (p.time * 1000).toFixed(1),
     )
 
     // Create datasets for each individual waveform using the diverse color palette
@@ -344,10 +344,7 @@ export function ChordBuilder() {
 
     return {
       labels: timeLabels,
-      datasets: [
-        ...individualDatasets,
-        combinedDataset,
-      ],
+      datasets: [...individualDatasets, combinedDataset],
     }
   }, [waveformData, noteFrequencies])
 
@@ -356,7 +353,7 @@ export function ChordBuilder() {
     // Each note can contribute ±1, so max amplitude is ±noteCount
     const noteCount = noteFrequencies.length
     const maxAmplitude = noteCount * 1.2 // Add 20% padding
-    
+
     return {
       responsive: true,
       maintainAspectRatio: false,
@@ -445,7 +442,9 @@ export function ChordBuilder() {
     <Card className="p-6">
       <div className="mb-6 space-y-4">
         <div>
-          <h3 className="text-xl font-semibold mb-2">{t('chordBuilder.title')}</h3>
+          <h3 className="text-xl font-semibold mb-2">
+            {t('chordBuilder.title')}
+          </h3>
           <p className="text-sm text-gray-600">
             {t('chordBuilder.description')}
           </p>
@@ -453,7 +452,9 @@ export function ChordBuilder() {
 
         {/* Root note selector */}
         <div className="flex items-center gap-2">
-          <label className="text-sm font-medium text-gray-700">{t('common:labels.root')}:</label>
+          <label className="text-sm font-medium text-gray-700">
+            {t('common:labels.root')}:
+          </label>
           <NotePicker value={root} onValueChange={(v) => v && setRoot(v)} />
         </div>
 
@@ -466,11 +467,11 @@ export function ChordBuilder() {
             {AVAILABLE_INTERVALS.map((interval) => {
               const isSelected = selectedIntervals.has(interval.semitones)
               const roleColor = getRoleColor(interval.role)
-              
+
               // Calculate the actual note for this interval from the root
               const rootIdx = noteToIndex(root)
               const intervalNote = indexToNote(rootIdx + interval.semitones)
-              
+
               return (
                 <Button
                   key={interval.semitones}
@@ -497,13 +498,17 @@ export function ChordBuilder() {
                       </span>
                     )}
                   </span>
-                  <span className="text-xs opacity-80">{interval.shortName}</span>
+                  <span className="text-xs opacity-80">
+                    {interval.shortName}
+                  </span>
                 </Button>
               )
             })}
           </div>
           <p className="text-xs text-gray-500 mt-2">
-            ◆ = {t('chordBuilder.legendQuality')} • ● = {t('chordBuilder.legendStability')} • ★ = {t('chordBuilder.legendColor')}
+            ◆ = {t('chordBuilder.legendQuality')} • ● ={' '}
+            {t('chordBuilder.legendStability')} • ★ ={' '}
+            {t('chordBuilder.legendColor')}
           </p>
         </div>
 
@@ -511,24 +516,31 @@ export function ChordBuilder() {
         <div className="rounded-lg bg-linear-to-r from-blue-50 to-purple-50 p-4 border border-blue-200">
           <div className="flex flex-wrap items-center gap-4 mb-2">
             <div>
-              <span className="text-sm text-gray-600">{t('common:labels.chord')}: </span>
+              <span className="text-sm text-gray-600">
+                {t('common:labels.chord')}:{' '}
+              </span>
               <span className="text-xl font-bold text-gray-800">
                 {chordSymbol}
               </span>
             </div>
             <div>
-              <span className="text-sm text-gray-600">{t('common:labels.notes')}: </span>
+              <span className="text-sm text-gray-600">
+                {t('common:labels.notes')}:{' '}
+              </span>
               <span className="text-md font-medium text-gray-700">
                 {chord.notes.join(' - ')}
               </span>
             </div>
             <Badge variant={getConsonanceBadgeColor(analysis.consonance)}>
-              {t('common:labels.consonance')}: {Math.round(analysis.consonance * 100)}%
+              {t('common:labels.consonance')}:{' '}
+              {Math.round(analysis.consonance * 100)}%
             </Badge>
           </div>
           {harmonicData && (
             <div className="text-sm text-gray-700">
-              <span className="font-semibold">{t('chordBuilder.harmonicAlignment')}:</span>{' '}
+              <span className="font-semibold">
+                {t('chordBuilder.harmonicAlignment')}:
+              </span>{' '}
               {t('chordBuilder.overlappingHarmonics', { count: overlapCount })}
             </div>
           )}
@@ -615,7 +627,9 @@ export function ChordBuilder() {
                 </span>
                 <div className="ml-auto">
                   <Badge variant="outline" className="text-xs">
-                    {t('chordBuilder.importance', { value: Math.round(di.importance * 100) })}
+                    {t('chordBuilder.importance', {
+                      value: Math.round(di.importance * 100),
+                    })}
                   </Badge>
                 </div>
               </div>
