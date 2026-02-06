@@ -1,0 +1,57 @@
+{
+  "appTitle": "Music Theory Explorer",
+  "landing": {
+    "subtitle": "Music theory, taught through interactive tools and real data from 660,000 songs.",
+    "getStarted": "Get started"
+  },
+  "header": {
+    "subtitle": "Music theory from first principles, with interactive tools and statistical data from 660,000 real songs."
+  },
+  "footer": {
+    "builtWith": "Built with React, TypeScript, Tone.js, and Braided",
+    "data": "Data: Chordonomicon dataset (660,000+ chord progressions)"
+  },
+  "loading": {
+    "title": "Initializing Audio System...",
+    "subtitle": "Click anywhere to enable audio"
+  },
+  "language": {
+    "en": "English",
+    "pt": "Português"
+  },
+  "concepts": {
+    "vibration": "Rapid back-and-forth movement of an object",
+    "frequency": "Number of vibrations per second, measured in Hertz (Hz)",
+    "hertz": "Hertz: one cycle per second",
+    "ratios": "The ratio between two frequencies, not their arithmetic difference",
+    "cents": "1/100th of a semitone. 1200 cents = 1 octave. Measures pitch the way humans hear it.",
+    "fundamental": "The lowest frequency of vibration, the pitch you consciously hear",
+    "overtones": "Frequencies above the fundamental that occur naturally when a string vibrates",
+    "harmonicSeries": "The series of frequencies produced by a vibrating object: f, 2f, 3f, 4f...",
+    "consonance": "A pleasant, stable sound when two or more notes are played together",
+    "dissonance": "A tense, unstable sound that creates a sense of wanting to resolve",
+    "interval": "The distance in pitch between two notes, measured in semitones (half steps)",
+    "scale": "A set of notes (usually 7) selected from the 12 chromatic notes, ordered by pitch",
+    "chord": "Three or more notes sounded simultaneously",
+    "triad": "A three-note chord: root, 3rd, and 5th",
+    "voicing": "A specific arrangement of a chord's notes across the strings of an instrument",
+    "key": "A scale plus its tonic (home chord). Defines which notes and chords 'belong' together.",
+    "tonic": "The first degree of a scale, the chord that feels like 'home'",
+    "circleOfFifths": "A diagram arranging all 12 keys by the number of sharps/flats in their key signature",
+    "diatonic": "Chords built only from the notes of the current scale",
+    "chordProgression": "A sequence of chords played in order, creating harmonic movement",
+    "harmonicFunction": "The role a chord plays in a key: tonic (home), dominant (tension), or subdominant (departure)",
+    "cadence": "A chord movement from dominant to tonic that creates a strong sense of resolution"
+  },
+  "labels": {
+    "root": "Root",
+    "notes": "Notes",
+    "chord": "Chord",
+    "consonance": "Consonance",
+    "note1": "Note 1",
+    "note2": "Note 2",
+    "semitones": "semitones",
+    "cents": "cents",
+    "ratio": "ratio"
+  }
+}

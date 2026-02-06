@@ -1,0 +1,118 @@
+{
+  "s1": {
+    "title": "The Physics of Sound",
+    "subtitle": "Music begins with vibration. A string moves back and forth, pushes air, and your ear turns that into sound.",
+    "notationDisclaimer": {
+      "title": "",
+      "description": "",
+      "sharp": "",
+      "flat": "",
+      "example": "",
+      "note": ""
+    },
+    "kb": {
+      "p1": "Sound is <vibration>vibration</vibration> traveling through air. Pluck a ukulele string and it vibrates hundreds of times per second, pushing air molecules that reach your ear as sound waves.",
+      "p2": "The speed of vibration is called <frequency>frequency</frequency>, measured in <hertz>Hz</hertz>. Higher frequency = higher pitch. Lower frequency = lower pitch.",
+      "p3": "The note A above middle C vibrates at exactly <b>440 Hz</b>, an international standard adopted in 1955. Every other note in Western music is defined relative to this reference point.",
+      "p4": "The fretboard below shows each string position and its frequency. Click any position to hear it. Moving up the neck (higher fret numbers) shortens the string, raising the pitch."
+    }
+  },
+  "s2": {
+    "title": "Pitch Perception & Cents",
+    "subtitle": "Humans hear pitch in ratios, not absolute values. This has consequences for how we measure and tune.",
+    "kb": {
+      "p1": "Going from <b>100 Hz to 200 Hz</b> sounds like the same jump as going from <b>200 Hz to 400 Hz</b>. Both are a doubling, and a doubling always sounds like \"the same note, one octave higher.\"",
+      "p2": "We hear <ratios>ratios</ratios>, not differences. A 100 Hz gap at 200 Hz is perceptually huge; the same gap at 2000 Hz is barely noticeable. Frequency in Hz doesn't map to what we actually hear.",
+      "p3": "<cents>Cents</cents> fix this. One octave = 1200 cents. One semitone = 100 cents. Cents scale linearly with perceived pitch, so equal distances in cents sound like equal distances to your ear.",
+      "p4": "In the chart below, <b>toggle between Linear and Log scale</b>. On linear, frequency curves upward exponentially. On log, it straightens out. The log view matches human perception.",
+      "p5": "Compare two frequencies below and hear the difference in cents. 10 cents off is barely noticeable. 50 cents is clearly out of tune."
+    }
+  },
+  "s3": {
+    "title": "Harmonics & Consonance",
+    "subtitle": "A vibrating string produces not one frequency but many. These overtones determine why some note combinations sound stable and others don't.",
+    "kb": {
+      "p1": "A plucked string vibrates at its <fundamental>fundamental</fundamental> frequency and at integer multiples: 2x, 3x, 4x, 5x, and so on. These additional frequencies are called <overtones>overtones</overtones>, and together they form the <harmonicSeries>harmonic series</harmonicSeries>.",
+      "p2": "You don't hear each overtone individually. They blend into what you perceive as the note's <b>timbre</b> (the reason a ukulele and a piano playing the same note sound different). But your brain does use overtones to judge whether notes work together.",
+      "p3": "When two notes share many overtone frequencies, you perceive <consonance>consonance</consonance>. Simple frequency ratios (2:1 for the octave, 3:2 for the fifth) produce the most overlap. Complex ratios produce <dissonance>dissonance</dissonance>.",
+      "p4": "Pick two notes below and compare their overtone overlap. Try C and G (a perfect fifth) versus C and C# (a minor second) to hear and see the difference."
+    }
+  },
+  "s4": {
+    "title": "Intervals",
+    "subtitle": "The distance between two notes, measured in semitones. Intervals are how scales, chords, and melodies are constructed.",
+    "kb": {
+      "p1": "An <interval>interval</interval> is the distance between two notes. There are 12 possible intervals within an octave, from <b>unison</b> (0 semitones) to the <b>octave</b> (12 semitones).",
+      "p2": "Each has a different character:",
+      "li1": "<b>Perfect consonances</b> (unison, fourth, fifth, octave): stable, open",
+      "li2": "<b>Imperfect consonances</b> (minor/major 3rd, minor/major 6th): warm, with color",
+      "li3": "<b>Dissonances</b> (2nds, tritone, 7ths): tense, pulling toward resolution",
+      "p3": "On a fretboard, intervals form <b>geometric patterns</b>. A perfect fifth always has the same shape regardless of starting note. Learn the shape once and it works everywhere."
+    }
+  },
+  "s5": {
+    "title": "Scales",
+    "subtitle": "Out of 12 chromatic notes, a scale selects the subset that defines a piece's tonal character.",
+    "kb": {
+      "p1": "A <scale>scale</scale> picks a subset of the 12 chromatic notes that work together. Most Western scales use 7 notes, leaving 5 out. The pattern of whole steps and half steps between them defines the character.",
+      "p2": "The <b>major scale</b> follows <b>W-W-H-W-W-W-H</b>. It sounds bright and resolved. The <b>minor scale</b> follows <b>W-H-W-W-H-W-W</b>. Same notes rearranged from a different starting point, but the mood shifts completely.",
+      "p3": "A scale sets the palette for a piece of music. Melodies and chords are typically drawn from the notes of the current scale."
+    }
+  },
+  "s6": {
+    "title": "Chords",
+    "subtitle": "Three or more notes played simultaneously. Built by stacking intervals, mostly thirds.",
+    "kb": {
+      "p1": "A <chord>chord</chord> is built by stacking intervals. The simplest chord, a <triad>triad</triad>, uses the 1st, 3rd, and 5th notes of a scale.",
+      "p2": "<b>Major triad</b> = root + major 3rd (4 semitones) + perfect 5th (7 semitones). <b>Minor triad</b> = root + minor 3rd (3 semitones) + perfect 5th (7 semitones). The difference between major and minor is <b>one semitone on the third</b>.",
+      "p3": "Adding more notes creates richer chords: <b>7ths</b> add the 7th scale degree, <b>sus chords</b> replace the 3rd with a 2nd or 4th, and extended chords (9th, 11th, 13th) stack additional thirds.",
+      "p4": "A <voicing>voicing</voicing> is how a chord's notes are distributed across the strings. The same C major chord has many possible voicings, each with a different character."
+    }
+  },
+  "s7": {
+    "title": "Keys & The Circle of Fifths",
+    "subtitle": "A key is a scale plus its home chord. The circle of fifths maps how all 12 keys relate.",
+    "kb": {
+      "p1": "A <key>key</key> is a scale plus its <tonic>tonic</tonic> (home chord). \"In the key of C major\" means: the C major scale provides the notes, and C is home.",
+      "p2": "The <circleOfFifths>circle of fifths</circleOfFifths> arranges all 12 keys so that neighbors are a perfect fifth apart. Adjacent keys share <b>6 of 7 notes</b>, making transitions between them smooth. Keys on opposite sides share very few notes.",
+      "p3": "Every key produces 7 <diatonic>diatonic</diatonic> chords: 3 major (I, IV, V), 3 minor (ii, iii, vi), and 1 diminished (vii°). These are the chords that belong to the key."
+    }
+  },
+  "s8": {
+    "title": "Chord Progressions",
+    "subtitle": "Chords in sequence create harmonic motion: tension, resolution, surprise. The order matters as much as the chords themselves.",
+    "kb": {
+      "p1": "A <progression>chord progression</progression> is a sequence of chords that creates harmonic motion. Each chord has a <harmonicFunction>harmonic function</harmonicFunction>:",
+      "li1": "<b>Tonic</b> (I, iii, vi): stability, home",
+      "li2": "<b>Subdominant</b> (ii, IV): departure, movement",
+      "li3": "<b>Dominant</b> (V, vii°): tension, pull toward resolution",
+      "p2": "<b>I-IV-V-I</b> is the basic pattern: home, depart, tension, resolve. The V-to-I resolution is the strongest pull in Western harmony, the <cadence>cadence</cadence>.",
+      "p3": "<b>I-V-vi-IV</b> is probably the most common progression in modern pop: \"Let It Be,\" \"Someone Like You,\" \"No Woman, No Cry.\" It appears across decades and genres because the tension-resolution cycle it creates is consistently effective.",
+      "p4": "Theory describes which chords <i>can</i> follow each other. The data below shows what actually happens. Pick a chord and see the probability distribution of what comes next, computed from <b>660,000 real progressions</b>."
+    }
+  },
+  "s9": {
+    "title": "The Creative Toolset",
+    "subtitle": "Composition and analysis tools backed by a statistical model trained on 660,000 real songs across 9 genres.",
+    "kb": {
+      "p1": "The tools below combine music theory with a <b>statistical model</b> trained on the Chordonomicon dataset: <b>660,000 chord progressions</b> across 9 genres (pop, rock, country, punk, alternative, pop rock, rap, metal, soul).",
+      "p2": "Recommendations reflect real usage. When the model suggests G after C with 36% probability in pop, that's the actual frequency in the dataset. Theory explains <i>why</i> a transition works; the data shows <i>how often</i> it actually occurs."
+    },
+    "progressionExplorer": {
+      "title": "Progression Explorer",
+      "description": "Build chord progressions with genre-aware recommendations. Up to 5 parallel paths, 9 genres, voicing selection, and audio playback."
+    },
+    "melodyExplorer": {
+      "title": "Melody Explorer",
+      "description": "Generate melodies in 4 styles (smooth, melodic, angular, arpeggiated) across any key and scale. Compare paths, edit individual notes, or practice on the fretboard."
+    },
+    "dataInsights": {
+      "title": "Data Insights: What 660,000 Songs Tell Us",
+      "description": "Visualizations drawn from 667,858 chord progressions and 51 million chord occurrences.",
+      "chordFrequency": "Chord usage follows a <b>power law</b>: the top 10 chords account for most occurrences in any genre, while thousands of others appear rarely. The most-used chords (G, C, D, A, E) are also the easiest open shapes on guitar, which is not a coincidence.",
+      "genreFingerprints": "Each genre has a distinct harmonic profile. Pop is predictable and major-heavy. Metal is diverse with chromatic chords. Soul leans on extensions and dominant harmony. The radar chart below makes these differences visible.",
+      "transitionMatrix": "The full transition matrix: for every chord pair, how often does one follow the other? The matrix is asymmetric (C goes to G far more often than G goes to C). Color intensity is probability. Click any cell to hear the transition.",
+      "gCentric": "In the graph below, chords are positioned by transition strength: chords that frequently follow each other cluster together. In guitar-based genres, <b>G, C, and D</b> consistently land at the center. The layout is computed from the data, not manually arranged."
+    }
+  }
+}

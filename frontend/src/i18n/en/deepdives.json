@@ -1,0 +1,94 @@
+{
+  "s1": {
+    "d1": {
+      "title": "Why 440 Hz?",
+      "p1": "Concert pitch wasn't always 440 Hz. In the Baroque era (1600s-1750s), A was typically around 415 Hz, nearly a semitone lower. Some orchestras tuned as high as 460 Hz. Music literally sounded different from city to city.",
+      "p2": "The ISO standardized A4 = 440 Hz in 1955. Some orchestras still tune slightly higher (the Berlin Philharmonic uses 443 Hz) for a brighter sound."
+    },
+    "d2": {
+      "title": "String physics and re-entrant tuning",
+      "p1": "A string's frequency depends on its <b>length</b> (shorter = higher), <b>tension</b> (tighter = higher), and <b>mass</b> (thinner = higher). Pressing a fret shortens the vibrating portion of the string, raising the pitch.",
+      "p2": "The ukulele uses re-entrant tuning: the G string (4th) is tuned <i>higher</i> than the C string (3rd). On most stringed instruments, strings go low to high. This reversed ordering gives the ukulele its bright, jangly character."
+    }
+  },
+  "s2": {
+    "d1": {
+      "title": "Why 12 notes?",
+      "p1": "The 12-note system comes from a mathematical compromise. The most consonant interval after the octave is the perfect fifth (3:2 ratio). Stack 12 perfect fifths and you <i>almost</i> return to the starting note, 7 octaves higher.",
+      "p2": "\"Almost\" is the catch. 12 fifths overshoot 7 octaves by about 23.5 cents (the <b>Pythagorean comma</b>). Equal temperament spreads this error across all 12 notes, making each semitone exactly the <b>12th root of 2</b> (about 1.05946). Every interval is slightly impure, but every key works."
+    },
+    "d2": {
+      "title": "Just intonation vs equal temperament",
+      "p1": "<b>Just intonation</b> uses pure frequency ratios: a fifth at exactly 3:2, a major third at exactly 5:4. These intervals sound pristine in isolation.",
+      "p2": "The tradeoff: pure intervals don't stack evenly. A piano tuned in just intonation for C major sounds terrible in F# major. <b>Equal temperament</b> detunes every interval slightly so that all 12 keys sound equally acceptable. This compromise is what makes modulation between keys possible."
+    }
+  },
+  "s3": {
+    "d1": {
+      "title": "Timbre: same pitch, different sound",
+      "p1": "A ukulele and a piano playing A4 (440 Hz) sound completely different because each instrument produces a different mix of overtone strengths. A ukulele emphasizes certain harmonics while dampening others. A piano has a different distribution. This overtone \"fingerprint\" is called <b>timbre</b>."
+    },
+    "d2": {
+      "title": "From harmonics to all of music theory",
+      "p1": "Most of music theory traces back to the harmonic series. The octave (2:1) is the 2nd harmonic. The perfect fifth (3:2) is the 3rd. The major third (5:4) is the 5th. Chords are built from these intervals. Scales from chords. Progressions from scales. The whole system grows from the physics of a vibrating string."
+    }
+  },
+  "s4": {
+    "d1": {
+      "title": "Interval inversion",
+      "p1": "Flip a perfect 5th (7 semitones) by putting the bottom note on top and you get a perfect 4th (5 semitones). They add up to 12. A major 3rd inverts to a minor 6th. A minor 2nd inverts to a major 7th. Every interval has a complement."
+    },
+    "d2": {
+      "title": "The tritone: diabolus in musica",
+      "p1": "The tritone (6 semitones) sits exactly halfway through the octave. Medieval musicians called it \"the devil in music\" and avoided it. In modern harmony, the tritone appears inside dominant 7th chords (between the 3rd and 7th degrees) and is exactly what makes the V-to-I resolution so strong. The instability is the point."
+    }
+  },
+  "s5": {
+    "d1": {
+      "title": "Modes",
+      "p1": "C major has 7 notes: C D E F G A B. Play those same notes starting on D and you get <b>Dorian</b>, which sounds minor but with a brighter 6th. Start on E: Phrygian (dark, Spanish). Start on G: Mixolydian (bluesy, rock). Seven different characters from one set of notes."
+    },
+    "d2": {
+      "title": "The pentatonic scale",
+      "p1": "Remove the 4th and 7th from a major scale (the two notes that create semitone tension) and you get 5 notes: the <b>pentatonic scale</b>. It appears independently across cultures worldwide, from Chinese traditional music to Celtic folk to the blues. With no semitone clashes, it's nearly impossible to play a \"wrong\" note."
+    }
+  },
+  "s6": {
+    "d1": {
+      "title": "Inversions",
+      "p1": "C major has three notes: C, E, G. In <b>root position</b>, C is the lowest. Move C up an octave and E becomes the bass note (<b>first inversion</b>). Move E up too and G is the bass (<b>second inversion</b>). Same notes, but each inversion has a slightly different quality and connects differently to neighboring chords."
+    },
+    "d2": {
+      "title": "Diminished and augmented triads",
+      "p1": "Not all triads from a scale are major or minor. The triad on the 7th degree of C major (B-D-F) is a <b>diminished triad</b> (two stacked minor 3rds), tense and pulling toward resolution. An <b>augmented triad</b> (two stacked major 3rds) sounds unresolved and ambiguous. Both are natural consequences of the scale's interval structure."
+    }
+  },
+  "s7": {
+    "d1": {
+      "title": "Relative major and minor",
+      "p1": "Every major key has a <b>relative minor</b> that uses the exact same notes. C major and A minor both use C D E F G A B. The only difference is which note acts as home. This lets you shift mood from bright to dark without changing a single note in the scale."
+    },
+    "d2": {
+      "title": "Modulation",
+      "p1": "Moving to a neighboring key on the circle (e.g., C to G) is <b>modulation</b>. Because neighbors share most notes, the transition is smooth. Modulating up a half step (common in pop ballads) adds energy. Modulating to the relative minor shifts mood. Key changes are one of the strongest compositional tools available."
+    }
+  },
+  "s8": {
+    "d1": {
+      "title": "Secondary dominants",
+      "p1": "Any chord can have its own V chord. In C major, D major (V/V) doesn't belong to the key but creates a strong pull toward G. These <b>secondary dominants</b> add chromatic color to progressions that otherwise stay within a single key."
+    },
+    "d2": {
+      "title": "The deceptive cadence",
+      "p1": "After V, the ear expects I. A <b>deceptive cadence</b> goes to vi instead. The tension resolves, but not where expected. It works because vi shares two of three notes with I. Songwriters use this to extend sections and delay resolution."
+    }
+  },
+  "s9": {
+    "d1": {
+      "title": "About the model",
+      "p1": "The recommendation engine is a <b>Markov model</b> trained on the Chordonomicon dataset (667,858 progressions, 51 million chord occurrences). It stores the probability distribution of next chords for every chord in every genre.",
+      "p2": "Final recommendations blend statistical and theoretical signals: 40% transition probability from the data, 30% harmonic score from music theory, 20% voice leading smoothness, and 10% commonality bonus.",
+      "p3": "The model achieves <b>68.9% top-5 accuracy</b>: 7 out of 10 times, the actual next chord in a real song appears in the top 5 suggestions. The other 30% represents the creative choices that make songs distinct."
+    }
+  }
+}

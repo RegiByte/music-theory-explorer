@@ -1,0 +1,5 @@
+# Trained model files (can be large)
+*.json
+
+# Keep this directory in git
+!.gitignore

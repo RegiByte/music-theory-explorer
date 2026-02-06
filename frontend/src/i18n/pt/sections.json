@@ -1,0 +1,118 @@
+{
+  "s1": {
+    "title": "A Física do Som",
+    "subtitle": "Música começa com vibração. Uma corda se move para frente e para trás, empurra o ar, e seu ouvido transforma isso em som.",
+    "notationDisclaimer": {
+      "title": "Sobre a notação musical",
+      "description": "As ferramentas desta página usam a notação internacional (letras), que é padrão em cifras, softwares musicais e instrumentos digitais. Veja a correspondência com o sistema de solfejo usado no Brasil:",
+      "sharp": "Sustenido (#): meio tom acima",
+      "flat": "Bemol (b): meio tom abaixo",
+      "example": "Exemplo: C# = Dó Sustenido, Bb = Si Bemol",
+      "note": "Os textos explicativos usam nomes em português quando possível, mas as ferramentas interativas mantêm a notação por letras para compatibilidade com cifras e partituras internacionais."
+    },
+    "kb": {
+      "p1": "Som é <vibration>vibração</vibration> viajando pelo ar. Dedilhe uma corda de ukulele e ela vibra centenas de vezes por segundo, empurrando moléculas de ar que chegam ao seu ouvido como ondas sonoras.",
+      "p2": "A velocidade da vibração é chamada de <frequency>frequência</frequency>, medida em <hertz>Hz</hertz>. Frequência mais alta = nota mais aguda. Frequência mais baixa = nota mais grave.",
+      "p3": "A nota Lá acima do Dó central vibra a exatamente <b>440 Hz</b>, um padrão internacional adotado em 1955. Todas as outras notas da música ocidental são definidas em relação a esse ponto de referência.",
+      "p4": "O braço do instrumento abaixo mostra cada posição das cordas e sua frequência. Clique em qualquer posição para ouvi-la. Subindo no braço (números de trastes mais altos) a corda encurta, elevando a nota."
+    }
+  },
+  "s2": {
+    "title": "Percepção de Altura & Cents",
+    "subtitle": "Humanos ouvem altura em razões, não em valores absolutos. Isso tem consequências para como medimos e afinamos.",
+    "kb": {
+      "p1": "Ir de <b>100 Hz para 200 Hz</b> soa como o mesmo salto que ir de <b>200 Hz para 400 Hz</b>. Ambos são uma duplicação, e uma duplicação sempre soa como \"a mesma nota, uma oitava acima.\"",
+      "p2": "Nós ouvimos <ratios>razões</ratios>, não diferenças. Um intervalo de 100 Hz em 200 Hz é perceptualmente enorme; o mesmo intervalo em 2000 Hz é quase imperceptível. Frequência em Hz não corresponde ao que realmente ouvimos.",
+      "p3": "<cents>Cents</cents> resolvem isso. Uma oitava = 1200 cents. Um semitom = 100 cents. Cents escalam linearmente com a altura percebida, então distâncias iguais em cents soam como distâncias iguais para o seu ouvido.",
+      "p4": "No gráfico abaixo, <b>alterne entre escala Linear e Log</b>. Na linear, a frequência cresce exponencialmente. Na log, ela se alinha. A visualização log corresponde à percepção humana.",
+      "p5": "Compare duas frequências abaixo e ouça a diferença em cents. 10 cents de diferença é quase imperceptível. 50 cents está claramente desafinado."
+    }
+  },
+  "s3": {
+    "title": "Harmônicos & Consonância",
+    "subtitle": "Uma corda vibrando produz não uma frequência, mas muitas. Esses harmônicos determinam por que certas combinações de notas soam estáveis e outras não.",
+    "kb": {
+      "p1": "Uma corda dedilhada vibra em sua frequência <fundamental>fundamental</fundamental> e em múltiplos inteiros: 2x, 3x, 4x, 5x, e assim por diante. Essas frequências adicionais são chamadas de <overtones>harmônicos</overtones>, e juntas formam a <harmonicSeries>série harmônica</harmonicSeries>.",
+      "p2": "Você não ouve cada harmônico individualmente. Eles se misturam no que você percebe como o <b>timbre</b> da nota (a razão pela qual um ukulele e um piano tocando a mesma nota soam diferentes). Mas seu cérebro usa os harmônicos para julgar se as notas combinam.",
+      "p3": "Quando duas notas compartilham muitas frequências de harmônicos, você percebe <consonance>consonância</consonance>. Razões de frequência simples (2:1 para a oitava, 3:2 para a quinta) produzem mais sobreposição. Razões complexas produzem <dissonance>dissonância</dissonance>.",
+      "p4": "Escolha duas notas abaixo e compare a sobreposição de harmônicos. Tente Dó e Sol (uma quinta justa) contra Dó e Dó# (uma segunda menor) para ouvir e ver a diferença."
+    }
+  },
+  "s4": {
+    "title": "Intervalos",
+    "subtitle": "A distância entre duas notas, medida em semitons. Intervalos são como escalas, acordes e melodias são construídos.",
+    "kb": {
+      "p1": "Um <interval>intervalo</interval> é a distância entre duas notas. Existem 12 intervalos possíveis dentro de uma oitava, do <b>uníssono</b> (0 semitons) até a <b>oitava</b> (12 semitons).",
+      "p2": "Cada um tem um caráter diferente:",
+      "li1": "<b>Consonâncias perfeitas</b> (uníssono, quarta, quinta, oitava): estáveis, abertas",
+      "li2": "<b>Consonâncias imperfeitas</b> (3ª menor/maior, 6ª menor/maior): calorosas, com cor",
+      "li3": "<b>Dissonâncias</b> (2ªs, trítono, 7ªs): tensas, puxando para resolução",
+      "p3": "No braço do instrumento, intervalos formam <b>padrões geométricos</b>. Uma quinta justa sempre tem a mesma forma, independente da nota inicial. Aprenda a forma uma vez e funciona em qualquer lugar."
+    }
+  },
+  "s5": {
+    "title": "Escalas",
+    "subtitle": "Das 12 notas cromáticas, uma escala seleciona o subconjunto que define o caráter tonal de uma peça.",
+    "kb": {
+      "p1": "Uma <scale>escala</scale> seleciona um subconjunto das 12 notas cromáticas que funcionam juntas. A maioria das escalas ocidentais usa 7 notas, deixando 5 de fora. O padrão de tons e semitons entre elas define o caráter.",
+      "p2": "A <b>escala maior</b> segue <b>T-T-S-T-T-T-S</b>. Soa brilhante e resolvida. A <b>escala menor</b> segue <b>T-S-T-T-S-T-T</b>. As mesmas notas reorganizadas de um ponto de partida diferente, mas o humor muda completamente.",
+      "p3": "Uma escala define a paleta de uma peça musical. Melodias e acordes são tipicamente derivados das notas da escala atual."
+    }
+  },
+  "s6": {
+    "title": "Acordes",
+    "subtitle": "Três ou mais notas tocadas simultaneamente. Construídos empilhando intervalos, principalmente terças.",
+    "kb": {
+      "p1": "Um <chord>acorde</chord> é construído empilhando intervalos. O acorde mais simples, uma <triad>tríade</triad>, usa a 1ª, 3ª e 5ª notas de uma escala.",
+      "p2": "<b>Tríade maior</b> = fundamental + terça maior (4 semitons) + quinta justa (7 semitons). <b>Tríade menor</b> = fundamental + terça menor (3 semitons) + quinta justa (7 semitons). A diferença entre maior e menor é <b>um semitom na terça</b>.",
+      "p3": "Adicionar mais notas cria acordes mais ricos: <b>7ªs</b> adicionam o 7º grau da escala, <b>acordes sus</b> substituem a 3ª por uma 2ª ou 4ª, e acordes estendidos (9ª, 11ª, 13ª) empilham terças adicionais.",
+      "p4": "Um <voicing>voicing</voicing> é como as notas de um acorde são distribuídas nas cordas. O mesmo acorde de Dó maior tem muitos voicings possíveis, cada um com um caráter diferente."
+    }
+  },
+  "s7": {
+    "title": "Tonalidades & O Círculo das Quintas",
+    "subtitle": "Uma tonalidade é uma escala mais seu acorde base. O círculo das quintas mapeia como todas as 12 tonalidades se relacionam.",
+    "kb": {
+      "p1": "Uma <key>tonalidade</key> é uma escala mais sua <tonic>tônica</tonic> (acorde base). \"Na tonalidade de Dó maior\" significa: a escala de Dó maior fornece as notas, e Dó é o lar.",
+      "p2": "O <circleOfFifths>círculo das quintas</circleOfFifths> organiza todas as 12 tonalidades de modo que vizinhos estão a uma quinta justa de distância. Tonalidades adjacentes compartilham <b>6 de 7 notas</b>, tornando transições entre elas suaves. Tonalidades em lados opostos compartilham poucas notas.",
+      "p3": "Cada tonalidade produz 7 acordes <diatonic>diatônicos</diatonic>: 3 maiores (I, IV, V), 3 menores (ii, iii, vi) e 1 diminuto (vii°). Esses são os acordes que pertencem à tonalidade."
+    }
+  },
+  "s8": {
+    "title": "Progressões de Acordes",
+    "subtitle": "Acordes em sequência criam movimento harmônico: tensão, resolução, surpresa. A ordem importa tanto quanto os próprios acordes.",
+    "kb": {
+      "p1": "Uma <progression>progressão de acordes</progression> é uma sequência de acordes que cria movimento harmônico. Cada acorde tem uma <harmonicFunction>função harmônica</harmonicFunction>:",
+      "li1": "<b>Tônica</b> (I, iii, vi): estabilidade, lar",
+      "li2": "<b>Subdominante</b> (ii, IV): partida, movimento",
+      "li3": "<b>Dominante</b> (V, vii°): tensão, atração para resolução",
+      "p2": "<b>I-IV-V-I</b> é o padrão básico: lar, partir, tensão, resolver. A resolução V-para-I é a atração mais forte na harmonia ocidental, a <cadence>cadência</cadence>.",
+      "p3": "<b>I-V-vi-IV</b> é provavelmente a progressão mais comum no pop moderno: \"Let It Be\", \"Someone Like You\", \"No Woman, No Cry\". Aparece ao longo de décadas e gêneros porque o ciclo de tensão-resolução que cria é consistentemente eficaz.",
+      "p4": "A teoria descreve quais acordes <i>podem</i> seguir uns aos outros. Os dados abaixo mostram o que realmente acontece. Escolha um acorde e veja a distribuição de probabilidade do que vem a seguir, calculada a partir de <b>660.000 progressões reais</b>."
+    }
+  },
+  "s9": {
+    "title": "Ferramentas Criativas",
+    "subtitle": "Ferramentas de composição e análise apoiadas por um modelo estatístico treinado em 660.000 músicas reais de 9 gêneros.",
+    "kb": {
+      "p1": "As ferramentas abaixo combinam teoria musical com um <b>modelo estatístico</b> treinado no dataset Chordonomicon: <b>660.000 progressões de acordes</b> em 9 gêneros (pop, rock, country, punk, alternativo, pop rock, rap, metal, soul).",
+      "p2": "As recomendações refletem o uso real. Quando o modelo sugere Sol depois de Dó com 36% de probabilidade no pop, essa é a frequência real no dataset. A teoria explica <i>por que</i> uma transição funciona; os dados mostram <i>com que frequência</i> ela realmente ocorre."
+    },
+    "progressionExplorer": {
+      "title": "Explorador de Progressões",
+      "description": "Construa progressões de acordes com recomendações baseadas em gênero. Até 5 caminhos paralelos, 9 gêneros, seleção de voicings e reprodução de áudio."
+    },
+    "melodyExplorer": {
+      "title": "Explorador de Melodias",
+      "description": "Gere melodias em 4 estilos (suave, melódico, angular, arpejado) em qualquer tonalidade e escala. Compare caminhos, edite notas individuais ou pratique no braço do instrumento."
+    },
+    "dataInsights": {
+      "title": "Insights dos Dados: O Que 660.000 Músicas Revelam",
+      "description": "Visualizações de 667.858 progressões de acordes e 51 milhões de ocorrências de acordes.",
+      "chordFrequency": "O uso de acordes segue uma <b>lei de potência</b>: os 10 acordes mais usados representam a maioria das ocorrências em qualquer gênero, enquanto milhares de outros aparecem raramente. Os acordes mais usados (Sol, Dó, Ré, Lá, Mi) também são as formas abertas mais fáceis no violão, e isso não é coincidência.",
+      "genreFingerprints": "Cada gênero tem um perfil harmônico distinto. Pop é previsível e predominantemente maior. Metal é diverso com acordes cromáticos. Soul usa extensões e harmonia dominante. O gráfico radar abaixo torna essas diferenças visíveis.",
+      "transitionMatrix": "A matriz completa de transições: para cada par de acordes, com que frequência um segue o outro? A matriz é assimétrica (Dó vai para Sol muito mais frequentemente do que Sol vai para Dó). A intensidade da cor é a probabilidade. Clique em qualquer célula para ouvir a transição.",
+      "gCentric": "No gráfico abaixo, os acordes são posicionados por força de transição: acordes que frequentemente se seguem ficam agrupados. Em gêneros baseados em violão, <b>Sol, Dó e Ré</b> consistentemente ficam no centro. O layout é calculado a partir dos dados, não arranjado manualmente."
+    }
+  }
+}

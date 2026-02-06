@@ -1,0 +1,94 @@
+{
+  "s1": {
+    "d1": {
+      "title": "Por que 440 Hz?",
+      "p1": "A afinação de concerto nem sempre foi 440 Hz. Na era Barroca (1600-1750), o Lá era tipicamente em torno de 415 Hz, quase um semitom mais baixo. Algumas orquestras afinavam até 460 Hz. A música literalmente soava diferente de cidade para cidade.",
+      "p2": "A ISO padronizou Lá4 = 440 Hz em 1955. Algumas orquestras ainda afinam ligeiramente acima (a Filarmônica de Berlim usa 443 Hz) para um som mais brilhante."
+    },
+    "d2": {
+      "title": "Física das cordas e afinação reentrante",
+      "p1": "A frequência de uma corda depende do seu <b>comprimento</b> (mais curta = mais aguda), <b>tensão</b> (mais tensa = mais aguda) e <b>massa</b> (mais fina = mais aguda). Pressionar um traste encurta a parte vibrante da corda, elevando a nota.",
+      "p2": "O ukulele usa afinação reentrante: a corda Sol (4ª) é afinada <i>mais aguda</i> que a corda Dó (3ª). Na maioria dos instrumentos de corda, as cordas vão do grave ao agudo. Essa ordenação invertida dá ao ukulele seu caráter brilhante e vibrante."
+    }
+  },
+  "s2": {
+    "d1": {
+      "title": "Por que 12 notas?",
+      "p1": "O sistema de 12 notas vem de um compromisso matemático. O intervalo mais consonante depois da oitava é a quinta justa (razão 3:2). Empilhe 12 quintas justas e você <i>quase</i> retorna à nota inicial, 7 oitavas acima.",
+      "p2": "\"Quase\" é o detalhe. 12 quintas excedem 7 oitavas em cerca de 23,5 cents (a <b>coma pitagórica</b>). O temperamento igual distribui esse erro entre todas as 12 notas, fazendo cada semitom exatamente a <b>raiz 12ª de 2</b> (cerca de 1,05946). Cada intervalo é ligeiramente impuro, mas todas as tonalidades funcionam."
+    },
+    "d2": {
+      "title": "Afinação justa vs temperamento igual",
+      "p1": "A <b>afinação justa</b> usa razões de frequência puras: uma quinta em exatamente 3:2, uma terça maior em exatamente 5:4. Esses intervalos soam puros quando isolados.",
+      "p2": "O tradeoff: intervalos puros não se empilham uniformemente. Um piano afinado em afinação justa para Dó maior soa terrível em Fá# maior. O <b>temperamento igual</b> desafina cada intervalo levemente para que todas as 12 tonalidades soem igualmente aceitáveis. Esse compromisso é o que torna a modulação entre tonalidades possível."
+    }
+  },
+  "s3": {
+    "d1": {
+      "title": "Timbre: mesma nota, som diferente",
+      "p1": "Um ukulele e um piano tocando Lá4 (440 Hz) soam completamente diferentes porque cada instrumento produz uma mistura diferente de intensidades de harmônicos. Um ukulele enfatiza certos harmônicos enquanto atenua outros. Um piano tem uma distribuição diferente. Essa \"impressão digital\" de harmônicos é chamada de <b>timbre</b>."
+    },
+    "d2": {
+      "title": "Dos harmônicos a toda a teoria musical",
+      "p1": "A maior parte da teoria musical se origina na série harmônica. A oitava (2:1) é o 2º harmônico. A quinta justa (3:2) é o 3º. A terça maior (5:4) é o 5º. Acordes são construídos a partir desses intervalos. Escalas a partir de acordes. Progressões a partir de escalas. Todo o sistema cresce da física de uma corda vibrante."
+    }
+  },
+  "s4": {
+    "d1": {
+      "title": "Inversão de intervalos",
+      "p1": "Inverta uma 5ª justa (7 semitons) colocando a nota de baixo em cima e você obtém uma 4ª justa (5 semitons). Eles somam 12. Uma 3ª maior inverte para uma 6ª menor. Uma 2ª menor inverte para uma 7ª maior. Todo intervalo tem um complemento."
+    },
+    "d2": {
+      "title": "O trítono: diabolus in musica",
+      "p1": "O trítono (6 semitons) fica exatamente na metade da oitava. Músicos medievais o chamavam de \"o diabo na música\" e o evitavam. Na harmonia moderna, o trítono aparece dentro de acordes de 7ª dominante (entre o 3º e 7º graus) e é exatamente o que torna a resolução V-para-I tão forte. A instabilidade é o objetivo."
+    }
+  },
+  "s5": {
+    "d1": {
+      "title": "Modos",
+      "p1": "Dó maior tem 7 notas: Dó Ré Mi Fá Sol Lá Si. Toque essas mesmas notas começando em Ré e você obtém o modo <b>Dórico</b>, que soa menor mas com uma 6ª mais brilhante. Comece em Mi: Frígio (escuro, espanhol). Comece em Sol: Mixolídio (blues, rock). Sete caracteres diferentes de um conjunto de notas."
+    },
+    "d2": {
+      "title": "A escala pentatônica",
+      "p1": "Remova a 4ª e a 7ª de uma escala maior (as duas notas que criam tensão de semitom) e você obtém 5 notas: a <b>escala pentatônica</b>. Ela aparece independentemente em culturas ao redor do mundo, da música tradicional chinesa ao folk celta ao blues. Sem choques de semitons, é quase impossível tocar uma nota \"errada\"."
+    }
+  },
+  "s6": {
+    "d1": {
+      "title": "Inversões",
+      "p1": "Dó maior tem três notas: Dó, Mi, Sol. Na <b>posição fundamental</b>, Dó é a mais grave. Mova Dó uma oitava acima e Mi se torna a nota mais grave (<b>primeira inversão</b>). Mova Mi também e Sol fica no baixo (<b>segunda inversão</b>). Mesmas notas, mas cada inversão tem uma qualidade ligeiramente diferente e se conecta diferentemente aos acordes vizinhos."
+    },
+    "d2": {
+      "title": "Tríades diminutas e aumentadas",
+      "p1": "Nem todas as tríades de uma escala são maiores ou menores. A tríade no 7º grau de Dó maior (Si-Ré-Fá) é uma <b>tríade diminuta</b> (duas 3ªs menores empilhadas), tensa e puxando para resolução. Uma <b>tríade aumentada</b> (duas 3ªs maiores empilhadas) soa não resolvida e ambígua. Ambas são consequências naturais da estrutura de intervalos da escala."
+    }
+  },
+  "s7": {
+    "d1": {
+      "title": "Relativo maior e menor",
+      "p1": "Toda tonalidade maior tem um <b>relativo menor</b> que usa exatamente as mesmas notas. Dó maior e Lá menor usam ambos Dó Ré Mi Fá Sol Lá Si. A única diferença é qual nota atua como base. Isso permite mudar o humor de brilhante para escuro sem alterar uma única nota na escala."
+    },
+    "d2": {
+      "title": "Modulação",
+      "p1": "Mover para uma tonalidade vizinha no círculo (ex.: Dó para Sol) é <b>modulação</b>. Como vizinhos compartilham a maioria das notas, a transição é suave. Modular um semitom acima (comum em baladas pop) adiciona energia. Modular para o relativo menor muda o humor. Mudanças de tonalidade são uma das ferramentas composicionais mais poderosas disponíveis."
+    }
+  },
+  "s8": {
+    "d1": {
+      "title": "Dominantes secundários",
+      "p1": "Qualquer acorde pode ter seu próprio acorde V. Em Dó maior, Ré maior (V/V) não pertence à tonalidade mas cria uma forte atração em direção a Sol. Esses <b>dominantes secundários</b> adicionam cor cromática a progressões que de outra forma permanecem dentro de uma única tonalidade."
+    },
+    "d2": {
+      "title": "A cadência deceptiva",
+      "p1": "Depois do V, o ouvido espera o I. Uma <b>cadência deceptiva</b> vai para o vi. A tensão resolve, mas não onde esperado. Funciona porque o vi compartilha duas das três notas com o I. Compositores usam isso para estender seções e adiar a resolução."
+    }
+  },
+  "s9": {
+    "d1": {
+      "title": "Sobre o modelo",
+      "p1": "O motor de recomendações é um <b>modelo de Markov</b> treinado no dataset Chordonomicon (667.858 progressões, 51 milhões de ocorrências de acordes). Ele armazena a distribuição de probabilidade dos próximos acordes para cada acorde em cada gênero.",
+      "p2": "As recomendações finais combinam sinais estatísticos e teóricos: 40% probabilidade de transição dos dados, 30% pontuação harmônica da teoria musical, 20% suavidade de condução de vozes e 10% bônus de frequência.",
+      "p3": "O modelo alcança <b>68,9% de acurácia top-5</b>: 7 em cada 10 vezes, o próximo acorde real em uma música real aparece nas 5 principais sugestões. Os outros 30% representam as escolhas criativas que tornam as músicas distintas."
+    }
+  }
+}

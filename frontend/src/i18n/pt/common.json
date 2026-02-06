@@ -1,0 +1,57 @@
+{
+  "appTitle": "Explorador de Teoria Musical",
+  "landing": {
+    "subtitle": "Teoria musical através de ferramentas interativas e dados reais de 660.000 músicas.",
+    "getStarted": "Começar"
+  },
+  "header": {
+    "subtitle": "Teoria musical a partir de primeiros princípios, com ferramentas interativas e dados estatísticos de 660.000 músicas reais."
+  },
+  "footer": {
+    "builtWith": "Feito com React, TypeScript, Tone.js e Braided",
+    "data": "Dados: Chordonomicon (660.000+ progressões de acordes)"
+  },
+  "loading": {
+    "title": "Inicializando Sistema de Áudio...",
+    "subtitle": "Clique em qualquer lugar para ativar o áudio"
+  },
+  "language": {
+    "en": "English",
+    "pt": "Português"
+  },
+  "concepts": {
+    "vibration": "Movimento rápido de ida e volta de um objeto",
+    "frequency": "Número de vibrações por segundo, medido em Hertz (Hz)",
+    "hertz": "Hertz: um ciclo por segundo",
+    "ratios": "A razão entre duas frequências, não a diferença aritmética entre elas",
+    "cents": "1/100 de um semitom. 1200 cents = 1 oitava. Mede a altura sonora como o ouvido humano percebe.",
+    "fundamental": "A frequência mais baixa de vibração, a nota que você conscientemente ouve",
+    "overtones": "Frequências acima da fundamental que ocorrem naturalmente quando uma corda vibra",
+    "harmonicSeries": "A série de frequências produzidas por um objeto vibrante: f, 2f, 3f, 4f...",
+    "consonance": "Um som agradável e estável quando duas ou mais notas são tocadas juntas",
+    "dissonance": "Um som tenso e instável que cria uma sensação de querer resolver",
+    "interval": "A distância em altura entre duas notas, medida em semitons",
+    "scale": "Um conjunto de notas (geralmente 7) selecionadas das 12 notas cromáticas, ordenadas por altura",
+    "chord": "Três ou mais notas soando simultaneamente",
+    "triad": "Um acorde de três notas: fundamental, 3ª e 5ª",
+    "voicing": "Um arranjo específico das notas de um acorde nas cordas de um instrumento",
+    "key": "Uma escala mais sua tônica (acorde base). Define quais notas e acordes 'pertencem' ao conjunto.",
+    "tonic": "O primeiro grau de uma escala, o acorde que soa como 'casa'",
+    "circleOfFifths": "Um diagrama que organiza todas as 12 tonalidades pelo número de sustenidos/bemóis em sua armadura",
+    "diatonic": "Acordes construídos apenas com as notas da escala atual",
+    "chordProgression": "Uma sequência de acordes tocados em ordem, criando movimento harmônico",
+    "harmonicFunction": "O papel que um acorde desempenha em uma tonalidade: tônica (casa), dominante (tensão) ou subdominante (partida)",
+    "cadence": "Um movimento de acorde de dominante para tônica que cria uma forte sensação de resolução"
+  },
+  "labels": {
+    "root": "Fundamental",
+    "notes": "Notas",
+    "chord": "Acorde",
+    "consonance": "Consonância",
+    "note1": "Nota 1",
+    "note2": "Nota 2",
+    "semitones": "semitons",
+    "cents": "cents",
+    "ratio": "razão"
+  }
+}
