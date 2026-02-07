@@ -232,6 +232,8 @@ export function ProgressionExplorerRoot() {
       flowNode.data.onSelectCandidate = node.isLeaf
         ? (chordId: string) => selectCandidate(node.id, chordId)
         : undefined
+      flowNode.data.selectedGenre = selectedGenre
+      flowNode.data.onGenreChange = setGenre
       return flowNode
     })
   }, [
@@ -243,11 +245,13 @@ export function ProgressionExplorerRoot() {
     notationPreference,
     key,
     scaleType,
+    selectedGenre,
     expandNode,
     selectCandidate,
     deleteNode,
     toggleMute,
     enterPracticeMode,
+    setGenre,
     handlePlayChord,
   ])
 

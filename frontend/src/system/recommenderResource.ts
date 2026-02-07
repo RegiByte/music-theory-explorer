@@ -5,6 +5,13 @@ import type {
   TrainedPattern,
 } from '@/schemas'
 
+/** Result of a recommendation query, including which Markov order was used. */
+export interface RecommendationResult {
+  recommendations: StatisticalRecommendation[]
+  /** Which Markov order provided the transitions: 3 = trigram, 2 = bigram, 1 = unigram */
+  orderUsed: number
+}
+
 /** Separator used for higher-order context keys (matches Python CONTEXT_SEP) */
 const CONTEXT_SEP = '|'
 
@@ -67,11 +74,13 @@ export const recommenderResource = defineResource({
         genre: Genre,
         topN = 20,
         context?: string[],
-      ): Promise<StatisticalRecommendation[]> => {
+      ): Promise<RecommendationResult> => {
         await loadPromise // Wait for models if still loading
-        if (!markovModel) return []
+        if (!markovModel)
+          return { recommendations: [], orderUsed: 1 }
 
         let transitions: Record<string, number> | undefined
+        let orderUsed = 1
 
         // Try order 3 (trigram): need >= 2 context chords
         if (context && context.length >= 2) {
@@ -83,6 +92,7 @@ export const recommenderResource = defineResource({
           transitions =
             markovModel.trigram_transitions?.[genre]?.[trigramKey]
           if (transitions && Object.keys(transitions).length > 0) {
+            orderUsed = 3
             console.log(
               `📊 Using 3rd-order context: ${trigramKey} (${Object.keys(transitions).length} transitions)`,
             )
@@ -100,6 +110,7 @@ export const recommenderResource = defineResource({
           transitions =
             markovModel.bigram_transitions?.[genre]?.[bigramKey]
           if (transitions && Object.keys(transitions).length > 0) {
+            orderUsed = 2
             console.log(
               `📊 Using 2nd-order context: ${bigramKey} (${Object.keys(transitions).length} transitions)`,
             )
@@ -111,11 +122,12 @@ export const recommenderResource = defineResource({
         // Fall back to order 1 (unigram)
         if (!transitions) {
           transitions = markovModel.transitions[genre]?.[fromChord] || {}
+          orderUsed = 1
         }
 
         const frequencies = markovModel.chord_frequencies[genre] || {}
 
-        return Object.entries(transitions)
+        const recommendations = Object.entries(transitions)
           .map(([chord, probability]) => {
             const freq = frequencies[chord] || 0
             // Match Python model: friction = 1 - min(freq * 10, 1.0)
@@ -125,6 +137,8 @@ export const recommenderResource = defineResource({
           })
           .sort((a, b) => b.probability - a.probability)
           .slice(0, topN)
+
+        return { recommendations, orderUsed }
       },
 
       // Find matching patterns for a chord sequence

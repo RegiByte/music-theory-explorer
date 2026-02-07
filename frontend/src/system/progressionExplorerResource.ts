@@ -22,6 +22,7 @@ import type {
   ProgressionMap,
   ProgressionNode,
   ScaleType,
+  StatisticalRecommendation,
   TrunkEdge,
   TrunkNode,
   Note,
@@ -233,23 +234,38 @@ export const progressionExplorerResource = defineResource({
           // came before it. getRecommendations uses backoff: trigram → bigram → unigram.
           const context = path.length > 1 ? path.slice(0, -1) : undefined
 
-          const statisticalRecs = await recommender.getRecommendations(
-            node.chordId,
-            genre,
-            50, // Increased from 30 to get more candidates
-            context,
-          )
+          const { recommendations: statisticalRecs, orderUsed } =
+            await recommender.getRecommendations(
+              node.chordId,
+              genre,
+              50, // Increased from 30 to get more candidates
+              context,
+            )
 
           // --- Context-aware pattern boosting ---
           // Use the progression path to find matching n-gram patterns from
           // the trained model. Try progressively shorter suffixes of the path
           // as prefixes (last 3, last 2, last 1 chords) to maximize coverage.
           // Longer prefix matches are weighted higher (more specific context).
-          const contextualBoost = await buildContextualBoostFromPatterns(
+          let contextualBoost = await buildContextualBoostFromPatterns(
             path,
             genre,
             recommender,
           )
+
+          // --- Markov-derived contextual boost (fallback) ---
+          // The patterns model has sparse coverage for less common chord names
+          // (e.g. Cm, Fm in minor keys). When pattern matching finds nothing
+          // but the Markov model IS using higher-order context (order 2+),
+          // the statistical probabilities already have context baked in.
+          // Derive a synthetic contextual boost from those probabilities so
+          // the user sees that recommendations ARE context-aware.
+          if (contextualBoost.size === 0 && orderUsed >= 2) {
+            contextualBoost = buildMarkovDerivedBoost(
+              statisticalRecs,
+              orderUsed,
+            )
+          }
 
           if (contextualBoost.size > 0) {
             console.log(
@@ -676,6 +692,40 @@ async function buildContextualBoostFromPatterns(
         boostMap.set(nextChord, current + pattern.frequency * confidence)
       }
     }
+  }
+
+  return boostMap
+}
+
+/**
+ * Derive a contextual boost map from Markov statistical probabilities.
+ *
+ * When the pattern model has no matching patterns (common for minor-key
+ * chords like Cm, Fm that are rare in the training data), but the Markov
+ * model IS using higher-order context (bigram or trigram), the statistical
+ * probabilities already reflect the progression context.
+ *
+ * We use those probabilities directly as the contextual boost, scaled by
+ * the Markov order to reflect confidence level:
+ *   - Order 3 (trigram): full probability as boost
+ *   - Order 2 (bigram): 70% of probability as boost
+ *
+ * This ensures the context bar appears whenever the system is genuinely
+ * using progression context, even when the pattern model has gaps.
+ */
+function buildMarkovDerivedBoost(
+  statisticalRecs: StatisticalRecommendation[],
+  orderUsed: number,
+): ContextualBoostMap {
+  const boostMap: ContextualBoostMap = new Map()
+
+  // Scale boost by Markov order confidence
+  const orderConfidence = orderUsed === 3 ? 1.0 : 0.7
+
+  for (const rec of statisticalRecs) {
+    // Use the statistical probability as the contextual boost.
+    // These probabilities are already context-aware when orderUsed >= 2.
+    boostMap.set(rec.chord, rec.probability * orderConfidence)
   }
 
   return boostMap

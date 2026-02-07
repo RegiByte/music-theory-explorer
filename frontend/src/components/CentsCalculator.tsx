@@ -73,7 +73,7 @@ export function CentsCalculator() {
             className="font-mono"
           />
           <Button
-            onClick={() => audio.playNote(freq1)}
+            onClick={() => audio.playFrequency(freq1)}
             variant="outline"
             className="w-full"
           >
@@ -92,7 +92,7 @@ export function CentsCalculator() {
             className="font-mono"
           />
           <Button
-            onClick={() => audio.playNote(freq2)}
+            onClick={() => audio.playFrequency(freq2)}
             variant="outline"
             className="w-full"
           >
@@ -112,7 +112,7 @@ export function CentsCalculator() {
 
       <div className="mt-6 space-y-2">
         <Button
-          onClick={() => audio.playChord([freq1, freq2], 2)}
+          onClick={() => audio.playFrequencies([freq1, freq2], 2)}
           className="w-full"
         >
           {t('centsCalculator.playBothTogether')}

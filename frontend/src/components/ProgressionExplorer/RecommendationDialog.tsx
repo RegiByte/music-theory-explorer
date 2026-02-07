@@ -27,6 +27,8 @@ interface RecommendationDialogProps {
   mapKey?: Note
   scaleType?: ScaleType
   trigger: ReactNode
+  selectedGenre: Genre
+  onGenreChange: (genre: Genre) => void
 }
 
 export function RecommendationDialog({
@@ -39,9 +41,10 @@ export function RecommendationDialog({
   mapKey,
   scaleType,
   trigger,
+  selectedGenre,
+  onGenreChange,
 }: RecommendationDialogProps) {
   const { t } = useTranslation('tools')
-  const [selectedGenre, setSelectedGenre] = useState<Genre>('pop')
   const [tab, setTab] = useState<'canonical' | 'spicy'>('canonical')
 
   const handleSelect = (chordId: string) => {
@@ -86,7 +89,7 @@ export function RecommendationDialog({
             <div className="px-3 py-2 border-b">
               <GenrePicker
                 value={selectedGenre}
-                onValueChange={setSelectedGenre}
+                onValueChange={onGenreChange}
                 size="xs"
               />
             </div>

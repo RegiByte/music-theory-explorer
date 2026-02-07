@@ -161,7 +161,7 @@ export function FrequencyPlot() {
         const dataPoint = dataset._originalData[dataIndex]
 
         if (dataPoint) {
-          audio.playNote(dataPoint.frequency, 0.5)
+          audio.playFrequency(dataPoint.frequency, 0.5)
         }
       }
     },

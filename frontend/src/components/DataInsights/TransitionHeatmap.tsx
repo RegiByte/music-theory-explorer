@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback } from 'react'
+import { useState, useMemo, useEffect, useCallback, Fragment } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useResource } from '@/system'
 import { Card } from '@/components/ui/card'
@@ -351,10 +351,9 @@ function MatrixView({
 
           {/* Rows */}
           {chords.map((fromChord, rowIdx) => (
-            <>
+            <Fragment key={`row-${fromChord}`}>
               {/* Row header */}
               <button
-                key={`row-${fromChord}`}
                 className={`flex items-center justify-end pr-2 text-xs font-bold cursor-pointer transition-colors rounded-sm ${
                   hoveredCell?.row === rowIdx
                     ? 'bg-indigo-100 text-indigo-800'
@@ -405,7 +404,7 @@ function MatrixView({
                   </button>
                 )
               })}
-            </>
+            </Fragment>
           ))}
         </div>
       </div>

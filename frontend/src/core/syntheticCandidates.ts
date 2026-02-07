@@ -282,8 +282,14 @@ export function createSyntheticCandidates(
   const synthetic: ScoredCandidate[] = []
 
   for (const stat of statisticalRecs) {
-    // Skip if already in harmonic candidates (enharmonic-aware)
-    if (existingChordIdsCanonical.has(normalizeChordId(stat.chord))) continue
+    // Skip if already in harmonic candidates OR a previously created synthetic
+    // with the same pitch (enharmonic-aware). This prevents the Markov model's
+    // dual-spelling entries (e.g. "Bb" and "A#") from creating duplicate candidates.
+    const canonicalId = normalizeChordId(stat.chord)
+    if (existingChordIdsCanonical.has(canonicalId)) continue
+
+    // Register this chord so subsequent enharmonic duplicates are caught
+    existingChordIdsCanonical.add(canonicalId)
 
     // Try to parse the chord
     const chord = parseChordSymbol(stat.chord)

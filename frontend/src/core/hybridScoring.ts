@@ -69,12 +69,31 @@ export function combineScores(
   contextualBoost: ContextualBoostMap,
   weights: HybridScoringWeights = DEFAULT_WEIGHTS,
 ): ScoredCandidate[] {
-  // Create a map of statistical probabilities for fast lookup
-  // Index by both original and canonical (sharp) chord IDs for enharmonic matching
+  // Create a map of statistical probabilities for fast lookup.
+  // The Markov model may contain both enharmonic spellings of the same
+  // pitch as separate entries (e.g. "Bb" at 12.7% AND "A#" at 2.2%).
+  // We merge them under the canonical (sharp) key, summing probabilities
+  // and keeping the max frequency, so candidates get the full statistical
+  // weight of their pitch class regardless of spelling.
   const statMap = new Map<string, StatisticalRecommendation>()
   for (const r of statisticalRecs) {
-    statMap.set(r.chord, r)
-    statMap.set(normalizeChordId(r.chord), r)
+    const canonical = normalizeChordId(r.chord)
+    const existing = statMap.get(canonical)
+    if (existing) {
+      // Merge enharmonic duplicate: sum probabilities, keep best frequency
+      const merged: StatisticalRecommendation = {
+        chord: existing.chord, // Keep the first spelling (higher probability)
+        probability: existing.probability + r.probability,
+        frequency: Math.max(existing.frequency, r.frequency),
+        friction: Math.min(existing.friction, r.friction),
+      }
+      statMap.set(canonical, merged)
+      statMap.set(existing.chord, merged)
+      statMap.set(r.chord, merged)
+    } else {
+      statMap.set(r.chord, r)
+      statMap.set(canonical, r)
+    }
   }
 
   // Find the max contextual boost for normalization (so we get 0-1 range)

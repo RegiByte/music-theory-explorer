@@ -54,6 +54,8 @@ interface ChordNodeData {
   mapKey?: Note
   scaleType?: ScaleType
   onSelectCandidate?: (chordId: string) => void
+  selectedGenre?: Genre
+  onGenreChange?: (genre: Genre) => void
 }
 
 export const ChordNode = memo(({ data }: { data: ChordNodeData }) => {
@@ -78,6 +80,8 @@ export const ChordNode = memo(({ data }: { data: ChordNodeData }) => {
     mapKey,
     scaleType: nodeScaleType,
     onSelectCandidate,
+    selectedGenre = 'pop',
+    onGenreChange,
   } = data
 
   const { t } = useTranslation('tools')
@@ -215,6 +219,8 @@ export const ChordNode = memo(({ data }: { data: ChordNodeData }) => {
               notationPreference={notationPreference}
               mapKey={mapKey}
               scaleType={nodeScaleType}
+              selectedGenre={selectedGenre}
+              onGenreChange={onGenreChange || (() => {})}
               trigger={
                 <button
                   className={cn(

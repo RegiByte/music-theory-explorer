@@ -309,7 +309,7 @@ export function HarmonicOverlap() {
         const dataset = harmonicChartData.datasets[element.datasetIndex] as any
         const harmonic = dataset._harmonics[element.index]
         if (harmonic) {
-          audio.playNote(harmonic.frequency, 0.5)
+          audio.playFrequency(harmonic.frequency, 0.5)
         }
       },
       plugins: {
@@ -428,21 +428,21 @@ export function HarmonicOverlap() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => audio.playNote(freq1, 0.5)}
+              onClick={() => audio.playFrequency(freq1, 0.5)}
             >
               {t('harmonicOverlap.playNote', { note: note1 })}
             </Button>
             <Button
               variant="outline"
               size="sm"
-              onClick={() => audio.playNote(freq2, 0.5)}
+              onClick={() => audio.playFrequency(freq2, 0.5)}
             >
               {t('harmonicOverlap.playNote', { note: note2 })}
             </Button>
             <Button
               variant="default"
               size="sm"
-              onClick={() => audio.playChord([freq1, freq2], 1.0)}
+              onClick={() => audio.playFrequencies([freq1, freq2], 1.0)}
             >
               {t('harmonicOverlap.playBoth')}
             </Button>

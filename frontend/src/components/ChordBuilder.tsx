@@ -260,7 +260,7 @@ export function ChordBuilder() {
         const dataset = harmonicChartData.datasets[element.datasetIndex] as any
         const harmonic = dataset._harmonics[element.index]
         if (harmonic) {
-          audio.playNote(harmonic.frequency, 0.5)
+          audio.playFrequency(harmonic.frequency, 0.5)
         }
       },
       plugins: {
