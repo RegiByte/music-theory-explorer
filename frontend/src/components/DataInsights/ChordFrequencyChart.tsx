@@ -16,6 +16,7 @@ import { useResource } from '@/system'
 import { Card } from '@/components/ui/card'
 import { GenrePicker } from '@/components/pickers'
 import { GENRE_DISPLAY } from '@/core/musicData'
+import { chordSymbolToFrequencies } from '@/core/chords'
 import type { Genre } from '@/schemas'
 
 ChartJS.register(
@@ -110,32 +111,8 @@ export function ChordFrequencyChart() {
           const element = elements[0]
           const chord = sortedChords[element.index]?.[0]
           if (chord) {
-            // Play a simple tone for the chord root
-            const noteFreqs: Record<string, number> = {
-              C: 261.63,
-              'C#': 277.18,
-              Db: 277.18,
-              D: 293.66,
-              'D#': 311.13,
-              Eb: 311.13,
-              E: 329.63,
-              F: 349.23,
-              'F#': 369.99,
-              Gb: 369.99,
-              G: 392.0,
-              'G#': 415.3,
-              Ab: 415.3,
-              A: 440.0,
-              'A#': 466.16,
-              Bb: 466.16,
-              B: 493.88,
-            }
-            // Extract root note from chord name (e.g., "Am" -> "A", "C#m" -> "C#", "Bb7" -> "Bb")
-            const rootMatch = chord.match(/^([A-G][#b]?)/)
-            if (rootMatch) {
-              const freq = noteFreqs[rootMatch[1]]
-              if (freq) audio.playNote(freq, 0.3)
-            }
+            const freqs = chordSymbolToFrequencies(chord)
+            if (freqs) audio.playChord(freqs, 0.5)
           }
         }
       },

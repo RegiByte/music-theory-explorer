@@ -20,29 +20,10 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { GenrePicker } from '@/components/pickers'
 import { GENRE_DISPLAY } from '@/core/musicData'
+import { chordSymbolToFrequencies } from '@/core/chords'
 import type { Genre } from '@/schemas'
 
 const elk = new ELK()
-
-const NOTE_FREQS: Record<string, number> = {
-  C: 261.63,
-  'C#': 277.18,
-  Db: 277.18,
-  D: 293.66,
-  'D#': 311.13,
-  Eb: 311.13,
-  E: 329.63,
-  F: 349.23,
-  'F#': 369.99,
-  Gb: 369.99,
-  G: 392.0,
-  'G#': 415.3,
-  Ab: 415.3,
-  A: 440.0,
-  'A#': 466.16,
-  Bb: 466.16,
-  B: 493.88,
-}
 
 const NOTE_INDEX: Record<string, number> = {
   C: 0,
@@ -97,75 +78,16 @@ function classifyMovement(
   return 'departure'
 }
 
-// ─── Handle Routing ───────────────────────────────────────────────────────────
-
-const HANDLE_POSITIONS = ['top', 'right', 'bottom', 'left'] as const
-type HandleDir = (typeof HANDLE_POSITIONS)[number]
-
-/**
- * Given a source node position+size and target node position+size,
- * pick the source handle direction and target handle direction
- * that minimize the straight-line distance between handle anchor points.
- *
- * Handle anchor points are at the midpoint of each side of the node bounding box.
- */
-function getHandleAnchor(
-  nodePos: { x: number; y: number },
-  nodeWidth: number,
-  nodeHeight: number,
-  dir: HandleDir,
-): { x: number; y: number } {
-  const cx = nodePos.x + nodeWidth / 2
-  const cy = nodePos.y + nodeHeight / 2
-  switch (dir) {
-    case 'top':
-      return { x: cx, y: nodePos.y }
-    case 'right':
-      return { x: nodePos.x + nodeWidth, y: cy }
-    case 'bottom':
-      return { x: cx, y: nodePos.y + nodeHeight }
-    case 'left':
-      return { x: nodePos.x, y: cy }
-  }
-}
-
-function dist(
-  a: { x: number; y: number },
-  b: { x: number; y: number },
-): number {
-  return Math.sqrt((a.x - b.x) ** 2 + (a.y - b.y) ** 2)
-}
-
-function bestHandlePair(
-  srcPos: { x: number; y: number },
-  srcW: number,
-  srcH: number,
-  tgtPos: { x: number; y: number },
-  tgtW: number,
-  tgtH: number,
-): { sourceHandle: string; targetHandle: string } {
-  let bestDist = Infinity
-  let bestSrc: HandleDir = 'right'
-  let bestTgt: HandleDir = 'left'
-
-  for (const sd of HANDLE_POSITIONS) {
-    const sa = getHandleAnchor(srcPos, srcW, srcH, sd)
-    for (const td of HANDLE_POSITIONS) {
-      const ta = getHandleAnchor(tgtPos, tgtW, tgtH, td)
-      const d = dist(sa, ta)
-      if (d < bestDist) {
-        bestDist = d
-        bestSrc = sd
-        bestTgt = td
-      }
-    }
-  }
-
-  return { sourceHandle: `s-${bestSrc}`, targetHandle: `t-${bestTgt}` }
-}
-
 // ─── Custom Edge ──────────────────────────────────────────────────────────────
 
+/**
+ * Custom edge that connects at the exact circle perimeters.
+ *
+ * sourceX/sourceY and targetX/targetY come from the center handles,
+ * so they represent node centers. We offset each endpoint outward
+ * along the center-to-center line by the node's radius, producing
+ * an edge that starts and ends precisely at the circle boundary.
+ */
 function GravityEdge({
   id,
   sourceX,
@@ -174,8 +96,32 @@ function GravityEdge({
   targetY,
   style,
   markerEnd,
+  data,
 }: any) {
-  const [edgePath] = getStraightPath({ sourceX, sourceY, targetX, targetY })
+  const sourceRadius: number = data?.sourceRadius ?? 0
+  const targetRadius: number = data?.targetRadius ?? 0
+
+  const dx = targetX - sourceX
+  const dy = targetY - sourceY
+  const len = Math.sqrt(dx * dx + dy * dy) || 1
+
+  // Unit vector from source center to target center
+  const ux = dx / len
+  const uy = dy / len
+
+  // Offset start/end to circle perimeters (with breathing room on the target)
+  const arrowGap = 4
+  const sx = sourceX + ux * sourceRadius
+  const sy = sourceY + uy * sourceRadius
+  const tx = targetX - ux * (targetRadius + arrowGap)
+  const ty = targetY - uy * (targetRadius + arrowGap)
+
+  const [edgePath] = getStraightPath({
+    sourceX: sx,
+    sourceY: sy,
+    targetX: tx,
+    targetY: ty,
+  })
 
   return (
     <BaseEdge
@@ -212,7 +158,7 @@ function GravityNode({ data }: { data: GravityNodeData }) {
   const { chord, frequency, maxFrequency, isHighlighted, onPlay, onHover } =
     data
   const relSize = Math.max(0.4, frequency / Math.max(maxFrequency, 0.001))
-  const size = 40 + relSize * 40
+  const size = 30 + relSize * 30
 
   const hue = 240
   const saturation = 60 + relSize * 30
@@ -227,12 +173,12 @@ function GravityNode({ data }: { data: GravityNodeData }) {
         backgroundColor: `hsl(${hue}, ${saturation}%, ${lightness}%)`,
         opacity: isHighlighted ? 1 : 0.85,
         border: isHighlighted
-          ? '3px solid #312e81'
-          : '2px solid rgba(255,255,255,0.7)',
+          ? '2px solid #312e81'
+          : '1.5px solid rgba(255,255,255,0.7)',
         boxShadow: isHighlighted
-          ? '0 0 16px rgba(99, 102, 241, 0.5)'
-          : '0 2px 8px rgba(0, 0, 0, 0.15)',
-        transform: isHighlighted ? 'scale(1.15)' : 'scale(1)',
+          ? '0 0 12px rgba(99, 102, 241, 0.5)'
+          : '0 2px 6px rgba(0, 0, 0, 0.15)',
+        transform: isHighlighted ? 'scale(1.12)' : 'scale(1)',
         zIndex: isHighlighted ? 20 : 1,
       }}
       onClick={() => onPlay(chord)}
@@ -242,61 +188,25 @@ function GravityNode({ data }: { data: GravityNodeData }) {
       <span
         className="font-bold text-center leading-tight"
         style={{
-          fontSize: Math.max(10, size * 0.28),
+          fontSize: Math.max(9, size * 0.3),
           color: lightness < 50 ? '#fff' : '#1e1b4b',
         }}
       >
         {chord}
       </span>
-      {/* Source handles — one per direction */}
+      {/* Single center handle — used as position reference only.
+          Edges compute their own perimeter connection points. */}
       <Handle
-        id="s-top"
+        id="center"
         type="source"
         position={Position.Top}
-        style={hiddenStyle}
+        style={{ ...hiddenStyle, left: '50%', top: '50%' }}
       />
       <Handle
-        id="s-right"
-        type="source"
-        position={Position.Right}
-        style={hiddenStyle}
-      />
-      <Handle
-        id="s-bottom"
-        type="source"
-        position={Position.Bottom}
-        style={hiddenStyle}
-      />
-      <Handle
-        id="s-left"
-        type="source"
-        position={Position.Left}
-        style={hiddenStyle}
-      />
-      {/* Target handles — one per direction */}
-      <Handle
-        id="t-top"
+        id="center-target"
         type="target"
         position={Position.Top}
-        style={hiddenStyle}
-      />
-      <Handle
-        id="t-right"
-        type="target"
-        position={Position.Right}
-        style={hiddenStyle}
-      />
-      <Handle
-        id="t-bottom"
-        type="target"
-        position={Position.Bottom}
-        style={hiddenStyle}
-      />
-      <Handle
-        id="t-left"
-        type="target"
-        position={Position.Left}
-        style={hiddenStyle}
+        style={{ ...hiddenStyle, left: '50%', top: '50%' }}
       />
     </div>
   )
@@ -308,7 +218,7 @@ const nodeTypes = { gravityNode: GravityNode }
 
 function computeNodeSize(frequency: number, maxFreq: number): number {
   const relSize = Math.max(0.4, frequency / Math.max(maxFreq, 0.001))
-  return 40 + relSize * 40
+  return 30 + relSize * 30
 }
 
 // ─── Main Component ───────────────────────────────────────────────────────────
@@ -332,11 +242,8 @@ export function GCentricUniverse() {
 
   const playChord = useCallback(
     (chord: string) => {
-      const rootMatch = chord.match(/^([A-G][#b]?)/)
-      if (rootMatch) {
-        const freq = NOTE_FREQS[rootMatch[1]]
-        if (freq) audio.playNote(freq, 0.3)
-      }
+      const freqs = chordSymbolToFrequencies(chord)
+      if (freqs) audio.playChord(freqs, 0.5)
     },
     [audio],
   )
@@ -404,8 +311,8 @@ export function GCentricUniverse() {
           id: 'root',
           layoutOptions: {
             'elk.algorithm': 'stress',
-            'elk.stress.desiredEdgeLength': '150',
-            'elk.spacing.nodeNode': '80',
+            'elk.stress.desiredEdgeLength': '180',
+            'elk.spacing.nodeNode': '100',
             'elk.stress.epsilon': '0.001',
             'elk.stress.iterationLimit': '500',
           },
@@ -435,44 +342,35 @@ export function GCentricUniverse() {
           position: posMap[node.id] ?? { x: 0, y: 0 },
         }))
 
-        // Now build edges with optimal handle pairs based on actual positions
+        // Build edges with center handles — GravityEdge computes perimeter points
         const laidOutEdges: Edge[] = Array.from(edgeMap.values()).map(
-          ({ from, to, prob }) => {
-            const srcPos = posMap[from] ?? { x: 0, y: 0 }
-            const tgtPos = posMap[to] ?? { x: 0, y: 0 }
-            const srcSize = nodeSizes[from]
-            const tgtSize = nodeSizes[to]
-            const { sourceHandle, targetHandle } = bestHandlePair(
-              srcPos,
-              srcSize,
-              srcSize,
-              tgtPos,
-              tgtSize,
-              tgtSize,
-            )
-
-            return {
-              id: `${from}->${to}`,
-              source: from,
-              target: to,
-              sourceHandle,
-              targetHandle,
-              type: 'gravityEdge',
-              animated: false,
-              data: { probability: prob, from, to },
-              style: {
-                stroke: MOVEMENT_COLORS.neutral,
-                strokeWidth: Math.max(1, prob * 10),
-                opacity: 0.5,
-              },
-              markerEnd: {
-                type: MarkerType.ArrowClosed,
-                width: 10,
-                height: 10,
-                color: MOVEMENT_COLORS.neutral,
-              },
-            }
-          },
+          ({ from, to, prob }) => ({
+            id: `${from}->${to}`,
+            source: from,
+            target: to,
+            sourceHandle: 'center',
+            targetHandle: 'center-target',
+            type: 'gravityEdge',
+            animated: false,
+            data: {
+              probability: prob,
+              from,
+              to,
+              sourceRadius: nodeSizes[from] / 2,
+              targetRadius: nodeSizes[to] / 2,
+            },
+            style: {
+              stroke: MOVEMENT_COLORS.neutral,
+              strokeWidth: Math.max(1, prob * 10),
+              opacity: 0.5,
+            },
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+              width: 10,
+              height: 10,
+              color: MOVEMENT_COLORS.neutral,
+            },
+          }),
         )
 
         setLayouted({ nodes: laidOutNodes, edges: laidOutEdges })
@@ -492,8 +390,16 @@ export function GCentricUniverse() {
             id: `${from}->${to}`,
             source: from,
             target: to,
+            sourceHandle: 'center',
+            targetHandle: 'center-target',
             type: 'gravityEdge',
-            data: { probability: prob, from, to },
+            data: {
+              probability: prob,
+              from,
+              to,
+              sourceRadius: nodeSizes[from] / 2,
+              targetRadius: nodeSizes[to] / 2,
+            },
             style: {
               stroke: MOVEMENT_COLORS.neutral,
               strokeWidth: Math.max(1, prob * 10),
