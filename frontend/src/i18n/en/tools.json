@@ -165,7 +165,11 @@
     "pattern": "Pattern:",
     "rootNote": "Root note",
     "scaleNotes": "Scale notes",
-    "currentlyPlaying": "Currently playing"
+    "currentlyPlaying": "Currently playing",
+    "favorites": "Favorites",
+    "allScales": "All Scales",
+    "noFavorites": "No favorite scales yet. Tap the heart icon on any scale to save it.",
+    "removeFavorite": "Remove from favorites"
   },
   "chordVoicingFinder": {
     "rootNote": "Root Note",
@@ -219,7 +223,16 @@
     "practiceMode": "Practice Mode",
     "backToExplorer": "← Back to Explorer",
     "progression": "Progression:",
-    "playAll": "▶ Play All ({{count}} chords)"
+    "playAll": "▶ Play All ({{count}} chords)",
+    "saveProgression": "Save Progression",
+    "saved": "Saved!",
+    "loadSaved": "Load Saved",
+    "savedProgressions": "Saved Progressions",
+    "noSavedProgressions": "No saved progressions yet. Build a progression and save it from practice mode!",
+    "deleteConfirm": "Delete this progression?",
+    "loadProgression": "Load",
+    "chordsLabel": "{{count}} chords",
+    "savedOn": "Saved {{date}}"
   },
   "recommendationDialog": {
     "loadingSuggestions": "Loading suggestions...",

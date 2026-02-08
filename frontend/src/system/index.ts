@@ -3,6 +3,7 @@ import { audioResource } from './audioResource'
 import { progressionExplorerResource } from './progressionExplorerResource'
 import { recommenderResource } from './recommenderResource'
 import { melodyExplorerResource } from './melodyExplorerResource'
+import { favoritesResource } from './favoritesResource'
 
 // System configuration - single source of truth
 export const systemConfig = {
@@ -10,6 +11,7 @@ export const systemConfig = {
   progressionExplorer: progressionExplorerResource,
   recommender: recommenderResource,
   melodyExplorer: melodyExplorerResource,
+  favorites: favoritesResource,
 }
 
 // Create manager and hooks ONCE (module singleton)

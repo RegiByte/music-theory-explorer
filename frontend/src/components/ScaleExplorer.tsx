@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useSyncExternalStore, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useResource } from '@/system'
+import type { FavoritesStoreApi } from '@/system/favoritesResource'
 import { Fretboard, type FretboardPosition } from './Fretboard'
 import { generateScale, findScalePositions } from '@/core/scales'
 import { getNoteAtPosition } from '@/core/fretboard'
@@ -8,6 +9,8 @@ import { semitonesToHz, noteToIndex } from '@/core/musicTheory'
 import { SCALE_PATTERNS } from '@/constants'
 import { KeyScalePicker } from '@/components/pickers'
 import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { IconHeart, IconHeartFilled, IconX } from '@tabler/icons-react'
 import type { Note, ScaleType, UkuleleString } from '@/schemas'
 
 // Helper to get scale pattern as W-H notation
@@ -28,10 +31,31 @@ function getScalePattern(scaleType: ScaleType): string {
 export function ScaleExplorer() {
   const { t } = useTranslation('tools')
   const audio = useResource('audio')
+  const favorites = useResource('favorites') as FavoritesStoreApi
   const [root, setRoot] = useState<Note>('C')
   const [scaleType, setScaleType] = useState<ScaleType>('major')
   const [currentlyPlayingNote, setCurrentlyPlayingNote] = useState<Note | null>(
     null,
+  )
+
+  const favoritesState = useSyncExternalStore(
+    favorites.subscribe,
+    favorites.getState,
+    favorites.getState,
+  )
+
+  const isFavorited = favoritesState.isScaleFavorited(root, scaleType)
+
+  const handleToggleFavorite = useCallback(() => {
+    favoritesState.toggleScale(root, scaleType)
+  }, [favoritesState, root, scaleType])
+
+  const handleLoadFavorite = useCallback(
+    (favRoot: Note, favScaleType: ScaleType) => {
+      setRoot(favRoot)
+      setScaleType(favScaleType)
+    },
+    [],
   )
 
   // Generate scale using existing function
@@ -110,7 +134,7 @@ export function ScaleExplorer() {
           scaleGrouping="full"
         />
 
-        {/* Play Buttons */}
+        {/* Play Buttons + Favorite Toggle */}
         <div className="flex items-center gap-2">
           <Button
             onClick={() => playScale('ascending')}
@@ -126,7 +150,71 @@ export function ScaleExplorer() {
           >
             {t('scaleExplorer.playDescending')}
           </Button>
+
+          <Button
+            onClick={handleToggleFavorite}
+            variant="ghost"
+            size="sm"
+            className={
+              isFavorited
+                ? 'text-red-500 hover:text-red-600 hover:bg-red-50'
+                : 'text-gray-400 hover:text-red-400 hover:bg-red-50'
+            }
+          >
+            {isFavorited ? (
+              <IconHeartFilled className="size-4" />
+            ) : (
+              <IconHeart className="size-4" />
+            )}
+          </Button>
         </div>
+
+        {/* Favorite Scales Bar */}
+        {favoritesState.scales.length > 0 && (
+          <div className="space-y-1.5">
+            <span className="text-xs font-medium text-muted-foreground">
+              {t('scaleExplorer.favorites')}
+            </span>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              {favoritesState.scales.map((item) => {
+                const isActive =
+                  item.data.root === root && item.data.scaleType === scaleType
+                return (
+                  <Badge
+                    key={item.id}
+                    variant={isActive ? 'default' : 'secondary'}
+                    className={`cursor-pointer text-xs px-2 py-0.5 gap-1 transition-colors ${
+                      isActive
+                        ? 'bg-red-500 hover:bg-red-600 text-white border-red-500'
+                        : 'hover:bg-gray-200'
+                    }`}
+                    onClick={() =>
+                      handleLoadFavorite(item.data.root, item.data.scaleType)
+                    }
+                  >
+                    <IconHeartFilled className="size-2.5 shrink-0" />
+                    {item.name}
+                    <button
+                      type="button"
+                      className={`ml-0.5 rounded-full p-0.5 transition-colors ${
+                        isActive
+                          ? 'hover:bg-red-400'
+                          : 'hover:bg-gray-300'
+                      }`}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        favoritesState.removeScale(item.id)
+                      }}
+                      aria-label={t('scaleExplorer.removeFavorite')}
+                    >
+                      <IconX className="size-2.5" />
+                    </button>
+                  </Badge>
+                )
+              })}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Scale Info */}

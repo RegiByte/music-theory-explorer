@@ -165,7 +165,11 @@
     "pattern": "Padrão:",
     "rootNote": "Nota raiz",
     "scaleNotes": "Notas da escala",
-    "currentlyPlaying": "Tocando agora"
+    "currentlyPlaying": "Tocando agora",
+    "favorites": "Favoritas",
+    "allScales": "Todas as Escalas",
+    "noFavorites": "Nenhuma escala favorita ainda. Toque no ícone de coração em qualquer escala para salvá-la.",
+    "removeFavorite": "Remover dos favoritos"
   },
   "chordVoicingFinder": {
     "rootNote": "Nota Raiz",
@@ -219,7 +223,16 @@
     "practiceMode": "Modo Prática",
     "backToExplorer": "← Voltar ao Explorador",
     "progression": "Progressão:",
-    "playAll": "▶ Tocar Tudo ({{count}} acordes)"
+    "playAll": "▶ Tocar Tudo ({{count}} acordes)",
+    "saveProgression": "Salvar Progressão",
+    "saved": "Salvo!",
+    "loadSaved": "Carregar Salvas",
+    "savedProgressions": "Progressões Salvas",
+    "noSavedProgressions": "Nenhuma progressão salva ainda. Construa uma progressão e salve no modo prática!",
+    "deleteConfirm": "Excluir esta progressão?",
+    "loadProgression": "Carregar",
+    "chordsLabel": "{{count}} acordes",
+    "savedOn": "Salvo em {{date}}"
   },
   "recommendationDialog": {
     "loadingSuggestions": "Carregando sugestões...",

@@ -38,7 +38,7 @@ export function ScalePicker({
 
     return (
       <div className={className}>
-        <Tabs defaultValue={activeTab}>
+        <Tabs key={activeTab} defaultValue={activeTab}>
           <TabsList variant="line" className="mb-2">
             {groups.map((group) => (
               <TabsTrigger key={group.label} value={group.label}>
