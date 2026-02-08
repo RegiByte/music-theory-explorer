@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils'
 // --- Section ---
 
 interface SectionProps {
+  id?: string
   number: number
   title: string
   subtitle: string
@@ -12,6 +13,7 @@ interface SectionProps {
 }
 
 export function Section({
+  id,
   number,
   title,
   subtitle,
@@ -19,7 +21,10 @@ export function Section({
   children,
 }: SectionProps) {
   return (
-    <section className={cn('py-16 first:pt-0', className)}>
+    <section
+      id={id}
+      className={cn('py-16 first:pt-0 scroll-mt-16', className)}
+    >
       {/* Section header */}
       <div className="mb-10">
         <div className="flex items-center gap-4 mb-3">

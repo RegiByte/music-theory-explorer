@@ -43,6 +43,11 @@
     "harmonicFunction": "The role a chord plays in a key: tonic (home), dominant (tension), or subdominant (departure)",
     "cadence": "A chord movement from dominant to tonic that creates a strong sense of resolution"
   },
+  "nav": {
+    "contents": "Contents",
+    "tableOfContents": "Table of Contents",
+    "scrollToTop": "Scroll to top"
+  },
   "labels": {
     "root": "Root",
     "notes": "Notes",

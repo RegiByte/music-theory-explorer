@@ -43,6 +43,11 @@
     "harmonicFunction": "O papel que um acorde desempenha em uma tonalidade: tônica (casa), dominante (tensão) ou subdominante (partida)",
     "cadence": "Um movimento de acorde de dominante para tônica que cria uma forte sensação de resolução"
   },
+  "nav": {
+    "contents": "Conteúdo",
+    "tableOfContents": "Índice",
+    "scrollToTop": "Voltar ao topo"
+  },
   "labels": {
     "root": "Fundamental",
     "notes": "Notas",

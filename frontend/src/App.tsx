@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useTranslation, Trans } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import {
@@ -8,6 +8,7 @@ import {
   ConceptTerm,
   SectionDivider,
 } from '@/components/ui/section'
+import { StickyNav, type NavSection } from '@/components/StickyNav'
 
 // Tools & Visualizations
 import { Fretboard } from '@/components/Fretboard'
@@ -33,6 +34,21 @@ import {
 export function App() {
   const [started, setStarted] = useState(false)
   const { t, i18n } = useTranslation(['common', 'sections', 'deepdives'])
+
+  const sections: NavSection[] = useMemo(
+    () => [
+      { id: 'section-1', number: 1, titleKey: 's1.title' },
+      { id: 'section-2', number: 2, titleKey: 's2.title' },
+      { id: 'section-3', number: 3, titleKey: 's3.title' },
+      { id: 'section-4', number: 4, titleKey: 's4.title' },
+      { id: 'section-5', number: 5, titleKey: 's5.title' },
+      { id: 'section-6', number: 6, titleKey: 's6.title' },
+      { id: 'section-7', number: 7, titleKey: 's7.title' },
+      { id: 'section-8', number: 8, titleKey: 's8.title' },
+      { id: 'section-9', number: 9, titleKey: 's9.title' },
+    ],
+    [],
+  )
 
   const changeLanguage = (lng: string) => {
     i18n.changeLanguage(lng)
@@ -78,6 +94,8 @@ export function App() {
 
   return (
     <div className="min-h-screen bg-linear-to-b from-gray-50 to-gray-100">
+      <StickyNav sections={sections} />
+
       <div className="container mx-auto px-8 py-12 max-w-6xl">
         {/* Header */}
         <header className="mb-16 text-center">
@@ -93,6 +111,7 @@ export function App() {
             Section 1: The Physics of Sound
             ================================================================ */}
         <Section
+          id="section-1"
           number={1}
           title={t('sections:s1.title')}
           subtitle={t('sections:s1.subtitle')}
@@ -208,6 +227,7 @@ export function App() {
             Section 2: Pitch Perception & Cents
             ================================================================ */}
         <Section
+          id="section-2"
           number={2}
           title={t('sections:s2.title')}
           subtitle={t('sections:s2.subtitle')}
@@ -295,6 +315,7 @@ export function App() {
             Section 3: Harmonics & Consonance
             ================================================================ */}
         <Section
+          id="section-3"
           number={3}
           title={t('sections:s3.title')}
           subtitle={t('sections:s3.subtitle')}
@@ -380,6 +401,7 @@ export function App() {
             Section 4: Intervals
             ================================================================ */}
         <Section
+          id="section-4"
           number={4}
           title={t('sections:s4.title')}
           subtitle={t('sections:s4.subtitle')}
@@ -445,6 +467,7 @@ export function App() {
             Section 5: Scales
             ================================================================ */}
         <Section
+          id="section-5"
           number={5}
           title={t('sections:s5.title')}
           subtitle={t('sections:s5.subtitle')}
@@ -499,6 +522,7 @@ export function App() {
             Section 6: Chords
             ================================================================ */}
         <Section
+          id="section-6"
           number={6}
           title={t('sections:s6.title')}
           subtitle={t('sections:s6.subtitle')}
@@ -582,6 +606,7 @@ export function App() {
             Section 7: Keys & The Circle of Fifths
             ================================================================ */}
         <Section
+          id="section-7"
           number={7}
           title={t('sections:s7.title')}
           subtitle={t('sections:s7.subtitle')}
@@ -662,6 +687,7 @@ export function App() {
             Section 8: Chord Progressions
             ================================================================ */}
         <Section
+          id="section-8"
           number={8}
           title={t('sections:s8.title')}
           subtitle={t('sections:s8.subtitle')}
@@ -766,6 +792,7 @@ export function App() {
             Section 9: The Creative Toolset
             ================================================================ */}
         <Section
+          id="section-9"
           number={9}
           title={t('sections:s9.title')}
           subtitle={t('sections:s9.subtitle')}
