@@ -1,5 +1,5 @@
 import { noteToIndex } from './musicTheory'
-import { SCALE_PATTERNS } from '@/constants'
+import { getScalePattern, SEMITONES_PER_OCTAVE } from '@/constants'
 import type { Chord, Note, ScaleType } from '@/schemas'
 
 /**
@@ -21,14 +21,14 @@ export function calculateHarmonicDistance(
   let distance = 0
 
   // 1. Root distance
-  const rootInterval = (noteToIndex(chord.root) - keyIndex + 12) % 12
+  const rootInterval = (noteToIndex(chord.root) - keyIndex + SEMITONES_PER_OCTAVE) % SEMITONES_PER_OCTAVE
   if (!scale.includes(rootInterval)) {
     distance += 1.0
   }
 
   // 2. Chord tone distance
   for (const note of chord.notes) {
-    const interval = (noteToIndex(note) - keyIndex + 12) % 12
+    const interval = (noteToIndex(note) - keyIndex + SEMITONES_PER_OCTAVE) % SEMITONES_PER_OCTAVE
     if (!scale.includes(interval)) {
       distance += 0.5
     }
@@ -50,7 +50,7 @@ export function hasTritone(chord: Chord): boolean {
 
   for (let i = 0; i < noteIndices.length; i++) {
     for (let j = i + 1; j < noteIndices.length; j++) {
-      const interval = Math.abs(noteIndices[i] - noteIndices[j]) % 12
+      const interval = Math.abs(noteIndices[i] - noteIndices[j]) % SEMITONES_PER_OCTAVE
       // Tritone is 6 semitones
       if (interval === 6) {
         return true
@@ -59,13 +59,6 @@ export function hasTritone(chord: Chord): boolean {
   }
 
   return false
-}
-
-/**
- * Get scale pattern for a scale type
- */
-function getScalePattern(scaleType: ScaleType): readonly number[] {
-  return SCALE_PATTERNS[scaleType] || SCALE_PATTERNS.major
 }
 
 /**

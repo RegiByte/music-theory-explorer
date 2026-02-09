@@ -1,5 +1,6 @@
 import { defineResource } from 'braided'
 import { createStore, type StoreApi } from 'zustand/vanilla'
+import { useSyncExternalStore } from 'react'
 import {
   generateAllPaths,
   generateSinglePath,
@@ -81,6 +82,11 @@ interface MelodyExplorerActions {
 type MelodyExplorerStore = MelodyExplorerState & MelodyExplorerActions
 
 export type MelodyExplorerStoreApi = StoreApi<MelodyExplorerStore>
+
+export interface MelodyExplorerApi extends StoreApi<MelodyExplorerStore> {
+  /** React hook — returns the full reactive melody explorer state (closes over the store) */
+  useMelodyExplorer: () => MelodyExplorerStore
+}
 
 // ---------------------------------------------------------------------------
 // Defaults
@@ -570,7 +576,10 @@ export const melodyExplorerResource = defineResource({
       },
     }))
 
-    return store
+    return Object.assign(store, {
+      useMelodyExplorer: () =>
+        useSyncExternalStore(store.subscribe, store.getState, store.getState),
+    }) as MelodyExplorerApi
   },
 
   halt: async () => {},

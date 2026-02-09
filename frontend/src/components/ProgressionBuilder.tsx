@@ -4,7 +4,6 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { KeyScalePicker } from '@/components/pickers'
-import { useResource } from '@/system'
 import { PROGRESSION_TEMPLATES } from '@/constants'
 import {
   buildProgression,
@@ -12,12 +11,13 @@ import {
   getHarmonicFunction,
 } from '@/core/progressions'
 import { getChordSymbol, findChordVoicings } from '@/core/chords'
+import { usePlayChord } from '@/hooks/usePlayChord'
 import { CompactVoicingSelector } from './CompactVoicingSelector'
 import type { Note, ScaleType, ProgressionChord, ChordVoicing } from '@/schemas'
 
 export function ProgressionBuilder() {
   const { t } = useTranslation('tools')
-  const audio = useResource('audio')
+  const { audio, playChordByVoicing } = usePlayChord()
   const [key, setKey] = useState<Note>('C')
   const [scaleType, setScaleType] = useState<ScaleType>('major')
   const [progression, setProgression] = useState<ProgressionChord[]>([])
@@ -82,15 +82,13 @@ export function ProgressionBuilder() {
     const voicing = voicings[voicingIndex]
 
     if (voicing) {
-      const frequencies = voicing.positions.map((p) => p.frequency)
-      audio.playChord(frequencies, 1)
+      playChordByVoicing(voicing, 1)
     }
   }
 
   // Play voicing directly
   const playVoicing = (voicing: ChordVoicing) => {
-    const frequencies = voicing.positions.map((p) => p.frequency)
-    audio.playChord(frequencies, 1)
+    playChordByVoicing(voicing, 1)
   }
 
   // Play progression once with selected voicings

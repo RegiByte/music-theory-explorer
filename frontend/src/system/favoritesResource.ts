@@ -1,5 +1,6 @@
 import { defineResource } from 'braided'
 import { createStore, type StoreApi } from 'zustand/vanilla'
+import { useSyncExternalStore } from 'react'
 import type { Genre, Note, ScaleType } from '@/schemas'
 
 // ---------------------------------------------------------------------------
@@ -54,6 +55,11 @@ interface FavoritesActions {
 type FavoritesStore = FavoritesState & FavoritesActions
 
 export type FavoritesStoreApi = StoreApi<FavoritesStore>
+
+export interface FavoritesApi extends StoreApi<FavoritesStore> {
+  /** React hook — returns the full reactive favorites state (closes over the store) */
+  useFavorites: () => FavoritesStore
+}
 
 // ---------------------------------------------------------------------------
 // localStorage persistence
@@ -202,7 +208,12 @@ export const favoritesResource = defineResource({
       },
     }))
 
-    return store
+    // Return the store API extended with a React hook that closes over the store.
+    // Components can call `favorites.useFavorites()` instead of raw useSyncExternalStore.
+    return Object.assign(store, {
+      useFavorites: () =>
+        useSyncExternalStore(store.subscribe, store.getState, store.getState),
+    }) as FavoritesApi
   },
 
   halt: async () => {},

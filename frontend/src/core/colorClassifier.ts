@@ -1,5 +1,5 @@
 import { noteToIndex } from './musicTheory'
-import { SCALE_PATTERNS } from '@/constants'
+import { SCALE_PATTERNS, getScalePattern, SEMITONES_PER_OCTAVE } from '@/constants'
 import type { ProgressionNode, Note, ScaleType, ColorClass } from '@/schemas'
 
 /**
@@ -31,7 +31,7 @@ export function isDiatonic(
 
   // Check if all chord tones are in the scale
   for (const note of node.chord.notes) {
-    const interval = (noteToIndex(note) - keyIndex + 12) % 12
+    const interval = (noteToIndex(note) - keyIndex + SEMITONES_PER_OCTAVE) % SEMITONES_PER_OCTAVE
     if (!scalePattern.includes(interval)) {
       return false
     }
@@ -60,7 +60,7 @@ export function isSecondaryDominant(
   if (node.chord.quality === 'dominant7') {
     const scalePattern = getScalePattern(scaleType)
     const keyIndex = noteToIndex(key)
-    const rootInterval = (noteToIndex(node.chord.root) - keyIndex + 12) % 12
+    const rootInterval = (noteToIndex(node.chord.root) - keyIndex + SEMITONES_PER_OCTAVE) % SEMITONES_PER_OCTAVE
 
     // If root is chromatic (not in scale), it's likely a secondary dominant
     return !scalePattern.includes(rootInterval)
@@ -88,7 +88,7 @@ export function isBorrowed(
 
   // Check if chord contains notes from parallel scale but not current scale
   for (const note of node.chord.notes) {
-    const interval = (noteToIndex(note) - keyIndex + 12) % 12
+    const interval = (noteToIndex(note) - keyIndex + SEMITONES_PER_OCTAVE) % SEMITONES_PER_OCTAVE
 
     // Note is in parallel scale but NOT in current scale
     if (parallelScale.includes(interval) && !currentScale.includes(interval)) {
@@ -120,7 +120,7 @@ export function isDiminishedPassing(node: ProgressionNode, key: Note): boolean {
   // Check if root is chromatic (not in major scale - most common context)
   const scalePattern = SCALE_PATTERNS.major
   const keyIndex = noteToIndex(key)
-  const rootInterval = (noteToIndex(node.chord.root) - keyIndex + 12) % 12
+  const rootInterval = (noteToIndex(node.chord.root) - keyIndex + SEMITONES_PER_OCTAVE) % SEMITONES_PER_OCTAVE
 
   return !(scalePattern as readonly number[]).includes(rootInterval)
 }
@@ -155,13 +155,6 @@ export function getColorWeights(colorClass: ColorClass): {
       // Exotic - needs strong transition justification
       return { patternWeight: 0.2, transitionWeight: 0.8, colorBonus: 0.0 }
   }
-}
-
-/**
- * Get scale pattern for a scale type
- */
-function getScalePattern(scaleType: ScaleType): readonly number[] {
-  return SCALE_PATTERNS[scaleType] || SCALE_PATTERNS.major
 }
 
 /**

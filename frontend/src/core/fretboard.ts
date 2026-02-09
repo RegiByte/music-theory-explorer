@@ -1,4 +1,4 @@
-import { UKULELE_TUNING } from '@/constants'
+import { UKULELE_TUNING, SEMITONES_PER_OCTAVE } from '@/constants'
 import { noteToIndex, indexToNote } from './musicTheory'
 import type { Note, UkuleleString } from '@/schemas'
 
@@ -9,7 +9,7 @@ import type { Note, UkuleleString } from '@/schemas'
 export function getNoteAtPosition(string: UkuleleString, fret: number): Note {
   const stringBaseSemitone = UKULELE_TUNING[string]
   const semitones = stringBaseSemitone + fret
-  const noteIdx = (noteToIndex('C') + semitones) % 12
+  const noteIdx = (noteToIndex('C') + semitones) % SEMITONES_PER_OCTAVE
   return indexToNote(noteIdx) as Note
 }
 
@@ -24,7 +24,7 @@ export function getFrequencyAtPosition(
   const stringBaseSemitone = UKULELE_TUNING[string]
   const semitones = stringBaseSemitone + fret
   // Using the formula: f = f₀ × 2^(n/12)
-  return baseFreq * Math.pow(2, semitones / 12)
+  return baseFreq * Math.pow(2, semitones / SEMITONES_PER_OCTAVE)
 }
 
 /**

@@ -1,7 +1,7 @@
-import { useState, useSyncExternalStore, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useResource } from '@/system'
-import type { FavoritesStoreApi } from '@/system/favoritesResource'
+import type { FavoritesApi } from '@/system/favoritesResource'
 import { Fretboard, type FretboardPosition } from './Fretboard'
 import { generateScale, findScalePositions } from '@/core/scales'
 import { getNoteAtPosition } from '@/core/fretboard'
@@ -31,18 +31,14 @@ function getScalePattern(scaleType: ScaleType): string {
 export function ScaleExplorer() {
   const { t } = useTranslation('tools')
   const audio = useResource('audio')
-  const favorites = useResource('favorites') as FavoritesStoreApi
+  const favorites = useResource('favorites') as FavoritesApi
   const [root, setRoot] = useState<Note>('C')
   const [scaleType, setScaleType] = useState<ScaleType>('major')
   const [currentlyPlayingNote, setCurrentlyPlayingNote] = useState<Note | null>(
     null,
   )
 
-  const favoritesState = useSyncExternalStore(
-    favorites.subscribe,
-    favorites.getState,
-    favorites.getState,
-  )
+  const favoritesState = favorites.useFavorites()
 
   const isFavorited = favoritesState.isScaleFavorited(root, scaleType)
 

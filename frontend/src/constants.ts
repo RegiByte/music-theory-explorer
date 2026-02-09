@@ -65,6 +65,16 @@ export const SCALE_PATTERNS = {
   blues: [0, 3, 5, 6, 7, 10],
 } as const
 
+/**
+ * Get the scale pattern (semitone intervals) for a given scale type.
+ * Falls back to major if the scale type is not found.
+ */
+export function getScalePattern(
+  scaleType: keyof typeof SCALE_PATTERNS,
+): readonly number[] {
+  return SCALE_PATTERNS[scaleType] || SCALE_PATTERNS.major
+}
+
 // Chord patterns (semitone intervals from root)
 export const CHORD_PATTERNS = {
   major: [0, 4, 7],
@@ -161,8 +171,8 @@ export const PROGRESSION_TEMPLATES = {
     description: 'Circle of fifths - complete cycle',
   },
   blues_progression: {
-    name: 'I-I-I-I-IV-IV-I-I-V-IV-I-V',
-    degrees: [1, 1, 1, 1, 4, 4, 1, 1, 5, 4, 1, 5],
+    name: 'I-IV-I-V-IV-I-V',
+    degrees: [1, 4, 1, 5, 4, 1, 5],
     description: '12-bar blues progression',
   },
   royal_road: {

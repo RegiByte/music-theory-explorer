@@ -1,11 +1,11 @@
-import { useState, useMemo, useEffect, useCallback, Fragment } from 'react'
+import { useState, useMemo, useEffect, Fragment } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useResource } from '@/system'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { GenrePicker } from '@/components/pickers'
 import { GENRE_DISPLAY } from '@/core/musicData'
-import { chordSymbolToFrequencies } from '@/core/chords'
+import { usePlayChord } from '@/hooks/usePlayChord'
 import type { Genre } from '@/schemas'
 
 // Color intensity from probability (0-1) to CSS color
@@ -41,7 +41,7 @@ export function TransitionHeatmap({ mode }: TransitionHeatmapProps) {
   >({})
   const [topChords, setTopChords] = useState<string[]>([])
   const recommender = useResource('recommender')
-  const audio = useResource('audio')
+  const { playChordBySymbol } = usePlayChord()
 
   useEffect(() => {
     async function load() {
@@ -59,23 +59,12 @@ export function TransitionHeatmap({ mode }: TransitionHeatmapProps) {
     load()
   }, [genre, recommender, topN])
 
-  const playChord = useCallback(
-    (chord: string) => {
-      const freqs = chordSymbolToFrequencies(chord)
-      if (freqs) audio.playChord(freqs, 0.5)
-    },
-    [audio],
-  )
+  const playChord = playChordBySymbol
 
-  const playTransition = useCallback(
-    (from: string, to: string) => {
-      const f1 = chordSymbolToFrequencies(from)
-      const f2 = chordSymbolToFrequencies(to)
-      if (f1) audio.playChord(f1, 0.5)
-      if (f2) setTimeout(() => audio.playChord(f2, 0.5), 500)
-    },
-    [audio],
-  )
+  const playTransition = (from: string, to: string) => {
+    playChordBySymbol(from)
+    setTimeout(() => playChordBySymbol(to), 500)
+  }
 
   // --- Single-chord mode ---
   if (mode === 'single-chord') {

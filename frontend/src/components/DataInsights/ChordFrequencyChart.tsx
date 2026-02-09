@@ -16,7 +16,7 @@ import { useResource } from '@/system'
 import { Card } from '@/components/ui/card'
 import { GenrePicker } from '@/components/pickers'
 import { GENRE_DISPLAY } from '@/core/musicData'
-import { chordSymbolToFrequencies } from '@/core/chords'
+import { usePlayChord } from '@/hooks/usePlayChord'
 import type { Genre } from '@/schemas'
 
 ChartJS.register(
@@ -47,7 +47,7 @@ export function ChordFrequencyChart() {
   const [frequencies, setFrequencies] = useState<Record<string, number>>({})
   const { t } = useTranslation('tools')
   const recommender = useResource('recommender')
-  const audio = useResource('audio')
+  const { playChordBySymbol } = usePlayChord()
 
   useEffect(() => {
     recommender.getChordFrequencies(genre).then(setFrequencies)
@@ -111,8 +111,7 @@ export function ChordFrequencyChart() {
           const element = elements[0]
           const chord = sortedChords[element.index]?.[0]
           if (chord) {
-            const freqs = chordSymbolToFrequencies(chord)
-            if (freqs) audio.playChord(freqs, 0.5)
+            playChordBySymbol(chord)
           }
         }
       },
@@ -202,7 +201,7 @@ export function ChordFrequencyChart() {
         },
       },
     }),
-    [sortedChords, genre, top10Coverage, audio, t],
+    [sortedChords, genre, top10Coverage, playChordBySymbol, t],
   )
 
   if (sortedChords.length === 0) {

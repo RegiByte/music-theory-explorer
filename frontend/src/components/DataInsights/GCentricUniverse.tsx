@@ -1,5 +1,5 @@
 import '@xyflow/react/dist/style.css'
-import { useState, useMemo, useEffect, useCallback } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import {
   ReactFlow,
   Background,
@@ -7,10 +7,6 @@ import {
   type ReactFlowInstance,
   type Node,
   type Edge,
-  Handle,
-  Position,
-  BaseEdge,
-  getStraightPath,
   MarkerType,
 } from '@xyflow/react'
 import ELK from 'elkjs/lib/elk.bundled.js'
@@ -20,206 +16,22 @@ import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { GenrePicker } from '@/components/pickers'
 import { GENRE_DISPLAY } from '@/core/musicData'
-import { chordSymbolToFrequencies } from '@/core/chords'
+import { usePlayChord } from '@/hooks/usePlayChord'
 import type { Genre } from '@/schemas'
+import { GravityEdge } from './GravityEdge'
+import { GravityNode } from './GravityNode'
+import {
+  MOVEMENT_COLORS,
+  classifyMovement,
+  computeNodeSize,
+  buildGravityEdges,
+} from './graphUtils'
 
 const elk = new ELK()
 
-const NOTE_INDEX: Record<string, number> = {
-  C: 0,
-  'C#': 1,
-  Db: 1,
-  D: 2,
-  'D#': 3,
-  Eb: 3,
-  E: 4,
-  F: 5,
-  'F#': 6,
-  Gb: 6,
-  G: 7,
-  'G#': 8,
-  Ab: 8,
-  A: 9,
-  'A#': 10,
-  Bb: 10,
-  B: 11,
-}
-
-const MOVEMENT_COLORS = {
-  resolution: '#3b82f6',
-  tension: '#f97316',
-  departure: '#22c55e',
-  neutral: 'rgba(148, 163, 184, 0.35)',
-}
-
-function extractRoot(chord: string): string | null {
-  const match = chord.match(/^([A-G][#b]?)/)
-  return match ? match[1] : null
-}
-
-function classifyMovement(
-  fromChord: string,
-  toChord: string,
-): 'resolution' | 'tension' | 'departure' {
-  const fromRoot = extractRoot(fromChord)
-  const toRoot = extractRoot(toChord)
-  if (!fromRoot || !toRoot) return 'departure'
-
-  const fromIdx = NOTE_INDEX[fromRoot]
-  const toIdx = NOTE_INDEX[toRoot]
-  if (fromIdx === undefined || toIdx === undefined) return 'departure'
-
-  const interval = (((toIdx - fromIdx) % 12) + 12) % 12
-
-  if (interval === 7) return 'tension'
-  if (interval === 5) return 'resolution'
-  if (interval === 1) return 'resolution'
-  if (interval === 6) return 'tension'
-  return 'departure'
-}
-
-// ─── Custom Edge ──────────────────────────────────────────────────────────────
-
-/**
- * Custom edge that connects at the exact circle perimeters.
- *
- * sourceX/sourceY and targetX/targetY come from the center handles,
- * so they represent node centers. We offset each endpoint outward
- * along the center-to-center line by the node's radius, producing
- * an edge that starts and ends precisely at the circle boundary.
- */
-function GravityEdge({
-  id,
-  sourceX,
-  sourceY,
-  targetX,
-  targetY,
-  style,
-  markerEnd,
-  data,
-}: any) {
-  const sourceRadius: number = data?.sourceRadius ?? 0
-  const targetRadius: number = data?.targetRadius ?? 0
-
-  const dx = targetX - sourceX
-  const dy = targetY - sourceY
-  const len = Math.sqrt(dx * dx + dy * dy) || 1
-
-  // Unit vector from source center to target center
-  const ux = dx / len
-  const uy = dy / len
-
-  // Offset start/end to circle perimeters (with breathing room on the target)
-  const arrowGap = 4
-  const sx = sourceX + ux * sourceRadius
-  const sy = sourceY + uy * sourceRadius
-  const tx = targetX - ux * (targetRadius + arrowGap)
-  const ty = targetY - uy * (targetRadius + arrowGap)
-
-  const [edgePath] = getStraightPath({
-    sourceX: sx,
-    sourceY: sy,
-    targetX: tx,
-    targetY: ty,
-  })
-
-  return (
-    <BaseEdge
-      id={id}
-      path={edgePath}
-      markerEnd={markerEnd}
-      style={{ ...style, strokeLinecap: 'round' }}
-    />
-  )
-}
-
-const edgeTypes = { gravityEdge: GravityEdge }
-
-// ─── Custom Node ──────────────────────────────────────────────────────────────
-
-const hiddenStyle = {
-  opacity: 0,
-  width: 1,
-  height: 1,
-  pointerEvents: 'none' as const,
-}
-
-interface GravityNodeData {
-  chord: string
-  frequency: number
-  maxFrequency: number
-  isHighlighted: boolean
-  onPlay: (chord: string) => void
-  onHover: (chord: string | null) => void
-  [key: string]: unknown
-}
-
-function GravityNode({ data }: { data: GravityNodeData }) {
-  const { chord, frequency, maxFrequency, isHighlighted, onPlay, onHover } =
-    data
-  const relSize = Math.max(0.4, frequency / Math.max(maxFrequency, 0.001))
-  const size = 30 + relSize * 30
-
-  const hue = 240
-  const saturation = 60 + relSize * 30
-  const lightness = 70 - relSize * 35
-
-  return (
-    <div
-      className="flex items-center justify-center rounded-full cursor-pointer transition-all duration-200 select-none"
-      style={{
-        width: size,
-        height: size,
-        backgroundColor: `hsl(${hue}, ${saturation}%, ${lightness}%)`,
-        opacity: isHighlighted ? 1 : 0.85,
-        border: isHighlighted
-          ? '2px solid #312e81'
-          : '1.5px solid rgba(255,255,255,0.7)',
-        boxShadow: isHighlighted
-          ? '0 0 12px rgba(99, 102, 241, 0.5)'
-          : '0 2px 6px rgba(0, 0, 0, 0.15)',
-        transform: isHighlighted ? 'scale(1.12)' : 'scale(1)',
-        zIndex: isHighlighted ? 20 : 1,
-      }}
-      onClick={() => onPlay(chord)}
-      onMouseEnter={() => onHover(chord)}
-      onMouseLeave={() => onHover(null)}
-    >
-      <span
-        className="font-bold text-center leading-tight"
-        style={{
-          fontSize: Math.max(9, size * 0.3),
-          color: lightness < 50 ? '#fff' : '#1e1b4b',
-        }}
-      >
-        {chord}
-      </span>
-      {/* Single center handle — used as position reference only.
-          Edges compute their own perimeter connection points. */}
-      <Handle
-        id="center"
-        type="source"
-        position={Position.Top}
-        style={{ ...hiddenStyle, left: '50%', top: '50%' }}
-      />
-      <Handle
-        id="center-target"
-        type="target"
-        position={Position.Top}
-        style={{ ...hiddenStyle, left: '50%', top: '50%' }}
-      />
-    </div>
-  )
-}
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const edgeTypes = { gravityEdge: GravityEdge as any }
 const nodeTypes = { gravityNode: GravityNode }
-
-// ─── Node size helper (must match the node component) ─────────────────────────
-
-function computeNodeSize(frequency: number, maxFreq: number): number {
-  const relSize = Math.max(0.4, frequency / Math.max(maxFreq, 0.001))
-  return 30 + relSize * 30
-}
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
@@ -238,15 +50,7 @@ export function GCentricUniverse() {
   const [loading, setLoading] = useState(true)
 
   const recommender = useResource('recommender')
-  const audio = useResource('audio')
-
-  const playChord = useCallback(
-    (chord: string) => {
-      const freqs = chordSymbolToFrequencies(chord)
-      if (freqs) audio.playChord(freqs, 0.5)
-    },
-    [audio],
-  )
+  const { playChordBySymbol: playChord } = usePlayChord()
 
   // Load data and compute layout
   useEffect(() => {
@@ -300,7 +104,7 @@ export function GCentricUniverse() {
         }
       }
 
-      // Compute ELK layout
+      // Compute node sizes for layout
       const nodeSizes: Record<string, number> = {}
       topChords.forEach((c) => {
         nodeSizes[c] = computeNodeSize(frequencies[c] || 0, maxFreq)
@@ -342,36 +146,9 @@ export function GCentricUniverse() {
           position: posMap[node.id] ?? { x: 0, y: 0 },
         }))
 
-        // Build edges with center handles — GravityEdge computes perimeter points
-        const laidOutEdges: Edge[] = Array.from(edgeMap.values()).map(
-          ({ from, to, prob }) => ({
-            id: `${from}->${to}`,
-            source: from,
-            target: to,
-            sourceHandle: 'center',
-            targetHandle: 'center-target',
-            type: 'gravityEdge',
-            animated: false,
-            data: {
-              probability: prob,
-              from,
-              to,
-              sourceRadius: nodeSizes[from] / 2,
-              targetRadius: nodeSizes[to] / 2,
-            },
-            style: {
-              stroke: MOVEMENT_COLORS.neutral,
-              strokeWidth: Math.max(1, prob * 10),
-              opacity: 0.5,
-            },
-            markerEnd: {
-              type: MarkerType.ArrowClosed,
-              width: 10,
-              height: 10,
-              color: MOVEMENT_COLORS.neutral,
-            },
-          }),
-        )
+        const laidOutEdges = buildGravityEdges(edgeMap, nodeSizes, {
+          includeMarker: true,
+        })
 
         setLayouted({ nodes: laidOutNodes, edges: laidOutEdges })
       } catch {
@@ -385,28 +162,9 @@ export function GCentricUniverse() {
             y: radius * Math.sin(i * angleStep),
           },
         }))
-        const fallbackEdges: Edge[] = Array.from(edgeMap.values()).map(
-          ({ from, to, prob }) => ({
-            id: `${from}->${to}`,
-            source: from,
-            target: to,
-            sourceHandle: 'center',
-            targetHandle: 'center-target',
-            type: 'gravityEdge',
-            data: {
-              probability: prob,
-              from,
-              to,
-              sourceRadius: nodeSizes[from] / 2,
-              targetRadius: nodeSizes[to] / 2,
-            },
-            style: {
-              stroke: MOVEMENT_COLORS.neutral,
-              strokeWidth: Math.max(1, prob * 10),
-              opacity: 0.5,
-            },
-          }),
-        )
+        const fallbackEdges = buildGravityEdges(edgeMap, nodeSizes, {
+          includeMarker: false,
+        })
         setLayouted({ nodes: fallbackNodes, edges: fallbackEdges })
       }
 
@@ -466,7 +224,7 @@ export function GCentricUniverse() {
       const to = isFromHovered ? edge.target : edge.source
       const movement = classifyMovement(from, to)
       const color = MOVEMENT_COLORS[movement]
-      const prob = (edge.data as any)?.probability ?? 0
+      const prob = (edge.data as Record<string, unknown>)?.probability as number ?? 0
 
       return {
         ...edge,
@@ -499,14 +257,14 @@ export function GCentricUniverse() {
     if (!hoveredChord) return null
     const node = layouted.nodes.find((n) => n.id === hoveredChord)
     if (!node) return null
-    const freq = (node.data as any).frequency as number
+    const freq = (node.data as Record<string, unknown>).frequency as number
     const connectedEdges = layouted.edges.filter(
       (e) => e.source === hoveredChord || e.target === hoveredChord,
     )
     const topConnections = connectedEdges
       .map((e) => {
         const other = e.source === hoveredChord ? e.target : e.source
-        const prob = (e.data as any)?.probability ?? 0
+        const prob = (e.data as Record<string, unknown>)?.probability as number ?? 0
         const movement = classifyMovement(hoveredChord, other)
         return { chord: other, probability: prob, movement }
       })

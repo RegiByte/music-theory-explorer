@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, startTransition } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useResource } from '@/system'
+import { usePlayChord } from '@/hooks/usePlayChord'
 import { Fretboard, type FretboardPosition } from './Fretboard'
 import { VoicingCard } from './VoicingCard'
 import {
@@ -30,7 +30,7 @@ import {
 
 export function ChordVoicingFinder() {
   const { t } = useTranslation('tools')
-  const audio = useResource('audio')
+  const { playChordByVoicing } = usePlayChord()
   const [root, setRoot] = useState<Note>('C')
   const [quality, setQuality] = useState<ChordQuality>('major')
   const [selectedVoicingIndex, setSelectedVoicingIndex] = useState<
@@ -74,8 +74,7 @@ export function ChordVoicingFinder() {
 
   // Play a voicing
   const playVoicing = (voicing: ChordVoicing) => {
-    const frequencies = voicing.positions.map((pos) => pos.frequency)
-    audio.playChord(frequencies, 1.5)
+    playChordByVoicing(voicing, 1.5)
   }
 
   // Auto-select first voicing when chord changes

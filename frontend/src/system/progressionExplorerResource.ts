@@ -1,5 +1,6 @@
 import { defineResource } from 'braided'
 import { createStore, type StoreApi } from 'zustand/vanilla'
+import { useSyncExternalStore } from 'react'
 import { buildProgressionMap, getHarmonicMovement } from '@/core/progressionMap'
 import {
   getChromaticDiverseTrunks,
@@ -79,6 +80,11 @@ interface ExplorerActions {
 type ExplorerStore = ExplorerState & ExplorerActions
 
 export type ProgressionExplorerStore = StoreApi<ExplorerStore>
+
+export interface ProgressionExplorerApi extends StoreApi<ExplorerStore> {
+  /** React hook — returns the full reactive explorer state (closes over the store) */
+  useExplorer: () => ExplorerStore
+}
 
 const DEFAULT_KEY: Note = 'C'
 const DEFAULT_SCALE: ScaleType = 'major'
@@ -628,7 +634,10 @@ export const progressionExplorerResource = defineResource({
 
     store.getState().initialize(DEFAULT_KEY, DEFAULT_SCALE)
 
-    return store
+    return Object.assign(store, {
+      useExplorer: () =>
+        useSyncExternalStore(store.subscribe, store.getState, store.getState),
+    }) as ProgressionExplorerApi
   },
 
   halt: async () => {},
