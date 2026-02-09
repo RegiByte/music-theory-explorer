@@ -20,7 +20,7 @@ import {
   NotePicker,
   ChordQualityPicker,
 } from '@/components/pickers'
-import type { Note, ChordQuality } from '@/schemas'
+import type { ChordQuality } from '@/schemas'
 
 const MELODY_LENGTHS = [4, 8, 12, 16] as const
 
